@@ -13,8 +13,8 @@ namespace DAL.DbAccess
     {
         public DbSet<Account>? Accounts { get; set; }
         public DbSet<AccountAuth>? AccountAuths { get; set; }
-        public DbSet<ThreadPost>? Comments { get; set; }
-        public DbSet<ForumThread>? threads { get; set; }
+        public DbSet<ThreadPost>? Posts { get; set; }
+        public DbSet<ForumThread>? Threads { get; set; }
 
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         {
