@@ -1,5 +1,5 @@
-﻿using DAL.Entities;
-using DAL.Entities.Enums;
+﻿using DAL.Entities.Authentication;
+using DAL.Entities.Forum;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace DAL.DbAccess
     public class ForumDbContext : DbContext
     {
         public DbSet<Account>? Accounts { get; set; }
-        public DbSet<AccountAuth>? AccountAuths { get; set; }
-        public DbSet<ThreadPost>? Posts { get; set; }
+        public DbSet<Post>? Posts { get; set; }
         public DbSet<ForumThread>? Threads { get; set; }
+        public DbSet<Theme>? Themes { get; set; }
 
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         {
@@ -22,29 +22,24 @@ namespace DAL.DbAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var accountAuth = modelBuilder.Entity<AccountAuth>();
-            accountAuth.HasOne(au => au.Account).WithOne(a => a.AccountAuth);
-            accountAuth.HasIndex(a => a.Email).IsUnique();
-            accountAuth.Property(a => a.PasswordSalt).IsRequired();
-            accountAuth.Property(a => a.PasswordHash).IsRequired();
-
             var account = modelBuilder.Entity<Account>();
             account.HasMany(a => a.ThreadPosts).WithOne(t => t.Author);
-            account.HasOne(a => a.AccountAuth).WithOne(au => au.Account);
-            account.Property(a => a.Role).HasConversion(r =>
-                r.ToString(),
-                r => (Role)Enum.Parse(typeof(Role), r));
+            account.HasMany(a => a.Threads).WithOne(t => t.Author);
+            account.HasIndex(a => a.Email).IsUnique();
+            account.Property(a => a.Email).HasMaxLength(100);
+            account.Property(a => a.Nickname).HasMaxLength(30);
+
 
             var thread = modelBuilder.Entity<ForumThread>();
             thread.ToTable("Threads");
+            thread.HasOne(a => a.Theme).WithMany(t => t.ForumThreads);
             thread.HasMany(p => p.ThreadPosts).WithOne(c => c.Thread);
             thread.Property(p => p.Title).HasMaxLength(100);
-            thread.Property(p => p.Theme).HasConversion(th =>
-                th.ToString(),
-                th => (Theme)Enum.Parse(typeof(Theme), th)
-            );
 
-            modelBuilder.Entity<ThreadPost>().ToTable("ThreadPosts");
+            var theme = modelBuilder.Entity<Theme>();
+            theme.Property(th => th.ThemeName).HasMaxLength(50).IsRequired();
+
+            modelBuilder.Entity<Post>().ToTable("ThreadPosts");
         }
     }
 }

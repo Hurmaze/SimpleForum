@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities;
+using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class ThreadRepository : IRepository<ForumThread>
+    public class ForumThreadRepository : IRepository<ForumThread>
     {
         private readonly ForumDbContext _forumDbContext;
-        public ThreadRepository(ForumDbContext forumDbContext)
+        public ForumThreadRepository(ForumDbContext forumDbContext)
         {
             _forumDbContext = forumDbContext;
         }

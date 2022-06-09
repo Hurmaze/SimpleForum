@@ -22,61 +22,32 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DAL.Entities.Account", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Nickname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Accounts");
-                });
-
-            modelBuilder.Entity("DAL.Entities.AccountAuth", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Nickname")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique();
 
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
 
-                    b.ToTable("AccountAuths");
+                    b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ForumThread", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.ForumThread", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,9 +61,8 @@ namespace DAL.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Theme")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("ThemeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("datetime2");
@@ -105,10 +75,12 @@ namespace DAL.Migrations
 
                     b.HasIndex("AuthorId");
 
+                    b.HasIndex("ThemeId");
+
                     b.ToTable("Threads", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Entities.ThreadPost", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,33 +106,46 @@ namespace DAL.Migrations
                     b.ToTable("ThreadPosts", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Entities.AccountAuth", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.Theme", b =>
                 {
-                    b.HasOne("DAL.Entities.Account", "Account")
-                        .WithOne("AccountAuth")
-                        .HasForeignKey("DAL.Entities.AccountAuth", "AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("Account");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ThemeName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Themes");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ForumThread", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.ForumThread", b =>
                 {
-                    b.HasOne("DAL.Entities.Account", "Author")
+                    b.HasOne("DAL.Entities.Forum.Account", "Author")
                         .WithMany("Threads")
                         .HasForeignKey("AuthorId");
 
+                    b.HasOne("DAL.Entities.Forum.Theme", "Theme")
+                        .WithMany("ForumThreads")
+                        .HasForeignKey("ThemeId");
+
                     b.Navigation("Author");
+
+                    b.Navigation("Theme");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ThreadPost", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.Post", b =>
                 {
-                    b.HasOne("DAL.Entities.Account", "Author")
+                    b.HasOne("DAL.Entities.Forum.Account", "Author")
                         .WithMany("ThreadPosts")
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("DAL.Entities.ForumThread", "Thread")
+                    b.HasOne("DAL.Entities.Forum.ForumThread", "Thread")
                         .WithMany("ThreadPosts")
                         .HasForeignKey("ThreadId");
 
@@ -169,18 +154,21 @@ namespace DAL.Migrations
                     b.Navigation("Thread");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Account", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.Account", b =>
                 {
-                    b.Navigation("AccountAuth");
-
                     b.Navigation("ThreadPosts");
 
                     b.Navigation("Threads");
                 });
 
-            modelBuilder.Entity("DAL.Entities.ForumThread", b =>
+            modelBuilder.Entity("DAL.Entities.Forum.ForumThread", b =>
                 {
                     b.Navigation("ThreadPosts");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Forum.Theme", b =>
+                {
+                    b.Navigation("ForumThreads");
                 });
 #pragma warning restore 612, 618
         }

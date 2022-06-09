@@ -7,9 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-var connectionString = builder.Configuration.GetConnectionString("ForumDb");
-builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(connectionString));
+var forumConnectionString = builder.Configuration.GetConnectionString("ForumDb");
+builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(forumConnectionString));
 builder.Services.AddTransient<ForumDbContext>();
+
+var authConnectionString = builder.Configuration.GetConnectionString("AuthenticationDb");
+builder.Services.AddDbContext<AuthenticationDbContext>(x => x.UseSqlServer(authConnectionString));
+builder.Services.AddTransient<AuthenticationDbContext>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

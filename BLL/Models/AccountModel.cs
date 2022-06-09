@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Entities.Enums
+namespace BLL.Models
 {
-    public enum Role 
+    internal class AccountModel
     {
-        User,
-        Moderator,
-        Admin
     }
 }

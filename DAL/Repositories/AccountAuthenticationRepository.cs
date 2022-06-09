@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities;
+using DAL.Entities.Authentication;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,48 +12,48 @@ namespace DAL.Repositories
 {
     public class AccountAuthenticationRepository : IRepository<AccountAuth>
     {
-        private readonly ForumDbContext _forumDbContext;
-        public AccountAuthenticationRepository(ForumDbContext forumDbContext)
+        private readonly AuthenticationDbContext _authDbContext;
+        public AccountAuthenticationRepository(AuthenticationDbContext authDbContext)
         {
-            _forumDbContext = forumDbContext;
+            _authDbContext = authDbContext;
         }
 
         public async Task AddAsync(AccountAuth entity)
         {
-            await _forumDbContext.AccountAuths.AddAsync(entity);
+            await _authDbContext.AddAsync(entity);
         }
 
         public void Delete(AccountAuth entity)
         {
-            if (_forumDbContext.Entry(entity).State == EntityState.Detached)
-                _forumDbContext.AccountAuths?.Attach(entity);
+            if (_authDbContext.Entry(entity).State == EntityState.Detached)
+                _authDbContext.AccountAuths?.Attach(entity);
 
-            _forumDbContext.Entry(entity).State = EntityState.Deleted;
+            _authDbContext.Entry(entity).State = EntityState.Deleted;
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var entity = await _forumDbContext.AccountAuths.FindAsync(id);
+            var entity = await _authDbContext.AccountAuths.FindAsync(id);
 
             if (entity != null)
             {
-                _forumDbContext.Entry(entity).State = EntityState.Deleted;
+                _authDbContext.Entry(entity).State = EntityState.Deleted;
             }
         }
 
         public async Task<IEnumerable<AccountAuth>> GetAllAsync()
         {
-            return await _forumDbContext.AccountAuths.ToListAsync();
+            return await _authDbContext.AccountAuths?.ToListAsync();
         }
 
         public async Task<AccountAuth> GetByIdAsync(int id)
         {
-            return await _forumDbContext.AccountAuths.FindAsync(id);
+            return await _authDbContext.AccountAuths.FindAsync(id);
         }
 
         public void Update(AccountAuth entity)
         {
-            _forumDbContext.Entry(entity).State = EntityState.Modified;
+            _authDbContext.Entry(entity).State = EntityState.Modified;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities;
+using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class PostRepository : IRepository<ThreadPost>
+    public class PostRepository : IRepository<Post>
     {
         private readonly ForumDbContext _forumDbContext;
         public PostRepository(ForumDbContext forumDbContext)
@@ -18,12 +18,12 @@ namespace DAL.Repositories
             _forumDbContext = forumDbContext;
         }
 
-        public async Task AddAsync(ThreadPost entity)
+        public async Task AddAsync(Post entity)
         {
             await _forumDbContext.Posts.AddAsync(entity);
         }
 
-        public void Delete(ThreadPost entity)
+        public void Delete(Post entity)
         {
             if (_forumDbContext.Entry(entity).State == EntityState.Detached)
                 _forumDbContext.Posts?.Attach(entity);
@@ -41,17 +41,17 @@ namespace DAL.Repositories
             }
         }
 
-        public async Task<IEnumerable<ThreadPost>> GetAllAsync()
+        public async Task<IEnumerable<Post>> GetAllAsync()
         {
             return await _forumDbContext.Posts.ToListAsync();
         }
 
-        public async Task<ThreadPost> GetByIdAsync(int id)
+        public async Task<Post> GetByIdAsync(int id)
         {
             return await _forumDbContext.Posts.FindAsync(id);
         }
 
-        public void Update(ThreadPost entity)
+        public void Update(Post entity)
         {
             _forumDbContext.Entry(entity).State = EntityState.Modified;
         }

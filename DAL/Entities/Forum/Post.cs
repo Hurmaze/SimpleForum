@@ -1,6 +1,6 @@
-﻿namespace DAL.Entities
+﻿namespace DAL.Entities.Forum
 {
-    public class ThreadPost : BaseEntity
+    public class Post : BaseEntity
     {
         public Account? Author { get; set; }
         public ForumThread? Thread { get; set; }
