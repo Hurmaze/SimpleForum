@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Entities.Authentication
+namespace DAL.Entities.Account
 {
     public class Role : BaseEntity
     {
         public string? RoleName { get; set; }
-        public ICollection<AccountAuth>? AccountAuths { get; set; }
+        public ICollection<Account>? Accounts { get; set; }
     }
 }

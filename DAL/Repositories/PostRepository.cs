@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class PostRepository : IRepository<Post>
+    public class PostRepository : IPostRepository
     {
         private readonly ForumDbContext _forumDbContext;
         public PostRepository(ForumDbContext forumDbContext)
@@ -43,7 +43,7 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<Post>> GetAllAsync()
         {
-            return await _forumDbContext.Posts.ToListAsync();
+            return await _forumDbContext.Posts?.ToListAsync();
         }
 
         public async Task<Post> GetByIdAsync(int id)

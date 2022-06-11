@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class ForumThreadRepository : IRepository<ForumThread>
+    public class ForumThreadRepository : IForumThreadRepository
     {
         private readonly ForumDbContext _forumDbContext;
         public ForumThreadRepository(ForumDbContext forumDbContext)

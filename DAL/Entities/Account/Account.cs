@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Entities.Authentication
+namespace DAL.Entities.Account
 {
-    public class AccountAuth : BaseEntity
+    public class Account : BaseEntity
     {
         public string? Email { get; set; }
         public Role? Role { get; set; }

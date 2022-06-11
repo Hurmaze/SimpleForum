@@ -4,18 +4,16 @@ using DAL.DbAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace DAL.Migrations.AuthenticationDb
 {
-    [DbContext(typeof(AuthenticationDbContext))]
-    [Migration("20220609115307_DeletedAccountIdReference")]
-    partial class DeletedAccountIdReference
+    [DbContext(typeof(AccountDbContext))]
+    partial class AuthenticationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +22,7 @@ namespace DAL.Migrations.AuthenticationDb
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DAL.Entities.Authentication.AccountAuth", b =>
+            modelBuilder.Entity("DAL.Entities.Authentication.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,6 +31,7 @@ namespace DAL.Migrations.AuthenticationDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("PasswordHash")
@@ -49,12 +48,11 @@ namespace DAL.Migrations.AuthenticationDb
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AccountAuths");
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.Authentication.Role", b =>
@@ -66,6 +64,7 @@ namespace DAL.Migrations.AuthenticationDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("RoleName")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -74,10 +73,10 @@ namespace DAL.Migrations.AuthenticationDb
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Authentication.AccountAuth", b =>
+            modelBuilder.Entity("DAL.Entities.Authentication.Account", b =>
                 {
                     b.HasOne("DAL.Entities.Authentication.Role", "Role")
-                        .WithMany("AccountAuths")
+                        .WithMany("Accounts")
                         .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
@@ -85,7 +84,7 @@ namespace DAL.Migrations.AuthenticationDb
 
             modelBuilder.Entity("DAL.Entities.Authentication.Role", b =>
                 {
-                    b.Navigation("AccountAuths");
+                    b.Navigation("Accounts");
                 });
 #pragma warning restore 612, 618
         }

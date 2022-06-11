@@ -1,59 +1,70 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Forum;
+using DAL.Entities.Account;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class AccountRepository : IRepository<Account>
+    public class AccountRepository : IAccountRepository
     {
-        private readonly ForumDbContext _forumDbContext;
-        public AccountRepository(ForumDbContext forumDbContext)
+        private readonly AccountDbContext _authDbContext;
+        public AccountRepository(AccountDbContext authDbContext)
         {
-            _forumDbContext = forumDbContext;
+            _authDbContext = authDbContext;
         }
 
         public async Task AddAsync(Account entity)
         {
-            await _forumDbContext.Accounts.AddAsync(entity);
+            await _authDbContext.Accounts.AddAsync(entity);
         }
 
         public void Delete(Account entity)
         {
-            if (_forumDbContext.Entry(entity).State == EntityState.Detached)
-                _forumDbContext.Accounts?.Attach(entity);
+            if (_authDbContext.Entry(entity).State == EntityState.Detached)
+                _authDbContext.Accounts?.Attach(entity);
 
-            _forumDbContext.Entry(entity).State = EntityState.Deleted;
+            _authDbContext.Entry(entity).State = EntityState.Deleted;
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var entity = await _forumDbContext.Accounts.FindAsync(id);
+            var entity = await _authDbContext.Accounts.FindAsync(id);
 
-            if(entity != null)
+            if (entity != null)
             {
-                _forumDbContext.Entry(entity).State = EntityState.Deleted;
+                _authDbContext.Entry(entity).State = EntityState.Deleted;
             }
         }
 
         public async Task<IEnumerable<Account>> GetAllAsync()
         {
-            return await _forumDbContext.Accounts.ToListAsync();
+            return await _authDbContext.Accounts.ToListAsync();
+        }
+
+        public async Task<Account> GetByEmailAsync(string email)
+        {
+            return await _authDbContext.Accounts.FirstOrDefaultAsync(a => a.Email == email);
         }
 
         public async Task<Account> GetByIdAsync(int id)
         {
-            return await _forumDbContext.Accounts.FindAsync(id);
+            return await _authDbContext.Accounts.FindAsync(id);
+        }
+
+        public async Task<bool> IsEmailExist(string email)
+        {
+            var acc = await _authDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (acc == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         public void Update(Account entity)
         {
-            _forumDbContext.Entry(entity).State = EntityState.Modified;
+            _authDbContext.Entry(entity).State = EntityState.Modified;
         }
     }
 }

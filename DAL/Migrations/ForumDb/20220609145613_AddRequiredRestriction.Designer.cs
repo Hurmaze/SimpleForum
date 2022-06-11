@@ -4,6 +4,7 @@ using DAL.DbAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    partial class ForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220609145613_AddRequiredRestriction")]
+    partial class AddRequiredRestriction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,31 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("DAL.Entities.Forum.Account", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Nickname")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Accounts");
+                });
 
             modelBuilder.Entity("DAL.Entities.Forum.ForumThread", b =>
                 {
@@ -106,34 +133,9 @@ namespace DAL.Migrations
                     b.ToTable("Themes");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Forum.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Nickname")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Users", (string)null);
-                });
-
             modelBuilder.Entity("DAL.Entities.Forum.ForumThread", b =>
                 {
-                    b.HasOne("DAL.Entities.Forum.User", "Author")
+                    b.HasOne("DAL.Entities.Forum.Account", "Author")
                         .WithMany("Threads")
                         .HasForeignKey("AuthorId");
 
@@ -148,7 +150,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Forum.Post", b =>
                 {
-                    b.HasOne("DAL.Entities.Forum.User", "Author")
+                    b.HasOne("DAL.Entities.Forum.Account", "Author")
                         .WithMany("ThreadPosts")
                         .HasForeignKey("AuthorId");
 
@@ -161,6 +163,13 @@ namespace DAL.Migrations
                     b.Navigation("Thread");
                 });
 
+            modelBuilder.Entity("DAL.Entities.Forum.Account", b =>
+                {
+                    b.Navigation("ThreadPosts");
+
+                    b.Navigation("Threads");
+                });
+
             modelBuilder.Entity("DAL.Entities.Forum.ForumThread", b =>
                 {
                     b.Navigation("ThreadPosts");
@@ -169,13 +178,6 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.Forum.Theme", b =>
                 {
                     b.Navigation("ForumThreads");
-                });
-
-            modelBuilder.Entity("DAL.Entities.Forum.User", b =>
-                {
-                    b.Navigation("ThreadPosts");
-
-                    b.Navigation("Threads");
                 });
 #pragma warning restore 612, 618
         }

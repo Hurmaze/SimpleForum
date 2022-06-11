@@ -1,8 +1,6 @@
-﻿using DAL.Entities.Authentication;
-
-namespace DAL.Entities.Forum
+﻿namespace DAL.Entities.Forum
 {
-    public class Account : BaseEntity
+    public class User : BaseEntity
     {
         public string? Nickname { get; set; }
         public string? Email { get; set; }

@@ -6,7 +6,7 @@
         public string? Title { get; set; }
         public DateTime TimeCreated { get; set; } = DateTime.Now;
         public string? Content { get; set; }
-        public Account? Author { get; set; }
+        public User? Author { get; set; }
         public ICollection<Post>? ThreadPosts { get; set; }
     }
 }
