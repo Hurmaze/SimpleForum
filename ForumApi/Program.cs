@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using DAL.DbAccess;
 using NLog.Web;
 using NLog;
+using FluentValidation.AspNetCore;
+using BLL.Validation.FluentValidation;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -11,7 +13,17 @@ try
 
     // Add services to the container.
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers().AddFluentValidation(fv =>
+    {
+        fv.RegisterValidatorsFromAssemblyContaining<RegistrationModelValidator>(lifetime: ServiceLifetime.Singleton);
+        fv.RegisterValidatorsFromAssemblyContaining<AccountModelValidator>(lifetime: ServiceLifetime.Singleton);
+        fv.RegisterValidatorsFromAssemblyContaining<ForumThreadModelValidator>(lifetime: ServiceLifetime.Singleton);
+        fv.RegisterValidatorsFromAssemblyContaining<LoginModelValidator>(lifetime: ServiceLifetime.Singleton);
+        fv.RegisterValidatorsFromAssemblyContaining<PostModelValidator>(lifetime: ServiceLifetime.Singleton);
+        fv.RegisterValidatorsFromAssemblyContaining<RoleModelValidator>(lifetime: ServiceLifetime.Singleton);
+        fv.RegisterValidatorsFromAssemblyContaining<ThemeModelValidator>(lifetime: ServiceLifetime.Singleton);
+        fv.RegisterValidatorsFromAssemblyContaining<UserModelValidator>(lifetime: ServiceLifetime.Singleton);
+    });
 
     var forumConnectionString = builder.Configuration.GetConnectionString("ForumDb");
     builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(forumConnectionString));

@@ -1,0 +1,20 @@
+﻿using BLL.Models;
+using FluentValidation;
+
+namespace BLL.Validation.FluentValidation
+{
+    public class UserModelValidator : AbstractValidator<UserModel>
+    {
+        public UserModelValidator()
+        {
+            RuleFor(x => x.Email)
+                .NotNull().NotEmpty()
+                .MaximumLength(100)
+                .EmailAddress()
+                .WithMessage("Maximum 100 characters.");
+
+            RuleFor(x => x.Nickname)
+                .MaximumLength(30);
+        }
+    }
+}

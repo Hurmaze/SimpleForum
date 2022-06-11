@@ -9,6 +9,6 @@ namespace BLL.Interfaces
 {
     public interface IPostService : IBaseService<PostModel>
     {
-
+        public Task<IEnumerable<PostModel>> GetPostsByUserIdAsync(int userId);
     }
 }

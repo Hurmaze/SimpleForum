@@ -41,6 +41,7 @@ namespace BLL.Services
                 _logger.LogWarning(string.Format(ExceptionMessages.NicknameTaken, nickName));
                 throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, nickName));
             }
+
             userModel.Nickname = nickName;
 
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userModel.Id);
@@ -62,7 +63,7 @@ namespace BLL.Services
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Id", userId.ToString()));
             }
 
-            var role = await _unitOfWork.AccountRepository.GetRoleByIdAsync(roleId);
+            var role = await _unitOfWork.RoleRepository.GetByIdAsync(roleId);
 
             if(role == null)
             {
@@ -78,9 +79,29 @@ namespace BLL.Services
             _logger.LogInformation($"The role of the user {user.Email} has been changed to {role.RoleName}");
         }
 
-        public Task CreateRoleIfNotExist(string roleName)
+        public async Task CreateRoleIfNotExist(string roleName)
         {
-            
+            if(roleName == null || roleName.Trim().Length == 0)
+            {
+                _logger.LogWarning("Role name is empty.");
+                throw new ArgumentNullException($"Role name is empty.");
+            }
+            var roles = await _unitOfWork.RoleRepository.GetAllAsync();
+
+            var isExist = roles.Any(r => r.RoleName == roleName);
+
+            if (isExist)
+            {
+                _logger.LogWarning(String.Format(ExceptionMessages.AlreadyExists, typeof(Role), "RoleName", roleName));
+                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Role), "RoleName", roleName));
+            }
+
+            Role role = new Role { RoleName = roleName };
+
+            await _unitOfWork.RoleRepository.AddAsync(role);
+            await _unitOfWork.SaveAsync();
+
+            _logger.LogInformation($"The role {role.RoleName} is created.");
         }
 
         public async Task DeleteAsync(int userId)
@@ -104,7 +125,7 @@ namespace BLL.Services
 
         public async Task DeleteRoleAsync(int id)
         {
-            await 
+            await _unitOfWork.RoleRepository.DeleteByIdAsync(id);
         }
 
         public async Task<IEnumerable<UserModel>> GetAllAsync()
@@ -114,11 +135,6 @@ namespace BLL.Services
             return _mapper.Map<IEnumerable<UserModel>>(users);
         }
 
-        public Task<IEnumerable<PostModel>> GetAllUserPostsAsync(int userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<UserModel> GetByIdAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
@@ -126,18 +142,33 @@ namespace BLL.Services
             return _mapper.Map<UserModel>(user);
         }
 
-        public Task<string> LoginAsync(LoginModel authModel)
+        public async Task<string> LoginAsync(LoginModel authModel)
         {
-            throw new NotImplementedException();
+            var account = await _unitOfWork.AccountRepository.GetByEmailAsync(authModel.Email);
+
+            if(account == null)
+            {
+                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", authModel.Email.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", authModel.Email.ToString()));
+            }
+
+            if(!VerifyPassword(authModel.Password, account.PasswordHash, account.PasswordSalt))
+            {
+                _logger.LogWarning(ExceptionMessages.WrongPassword);
+                throw new WrongPasswordException(ExceptionMessages.WrongPassword);
+            }
+
+            return GenerateToken(_mapper.Map<AccountModel>(account));
         }
 
         public async Task<UserModel> RegisterAsync(RegistrationModel authModel)
         {
-            
+            bool isExist = await _unitOfWork.AccountRepository.IsEmailExist(authModel.Email);
 
-            if (!IsValid(authModel))
+            if (isExist)
             {
-                throw new InvalidRegistrationException(string.Format(ExceptionMessages.InvalidRegistration));
+                _logger.LogWarning(String.Format(ExceptionMessages.EmailIsAlreadyUsed, authModel.Email));
+                throw new InvalidRegistrationException(String.Format(ExceptionMessages.EmailIsAlreadyUsed, authModel.Email));
             }
 
             var accountModel = CreateAccount(authModel.Password, authModel);
@@ -150,12 +181,26 @@ namespace BLL.Services
             await _unitOfWork.AccountRepository.AddAsync(account);
             await _unitOfWork.SaveAsync();
 
+            _logger.LogInformation($"User with email {authModel.Email} registered.");
             return _mapper.Map<UserModel>(user);
         }
 
-        public Task UpdateAsync(UserModel user)
-        {
-            throw new NotImplementedException();
+        public async Task UpdateAsync(UserModel userModel)
+        { 
+            var user =  await _unitOfWork.UserRepository.GetByEmail(userModel.Email);
+
+            if(user == null)
+            {
+                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", userModel.Email.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", userModel.Email.ToString()));
+            }
+
+            user = _mapper.Map(userModel, user);
+
+            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.SaveAsync();
+
+            _logger.LogInformation($"The user with email {user.Email} is updated.");
         }
 
         private AccountModel CreateAccount(string password, RegistrationModel registrationModel)
@@ -187,7 +232,7 @@ namespace BLL.Services
             }
         }
 
-        private string GenerateToken(RegistrationModel user)
+        private string GenerateToken(AccountModel user)
         {
             var authParams = _authOptions.Value;
 
@@ -206,43 +251,10 @@ namespace BLL.Services
                 expires: DateTime.Now.AddSeconds(authParams.TokenLifeTime),
                 signingCredentials: credantials);
 
+            _logger.LogInformation($"JWT token for {user.Email} generated.");
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-        //TODO: do
-        public async Task<bool> IsValid(RegistrationModel registrationModel)
-        {
-            if (registrationModel == null)
-            {
-                throw new InvalidRegistrationException(ExceptionMessages.InvalidRegistration);
-            }
-
-            bool isExist = await _unitOfWork.AccountRepository.IsEmailExist(registrationModel.Email);
-
-            if (isExist)
-            {
-                throw new EmailIsUsedException(string.Format(ExceptionMessages.EmailIsAlreadyUsed, registrationModel.Email));
-            }
-
-            if (!(registrationModel != null && registrationModel.Password.Trim() != ""))
-            {
-                return false;
-            }
-
-            var hasNumber = new Regex(@"[0-9]+");
-            var hasUpperChar = new Regex(@"[A-Z]+");
-            var hasMinimum8Chars = new Regex(@".{8,}");
-
-            var isValidated = hasNumber.IsMatch(registrationModel.Password) && hasUpperChar.IsMatch(registrationModel.Password) && hasMinimum8Chars.IsMatch(registrationModel.Password);
-
-            if (!isValidated)
-            {
-                return false;
-            }
-
-            if(registrationModel.)
-
-            return true;
-        }
+        
     }
 }

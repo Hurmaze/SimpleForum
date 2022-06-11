@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation
 {
-    public class EmailIsUsedException : Exception
+    public class WrongPasswordException : Exception
     {
-        public EmailIsUsedException(string mes) : base(mes) { }
+        public WrongPasswordException(string mes) : base(mes) { }
     }
 }

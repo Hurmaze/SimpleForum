@@ -19,6 +19,8 @@ namespace DAL
         private IAccountRepository _accountRepository;
         private IPostRepository _postRepository;
         private IForumThreadRepository _forumThreadRepository;
+        private IThemeRepository _themeRepository;
+        private IRoleRepository _roleRepository;
 
         public UnitOfWork(ForumDbContext forumDbContext, AccountDbContext authDbContext)
         {
@@ -28,12 +30,16 @@ namespace DAL
             _accountRepository = new AccountRepository(authDbContext);
             _postRepository = new PostRepository(forumDbContext);
             _forumThreadRepository = new ForumThreadRepository(forumDbContext);
+            _themeRepository = new ThemeRepository(forumDbContext);
+            _roleRepository = new RoleRepository(authDbContext);
         }
 
         public IUserRepository UserRepository { get => _userRepository; }
         public IAccountRepository AccountRepository { get => _accountRepository; }
         public IPostRepository PostRepository { get => _postRepository; }
         public IForumThreadRepository ForumThreadRepository { get => _forumThreadRepository; }
+        public IThemeRepository ThemeRepository { get => _themeRepository; }
+        public IRoleRepository RoleRepository { get => _roleRepository; }
 
         public async Task SaveAsync()
         {

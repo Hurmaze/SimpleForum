@@ -10,10 +10,10 @@ namespace BLL.Interfaces
         public Task DeleteRoleAsync(int id);
         public Task ChangeNickNameAsync(UserModel userModel, string nickName);
         public Task ChangeUserRoleAsync(int userId, int roleId);
-        public Task<IEnumerable<PostModel>> GetAllUserPostsAsync(int userId);
         public Task<UserModel> GetByIdAsync(int id);
         public Task<IEnumerable<UserModel>> GetAllAsync();
-        public Task UpdateAsync(UserModel user);
+        public Task UpdateAsync(UserModel userModel);
         public Task DeleteAsync(int userId);
+        
     }
 }
