@@ -13,7 +13,7 @@ namespace BLL.Interfaces
         public Task<UserModel> GetByIdAsync(int id);
         public Task<IEnumerable<UserModel>> GetAllAsync();
         public Task UpdateAsync(UserModel userModel);
-        public Task DeleteAsync(int userId);
+        public Task DeleteByIdAsync(int userId);
         
     }
 }

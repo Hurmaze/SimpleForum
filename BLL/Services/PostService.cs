@@ -5,11 +5,6 @@ using BLL.Validation;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -17,23 +12,35 @@ namespace BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<UserAccountService> _logger;
+        private readonly ILogger<PostService> _logger;
 
-        public PostService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UserAccountService> logger)
+        public PostService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<PostService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public Task AddAsync(PostModel model)
+        public async Task AddAsync(PostModel model)
         {
-            throw new NotImplementedException();
+            var post = _mapper.Map<Post>(model);
+
+            await _unitOfWork.PostRepository.AddAsync(post);
+            await _unitOfWork.SaveAsync();
+
+            _logger.LogInformation("Added a new post by user {email} in thread id {thread}", post.Author.Email, post.Thread.Id);
         }
 
-        public Task DeleteAsync(int modelId)
+        public async Task DeleteByIdAsync(int modelId)
         {
-            throw new NotImplementedException();
+            var entity = await _unitOfWork.PostRepository.DeleteByIdAsync(modelId);
+
+            if(entity == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Post).Name, "Id", modelId.ToString()));
+            }
+
+            _logger.LogInformation("Post with an id {id} has been deleted.", modelId);
         }
 
         public async Task<IEnumerable<PostModel>> GetAllAsync()
@@ -56,16 +63,27 @@ namespace BLL.Services
 
             if (user == null)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(User), "Id", userId.ToString()));
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Id", userId.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Post).Name, "Id", userId.ToString()));
             }
 
             return _mapper.Map<IEnumerable<PostModel>>(user.ThreadPosts);
         }
 
-        public Task UpdateAsync(PostModel model)
+        public async Task UpdateAsync(PostModel model)
         {
-            throw new NotImplementedException();
+            var post = await _unitOfWork.PostRepository.GetByIdAsync(model.Id);
+
+            if (post == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Post).Name, "Id", model.Id.ToString())); 
+            }
+
+            post = _mapper.Map(model, post);
+
+            _unitOfWork.PostRepository.Update(post);
+            await _unitOfWork.SaveAsync();
+
+            _logger.LogInformation("Post with id {id} has been updated.", post.Id);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace DAL.Repositories
             _authDbContext.Entry(entity).State = EntityState.Deleted;
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public async Task<Role> DeleteByIdAsync(int id)
         {
             var entity = await _authDbContext.Roles.FindAsync(id);
 
@@ -37,6 +37,8 @@ namespace DAL.Repositories
             {
                 _authDbContext.Entry(entity).State = EntityState.Deleted;
             }
+
+            return entity;
         }
 
         public async Task<IEnumerable<Role>> GetAllAsync()

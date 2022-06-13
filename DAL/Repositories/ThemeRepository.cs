@@ -28,7 +28,7 @@ namespace DAL.Repositories
             _forumDbContext.Entry(entity).State = EntityState.Deleted;
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public async Task<Theme> DeleteByIdAsync(int id)
         {
             var entity = await _forumDbContext.Themes.FindAsync(id);
 
@@ -36,6 +36,8 @@ namespace DAL.Repositories
             {
                 _forumDbContext.Entry(entity).State = EntityState.Deleted;
             }
+
+            return entity;
         }
 
         public async Task<IEnumerable<Theme>> GetAllAsync()

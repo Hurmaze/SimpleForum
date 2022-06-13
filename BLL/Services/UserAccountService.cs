@@ -38,7 +38,6 @@ namespace BLL.Services
 
             if (isTaken)
             {
-                _logger.LogWarning(string.Format(ExceptionMessages.NicknameTaken, nickName));
                 throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, nickName));
             }
 
@@ -51,39 +50,36 @@ namespace BLL.Services
             _unitOfWork.UserRepository.Update(user);
 
             await _unitOfWork.SaveAsync();
-            _logger.LogInformation($"User {userModel.Email} has changed nickname to {nickName}");
+            _logger.LogInformation("User {email} has changed nickname to {nickname}", userModel.Email, nickName);
         }
 
         public async Task ChangeUserRoleAsync(int userId, int roleId)
         {
-            var user = await _unitOfWork.AccountRepository.GetByIdAsync(userId);
-            if(user == null)
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(userId);
+            if(account == null)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(User), "Id", userId.ToString()));
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Id", userId.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", userId.ToString()));
             }
 
             var role = await _unitOfWork.RoleRepository.GetByIdAsync(roleId);
 
             if(role == null)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(Role), "Id", roleId.ToString()));
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Role), "Id", roleId.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Role).Name, "Id", roleId.ToString()));
             }
 
-            user.Role = role;
+            account.Role = role;
 
-            _unitOfWork.AccountRepository.Update(user);
+            _unitOfWork.AccountRepository.Update(account);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation($"The role of the user {user.Email} has been changed to {role.RoleName}");
+            _logger.LogInformation("The role of the user {email} has been changed to {rolename}", account.Email, role.RoleName);
         }
 
         public async Task CreateRoleIfNotExist(string roleName)
         {
             if(roleName == null || roleName.Trim().Length == 0)
             {
-                _logger.LogWarning("Role name is empty.");
                 throw new ArgumentNullException($"Role name is empty.");
             }
             var roles = await _unitOfWork.RoleRepository.GetAllAsync();
@@ -92,8 +88,7 @@ namespace BLL.Services
 
             if (isExist)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.AlreadyExists, typeof(Role), "RoleName", roleName));
-                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Role), "RoleName", roleName));
+                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Role).Name, "RoleName", roleName));
             }
 
             Role role = new Role { RoleName = roleName };
@@ -101,17 +96,16 @@ namespace BLL.Services
             await _unitOfWork.RoleRepository.AddAsync(role);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation($"The role {role.RoleName} is created.");
+            _logger.LogInformation("The role {rolename} is created.", role.RoleName);
         }
 
-        public async Task DeleteAsync(int userId)
+        public async Task DeleteByIdAsync(int userId)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if(user == null)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(User), "Id", userId.ToString()));
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Id", userId.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", userId.ToString()));
             }
 
             var account = await _unitOfWork.AccountRepository.GetByEmailAsync(user.Email);
@@ -120,12 +114,19 @@ namespace BLL.Services
             await _unitOfWork.AccountRepository.DeleteByIdAsync(account.Id);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation($"The user {user.Email} has been deleted.");
+            _logger.LogInformation("The user {email} has been deleted.", user.Email);
         }
 
         public async Task DeleteRoleAsync(int id)
         {
-            await _unitOfWork.RoleRepository.DeleteByIdAsync(id);
+            var model = await _unitOfWork.RoleRepository.DeleteByIdAsync(id);
+
+            if(model == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", id.ToString()));
+            }
+
+            _logger.LogInformation("Role {rolename} has been deleted.", model.RoleName);
         }
 
         public async Task<IEnumerable<UserModel>> GetAllAsync()
@@ -148,16 +149,15 @@ namespace BLL.Services
 
             if(account == null)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", authModel.Email.ToString()));
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", authModel.Email.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", authModel.Email.ToString()));
             }
 
             if(!VerifyPassword(authModel.Password, account.PasswordHash, account.PasswordSalt))
             {
-                _logger.LogWarning(ExceptionMessages.WrongPassword);
                 throw new WrongPasswordException(ExceptionMessages.WrongPassword);
             }
 
+            _logger.LogInformation("The user with email {email} has logged into.", authModel.Email);
             return GenerateToken(_mapper.Map<AccountModel>(account));
         }
 
@@ -167,7 +167,6 @@ namespace BLL.Services
 
             if (isExist)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.EmailIsAlreadyUsed, authModel.Email));
                 throw new InvalidRegistrationException(String.Format(ExceptionMessages.EmailIsAlreadyUsed, authModel.Email));
             }
 
@@ -181,7 +180,7 @@ namespace BLL.Services
             await _unitOfWork.AccountRepository.AddAsync(account);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation($"User with email {authModel.Email} registered.");
+            _logger.LogInformation("User with email {email} registered.", authModel.Email);
             return _mapper.Map<UserModel>(user);
         }
 
@@ -191,8 +190,7 @@ namespace BLL.Services
 
             if(user == null)
             {
-                _logger.LogWarning(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", userModel.Email.ToString()));
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User), "Email", userModel.Email.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", userModel.Email.ToString()));
             }
 
             user = _mapper.Map(userModel, user);
@@ -200,7 +198,7 @@ namespace BLL.Services
             _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation($"The user with email {user.Email} is updated.");
+            _logger.LogInformation("The user with email {email} is updated.", user.Email);
         }
 
         private AccountModel CreateAccount(string password, RegistrationModel registrationModel)
@@ -251,7 +249,7 @@ namespace BLL.Services
                 expires: DateTime.Now.AddSeconds(authParams.TokenLifeTime),
                 signingCredentials: credantials);
 
-            _logger.LogInformation($"JWT token for {user.Email} generated.");
+            _logger.LogInformation("JWT token for {email} generated.", user.Email);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
