@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation
 {
-    public class InvalidRegistrationException : Exception
+    public class InvalidRegistrationException : CustomException
     {
         public InvalidRegistrationException(string mes) : base(mes) { }
     }

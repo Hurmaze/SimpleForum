@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation
 {
-    public class WrongPasswordException : Exception
+    public class WrongPasswordException : CustomException
     {
         public WrongPasswordException(string mes) : base(mes) { }
     }

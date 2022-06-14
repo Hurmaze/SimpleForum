@@ -90,13 +90,13 @@ namespace BLL.Services
             return _mapper.Map<IEnumerable<PostModel>>(forumThread.ThreadPosts);
         }
 
-        public async Task<IEnumerable<ForumThreadModel>> GetThreadsByUserIdAsync(string email)
+        public async Task<IEnumerable<ForumThreadModel>> GetThreadsByUserIdAsync(int userId)
         {
-            var user = await _unitOfWork.UserRepository.GetByEmail(email);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if(user == null)
             {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", email.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", userId.ToString()));
             }
 
             return _mapper.Map<IEnumerable<ForumThreadModel>>(user.ThreadPosts);

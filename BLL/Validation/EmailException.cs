@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation
 {
-    public class EmailException : Exception
+    public class EmailException : CustomException
     {
         public EmailException(string mes) : base(mes) { }
     }

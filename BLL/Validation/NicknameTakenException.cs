@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation
 {
-    public class NicknameTakenException : Exception
+    public class NicknameTakenException : CustomException
     {
         public NicknameTakenException(string mes) : base(mes) { }
     }

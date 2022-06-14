@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation
 {
-    public class NotFoundException : Exception
+    public class NotFoundException : CustomException
     {
         public NotFoundException(string mes) : base(mes) { }
     }
