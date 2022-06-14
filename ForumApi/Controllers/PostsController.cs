@@ -61,9 +61,9 @@ namespace ForumApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(PostModel model)
         {
-            await _postService.AddAsync(model);
+            var created = await _postService.AddAsync(model);
 
-            return CreatedAtAction(nameof(Add), new { id = model.Id }, model);
+            return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
         }
     }
 }

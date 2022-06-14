@@ -53,12 +53,12 @@ namespace BLL.Services
             _logger.LogInformation("User {email} has changed nickname to {nickname}", userModel.Email, nickName);
         }
 
-        public async Task ChangeUserRoleAsync(int userId, int roleId)
+        public async Task ChangeUserRoleAsync(string email, int roleId)
         {
-            var account = await _unitOfWork.AccountRepository.GetByIdAsync(userId);
+            var account = await _unitOfWork.AccountRepository.GetByEmailAsync(email);
             if(account == null)
             {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", userId.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", email.ToString()));
             }
 
             var role = await _unitOfWork.RoleRepository.GetByIdAsync(roleId);
@@ -76,27 +76,26 @@ namespace BLL.Services
             _logger.LogInformation("The role of the user {email} has been changed to {rolename}", account.Email, role.RoleName);
         }
 
-        public async Task CreateRoleIfNotExist(string roleName)
+        public async Task<RoleModel> CreateRoleIfNotExist(RoleModel model)
         {
-            if(roleName == null || roleName.Trim().Length == 0)
-            {
-                throw new ArgumentNullException($"Role name is empty.");
-            }
             var roles = await _unitOfWork.RoleRepository.GetAllAsync();
 
-            var isExist = roles.Any(r => r.RoleName == roleName);
+            var isExist = roles.Any(r => r.RoleName == model.RoleName);
 
             if (isExist)
             {
-                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Role).Name, "RoleName", roleName));
+                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Role).Name, "RoleName", model.RoleName));
             }
 
-            Role role = new Role { RoleName = roleName };
+            var role = _mapper.Map<Role>(model);
 
             await _unitOfWork.RoleRepository.AddAsync(role);
             await _unitOfWork.SaveAsync();
 
             _logger.LogInformation("The role {rolename} is created.", role.RoleName);
+
+            var roleView = _mapper.Map<RoleModel>(role);
+            return roleView;
         }
 
         public async Task DeleteByIdAsync(int userId)
@@ -141,6 +140,13 @@ namespace BLL.Services
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
 
             return _mapper.Map<UserModel>(user);
+        }
+
+        public async Task<IEnumerable<RoleModel>> GetAllRolesAsync()
+        {
+            var roles = await _unitOfWork.RoleRepository.GetAllAsync();
+
+            return _mapper.Map<IEnumerable<RoleModel>>(roles);
         }
 
         public async Task<string> LoginAsync(LoginModel authModel)
@@ -253,6 +259,6 @@ namespace BLL.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        
+       
     }
 }

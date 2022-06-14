@@ -8,7 +8,7 @@ namespace BLL.Interfaces
 {
     public interface IBaseService<TModel> where TModel : class
     {
-        Task AddAsync(TModel model);
+        Task<TModel> AddAsync(TModel model);
         Task<IEnumerable<TModel>> GetAllAsync();
 
         Task<TModel> GetByIdAsync(int id);

@@ -21,7 +21,7 @@ namespace BLL.Services
             _logger = logger;
         }
 
-        public async Task AddAsync(PostModel model)
+        public async Task<PostModel> AddAsync(PostModel model)
         {
             var post = _mapper.Map<Post>(model);
 
@@ -29,6 +29,9 @@ namespace BLL.Services
             await _unitOfWork.SaveAsync();
 
             _logger.LogInformation("Added a new post by user {email} in thread id {thread}", post.Author.Email, post.Thread.Id);
+
+            var postView = _mapper.Map<PostModel>(post);
+            return postView;
         }
 
         public async Task DeleteByIdAsync(int modelId)

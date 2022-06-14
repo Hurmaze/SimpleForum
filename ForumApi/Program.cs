@@ -10,12 +10,25 @@ using Microsoft.Extensions.Hosting;
 using System;
 using Microsoft.Extensions.Configuration;
 using ForumApi.Extensions;
+using AutoMapper;
+using BLL;
+using BLL.Interfaces;
+using BLL.Services;
+using DAL.Interfaces;
+using DAL.Repositories;
+using DAL;
+using Microsoft.Extensions.Logging;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+builder.Host.UseNLog();
+
+builder.Services.AddTransient<ExceptionMiddleware>();
 // Add services to the container.
 
 builder.Services.AddControllers().AddFluentValidation(fv =>
@@ -30,6 +43,19 @@ builder.Services.AddControllers().AddFluentValidation(fv =>
     fv.RegisterValidatorsFromAssemblyContaining<UserModelValidator>(lifetime: ServiceLifetime.Singleton);
 });
 
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IRoleRepository, RoleRepository>();
+builder.Services.AddTransient<IThemeRepository, ThemeRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IForumThreadRepository, ForumThreadRepository>();
+builder.Services.AddTransient<IPostRepository, PostRepository>();
+
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddTransient<IUserAccountService, UserAccountService>();
+builder.Services.AddTransient<IPostService, PostService>();
+builder.Services.AddTransient<IForumThreadService, ForumThreadService>();
+
 var forumConnectionString = builder.Configuration.GetConnectionString("ForumDb");
 builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(forumConnectionString));
 builder.Services.AddTransient<ForumDbContext>();
@@ -37,6 +63,14 @@ builder.Services.AddTransient<ForumDbContext>();
 var authConnectionString = builder.Configuration.GetConnectionString("AuthenticationDb");
 builder.Services.AddDbContext<AccountDbContext>(x => x.UseSqlServer(authConnectionString));
 builder.Services.AddTransient<AccountDbContext>();
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new AutomapperProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -59,7 +93,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseMiddleware<ExceptionMiddleware>(logger);
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
 

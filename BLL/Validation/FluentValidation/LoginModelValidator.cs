@@ -17,6 +17,10 @@ namespace BLL.Validation.FluentValidation
                 .NotNull().NotEmpty()
                 .Matches(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$")
                 .WithMessage("Password must contain 8-16 characters, at least one letter and one number.");
+
+            RuleFor(x => x.PasswordRepeat)
+                .Equal(x => x.Password)
+                .WithMessage("Passwords should be equal.");
         }
     }
 }

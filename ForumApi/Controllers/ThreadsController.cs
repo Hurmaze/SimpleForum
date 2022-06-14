@@ -45,7 +45,7 @@ namespace ForumApi.Controllers
         [HttpGet("{id}/posts")]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetThreadPosts(int id)
         {
-            var posts = _forumThreadService.GetThreadPostsAsync(id);
+            var posts = await _forumThreadService.GetThreadPostsAsync(id);
 
             return Ok(posts);
         }
@@ -53,17 +53,17 @@ namespace ForumApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(ForumThreadModel model)
         {
-            await _forumThreadService.AddAsync(model);
+            var created = await _forumThreadService.AddAsync(model);
 
-            return CreatedAtAction(nameof(Add), new { id = model.Id }, model);
+            return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
         }
 
         [HttpPost("/themes")]
-        public async Task<ActionResult> AddTheme(string name)
+        public async Task<ActionResult> AddTheme(ThemeModel model)
         {
-            await _forumThreadService.AddNewThemeAsync(name);
+            var created = await _forumThreadService.AddNewThemeAsync(model);
 
-            return CreatedAtAction(nameof(Add), new { id = value.Id }, value);
+            return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
         }
 
         [HttpDelete("{id}")]

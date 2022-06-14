@@ -21,23 +21,38 @@ namespace BLL.Services
             _logger = logger;
         }
 
-        public async Task AddAsync(ForumThreadModel model)
+        public async Task<ForumThreadModel> AddAsync(ForumThreadModel model)
         {
             var forumThread = _mapper.Map<ForumThread>(model);
 
             await _unitOfWork.ForumThreadRepository.AddAsync(forumThread);
 
             _logger.LogInformation("Added a new thread by user {email}", forumThread.Author.Email);
+
+            var forumThreadView = _mapper.Map<ForumThreadModel>(forumThread);
+            return forumThreadView;
         }
 
-        public async Task AddNewThemeAsync(string themeName)
+        public async Task<ThemeModel> AddNewThemeAsync(ThemeModel model)
         {
-            var theme = new Theme { ThemeName = themeName};
+            var themes = await _unitOfWork.ThemeRepository.GetAllAsync();
+
+            var isExist = themes.Any(t => t.ThemeName == model.Name);
+
+            if (isExist)
+            {
+                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Theme).Name, "RoleName", model.Name));
+            }
+
+            var theme = _mapper.Map<Theme>(model);
 
             await _unitOfWork.ThemeRepository.AddAsync(theme);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("Added a new theme {theme}", themeName);
+            _logger.LogInformation("Added a new theme {theme}", model.Name);
+
+            var themeView = _mapper.Map<ThemeModel>(theme);
+            return themeView;
         }
 
         public async Task DeleteByIdAsync(int modelId)

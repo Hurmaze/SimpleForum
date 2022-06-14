@@ -12,6 +12,12 @@ namespace ForumApi.Extensions
     public class ExceptionMiddleware : IMiddleware
     {
         private readonly ILogger logger;
+
+        public ExceptionMiddleware(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -23,20 +29,21 @@ namespace ForumApi.Extensions
 
                 context.Response.ContentType = "application/json";
 
-                logger.LogError("Something went wrong: {mes}", ex);
-
                 switch (ex)
                 {
                     case NotFoundException:
                         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                        logger.LogWarning(ex.Message);
                         break;
 
                     case CustomException:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        logger.LogWarning(ex.Message);
                         break;
 
                     default:
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        logger.LogError("Something went wrong: {mes}", ex);
                         break;
                 }
 
