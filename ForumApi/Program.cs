@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DAL.DbAccess;
 using NLog.Web;
-using NLog;
 using FluentValidation.AspNetCore;
 using BLL.Validation.FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,15 +17,18 @@ using DAL.Interfaces;
 using DAL.Repositories;
 using DAL;
 using Microsoft.Extensions.Logging;
-
-var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
 builder.Logging.ClearProviders();
-builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-builder.Host.UseNLog();
+builder.Logging.AddSerilog(logger);
 
 builder.Services.AddTransient<ExceptionMiddleware>();
 // Add services to the container.

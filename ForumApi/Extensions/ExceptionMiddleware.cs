@@ -11,11 +11,11 @@ namespace ForumApi.Extensions
 {
     public class ExceptionMiddleware : IMiddleware
     {
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
 
-        public ExceptionMiddleware(ILogger logger)
+        public ExceptionMiddleware(ILoggerFactory loggerFactory)
         {
-            this.logger = logger;
+            _logger = loggerFactory.CreateLogger<ExceptionMiddleware>();
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -33,24 +33,24 @@ namespace ForumApi.Extensions
                 {
                     case NotFoundException:
                         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                        logger.LogWarning(ex.Message);
+                        _logger.LogWarning(ex.Message);
                         break;
 
                     case CustomException:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        logger.LogWarning(ex.Message);
+                        _logger.LogWarning(ex.Message);
                         break;
 
                     default:
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        logger.LogError("Something went wrong: {mes}", ex);
+                        _logger.LogError("Something went wrong: {mes}", ex);
                         break;
                 }
 
                 await context.Response.WriteAsync(new ErrorDetails
                 {
                     StatusCode = context.Response.StatusCode,
-                    ErrorMessage = ex.Message
+                    ErrorMessage = "Internal error occured. We will fix it as fast as we can."
                 }.ToString());
 
             }

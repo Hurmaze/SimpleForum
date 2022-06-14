@@ -120,6 +120,8 @@ namespace BLL.Services
         {
             var model = await _unitOfWork.RoleRepository.DeleteByIdAsync(id);
 
+            await _unitOfWork.SaveAsync();
+
             if(model == null)
             {
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", id.ToString()));

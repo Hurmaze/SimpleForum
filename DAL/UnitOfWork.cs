@@ -44,6 +44,7 @@ namespace DAL
         public async Task SaveAsync()
         {
             await _forumDbContext.SaveChangesAsync();
+            await _accountDbContext.SaveChangesAsync();
         }
     }
 }
