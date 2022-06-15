@@ -4,6 +4,7 @@
     {
         public int AuthorId { get; set; }
         public int ThreadId { get; set; }
-        public string? Content { get; set; }
+        public string Content { get; set; }
+        public DateTime TimeCreated { get; set; }
     }
 }

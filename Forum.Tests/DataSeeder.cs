@@ -67,6 +67,7 @@ namespace Forum.Tests
                 new ForumThread { Author = users[3], Content = "My first book was...", Title = "Man I love books", Theme = themes[0], TimeCreated = DateTime.Now }
             };
             context.Threads.AddRange(threads);
+            context.SaveChanges();
 
             var posts = new List<Post>
             {

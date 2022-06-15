@@ -8,7 +8,7 @@ namespace BLL.Models
 {
     public class RoleModel : BaseModel
     {
-        public string? RoleName { get; set; }
-        public ICollection<int>? AccountAuthsIds { get; set; }
+        public string RoleName { get; set; }
+        public ICollection<int> AccountAuthsIds { get; set; }
     }
 }

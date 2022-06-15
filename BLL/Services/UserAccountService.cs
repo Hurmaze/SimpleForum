@@ -15,6 +15,7 @@ using DAL.Entities.Forum;
 using DAL.Entities.Account;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
+using Services.Validation.Exceptions;
 
 namespace BLL.Services
 {
@@ -140,6 +141,11 @@ namespace BLL.Services
         public async Task<UserModel> GetByIdAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+
+            if(user == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", id.ToString()));
+            }
 
             return _mapper.Map<UserModel>(user);
         }

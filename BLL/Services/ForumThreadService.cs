@@ -5,6 +5,7 @@ using BLL.Validation;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
+using Services.Validation.Exceptions;
 
 namespace BLL.Services
 {
@@ -26,6 +27,7 @@ namespace BLL.Services
             var forumThread = _mapper.Map<ForumThread>(model);
 
             await _unitOfWork.ForumThreadRepository.AddAsync(forumThread);
+            await _unitOfWork.SaveAsync();
 
             _logger.LogInformation("Added a new thread by user {email}", forumThread.Author.Email);
 
@@ -33,15 +35,18 @@ namespace BLL.Services
             return forumThreadView;
         }
 
-        public async Task<ThemeModel> AddNewThemeAsync(ThemeModel model)
+        public async Task<ThemeModel> AddThemeAsync(ThemeModel model)
         {
             var themes = await _unitOfWork.ThemeRepository.GetAllAsync();
 
-            var isExist = themes.Any(t => t.ThemeName == model.Name);
-
-            if (isExist)
+            if(themes != null)
             {
-                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Theme).Name, "RoleName", model.Name));
+                var isExist = themes.Any(t => t.ThemeName == model.ThemeName);
+
+                if (isExist)
+                {
+                    throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Theme).Name, "RoleName", model.ThemeName));
+                }
             }
 
             var theme = _mapper.Map<Theme>(model);
@@ -49,7 +54,7 @@ namespace BLL.Services
             await _unitOfWork.ThemeRepository.AddAsync(theme);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("Added a new theme {theme}", model.Name);
+            _logger.LogInformation("Added a new theme {theme}", model.ThemeName);
 
             var themeView = _mapper.Map<ThemeModel>(theme);
             return themeView;
@@ -64,6 +69,8 @@ namespace BLL.Services
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(ForumThread).Name, "Id", modelId.ToString()));
             }
 
+            await _unitOfWork.SaveAsync();
+
             _logger.LogInformation("ForumThread with an id {id} has been deleted.", modelId);
         }
 
@@ -76,6 +83,7 @@ namespace BLL.Services
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Theme).Name, "Id", id.ToString()));
             }
 
+            await _unitOfWork.SaveAsync();
             _logger.LogInformation("Theme with an id {id} has been deleted.", id);
         }
 
@@ -88,7 +96,12 @@ namespace BLL.Services
 
         public async Task<ForumThreadModel> GetByIdAsync(int id)
         {
-            var forumThread = await _unitOfWork.ForumThreadRepository.GetAllAsync();
+            var forumThread = await _unitOfWork.ForumThreadRepository.GetByIdAsync(id);
+
+            if(forumThread == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(ForumThread).Name, "Id", id.ToString()));
+            }
 
             return _mapper.Map<ForumThreadModel>(forumThread);
         }
@@ -119,7 +132,7 @@ namespace BLL.Services
 
         public async Task UpdateAsync(ForumThreadModel model)
         {
-            var forumThread = await _unitOfWork.PostRepository.GetByIdAsync(model.Id);
+            var forumThread = await _unitOfWork.ForumThreadRepository.GetByIdAsync(model.Id);
 
             if (forumThread == null)
             {
@@ -128,7 +141,7 @@ namespace BLL.Services
 
             forumThread = _mapper.Map(model, forumThread);
 
-            _unitOfWork.PostRepository.Update(forumThread);
+            _unitOfWork.ForumThreadRepository.Update(forumThread);
             await _unitOfWork.SaveAsync();
 
             _logger.LogInformation("Post with id {id} has been updated.", forumThread.Id);

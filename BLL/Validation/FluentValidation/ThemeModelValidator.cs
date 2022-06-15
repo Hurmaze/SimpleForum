@@ -7,7 +7,7 @@ namespace BLL.Validation.FluentValidation
     {
         public ThemeModelValidator()
         {
-            RuleFor(c => c.Name)
+            RuleFor(c => c.ThemeName)
                 .NotNull().NotEmpty()
                 .MaximumLength(50);
         }

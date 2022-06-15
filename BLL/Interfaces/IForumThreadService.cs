@@ -6,7 +6,7 @@ namespace BLL.Interfaces
     {
         Task<IEnumerable<PostModel>> GetThreadPostsAsync(int id);
         Task<IEnumerable<ForumThreadModel>> GetThreadsByUserIdAsync(int userId);
-        Task<ThemeModel> AddNewThemeAsync(ThemeModel model);
+        Task<ThemeModel> AddThemeAsync(ThemeModel model);
         Task DeleteThemeByIdAsync(int id);
     }
 }

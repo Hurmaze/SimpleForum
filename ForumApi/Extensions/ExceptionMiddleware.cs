@@ -1,8 +1,8 @@
-﻿using BLL.Validation;
-using ForumApi.Models;
+﻿using ForumApi.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Services.Validation.Exceptions;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -30,7 +30,6 @@ namespace ForumApi.Extensions
                 context.Response.ContentType = "application/json";
                 var error = new ErrorDetails
                 {
-                    StatusCode = context.Response.StatusCode,
                     ErrorMessage = "Internal error occured. We will fix it as fast as we can."
                 };
 
@@ -53,6 +52,8 @@ namespace ForumApi.Extensions
                         _logger.LogError("Something went wrong: {mes}", ex);
                         break;
                 }
+
+                error.StatusCode = context.Response.StatusCode;
 
                 await context.Response.WriteAsync(error.ToString());
 

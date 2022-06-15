@@ -61,7 +61,7 @@ namespace ForumApi.Controllers
         [HttpPost("/themes")]
         public async Task<ActionResult> AddTheme(ThemeModel model)
         {
-            var created = await _forumThreadService.AddNewThemeAsync(model);
+            var created = await _forumThreadService.AddThemeAsync(model);
 
             return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
         }

@@ -1,4 +1,4 @@
-﻿namespace BLL.Validation
+﻿namespace Services.Validation.Exceptions
 {
     public class AlreadyExistException : CustomException
     {

@@ -1,5 +1,4 @@
-﻿
-namespace BLL.Validation
+﻿namespace Services.Validation.Exceptions
 {
     public static class ExceptionMessages
     {

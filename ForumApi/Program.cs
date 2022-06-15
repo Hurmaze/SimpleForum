@@ -18,7 +18,7 @@ using DAL.Repositories;
 using DAL;
 using Microsoft.Extensions.Logging;
 using Serilog;
-
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +44,7 @@ builder.Services.AddControllers().AddFluentValidation(fv =>
     fv.RegisterValidatorsFromAssemblyContaining<ThemeModelValidator>(lifetime: ServiceLifetime.Singleton);
     fv.RegisterValidatorsFromAssemblyContaining<UserModelValidator>(lifetime: ServiceLifetime.Singleton);
 });
+ValidatorOptions.Global.LanguageManager.Enabled = false;
 
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IRoleRepository, RoleRepository>();

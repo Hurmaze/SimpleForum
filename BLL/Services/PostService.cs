@@ -5,6 +5,7 @@ using BLL.Validation;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
+using Services.Validation.Exceptions;
 
 namespace BLL.Services
 {
@@ -43,6 +44,7 @@ namespace BLL.Services
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Post).Name, "Id", modelId.ToString()));
             }
 
+           await  _unitOfWork.SaveAsync();
             _logger.LogInformation("Post with an id {id} has been deleted.", modelId);
         }
 
@@ -56,6 +58,11 @@ namespace BLL.Services
         public async Task<PostModel> GetByIdAsync(int id)
         {
             var post = await _unitOfWork.PostRepository.GetByIdAsync(id);
+
+            if (post == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Post).Name, "Id", id.ToString()));
+            }
 
             return _mapper.Map<PostModel>(post);
         }

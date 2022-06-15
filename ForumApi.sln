@@ -5,11 +5,11 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumApi", "ForumApi\ForumApi.csproj", "{F7FC49C7-257C-46BD-9381-BB8B8C72720B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{0DC3A12C-CC05-4F22-9184-D2C2DEA496A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "BLL\Services.csproj", "{0DC3A12C-CC05-4F22-9184-D2C2DEA496A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{2CACB889-D650-4FA7-9E82-1689D6A3CB07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forum.Tests", "Forum.Tests\Forum.Tests.csproj", "{10E0BDCD-A447-48C1-ADDE-C1CA6CA13E88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forum.Tests", "Forum.Tests\Forum.Tests.csproj", "{10E0BDCD-A447-48C1-ADDE-C1CA6CA13E88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

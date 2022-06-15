@@ -21,17 +21,18 @@ namespace BLL
 
             CreateMap<User, RegistrationModel>()
                 .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.ThreadPosts.Select(y => y.Id)))
-                .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
+                .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
                 .ReverseMap();
 
             CreateMap<Account, AccountModel>()
                 .ForMember(um => um.RoleName, x => x.MapFrom(a => a.Role.RoleName))
                 .ReverseMap();
 
-           
+
             CreateMap<Post, PostModel>()
                 .ForMember(pm => pm.ThreadId, x => x.MapFrom(p => p.Thread.Id))
                 .ForMember(pm => pm.AuthorId, x => x.MapFrom(p => p.Author.Id))
+                .ForMember(pm => pm.TimeCreated, x => x.MapFrom(p => p.TimeCreated))
                 .ReverseMap();
 
             CreateMap<ForumThread, ForumThreadModel>()
