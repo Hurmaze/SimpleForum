@@ -2,11 +2,6 @@
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -23,14 +18,6 @@ namespace DAL.Repositories
             await _forumDbContext.Users.AddAsync(entity);
         }
 
-        public void Delete(User entity)
-        {
-            if (_forumDbContext.Entry(entity).State == EntityState.Detached)
-                _forumDbContext.Users?.Attach(entity);
-
-            _forumDbContext.Entry(entity).State = EntityState.Deleted;
-        }
-
         public async Task<User> DeleteByIdAsync(int id)
         {
             var entity = await _forumDbContext.Users.FindAsync(id);
@@ -45,20 +32,29 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _forumDbContext.Users.ToListAsync();
+            return await _forumDbContext.Users
+                .Include(u => u.ThreadPosts)
+                .ThenInclude(tp => tp.Thread)
+                .ToListAsync();
         }
 
-        public async Task<User> GetByEmail(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
-            return await _forumDbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+            return await _forumDbContext.Users
+                .Include(u => u.ThreadPosts)
+                .ThenInclude(tp => tp.Thread)
+                .FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<User> GetByIdAsync(int id)
         {
-            return await _forumDbContext.Users.FindAsync(id);
+            return await _forumDbContext.Users
+                .Include(u => u.ThreadPosts)
+                .ThenInclude(tp => tp.Thread)
+                .FirstOrDefaultAsync(u => u.Id == id); ;
         }
 
-        public async Task<bool> IsNicknameTaken(string nickname)
+        public async Task<bool> IsNicknameTakenAsync(string nickname)
         {
             return await _forumDbContext.Users.AnyAsync(u => u.Nickname == nickname);
         }

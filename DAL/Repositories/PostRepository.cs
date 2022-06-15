@@ -23,14 +23,6 @@ namespace DAL.Repositories
             await _forumDbContext.Posts.AddAsync(entity);
         }
 
-        public void Delete(Post entity)
-        {
-            if (_forumDbContext.Entry(entity).State == EntityState.Detached)
-                _forumDbContext.Posts?.Attach(entity);
-
-            _forumDbContext.Entry(entity).State = EntityState.Deleted;
-        }
-
         public async Task<Post> DeleteByIdAsync(int id)
         {
             var entity = await _forumDbContext.Posts.FindAsync(id);
@@ -45,12 +37,18 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<Post>> GetAllAsync()
         {
-            return await _forumDbContext.Posts?.ToListAsync();
+            return await _forumDbContext.Posts
+                .Include(p => p.Author)
+                .Include(p => p.Thread)
+                .ToListAsync();
         }
 
         public async Task<Post> GetByIdAsync(int id)
         {
-            return await _forumDbContext.Posts.FindAsync(id);
+            return await _forumDbContext.Posts
+                .Include(p => p.Author)
+                .Include(p => p.Thread)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public void Update(Post entity)

@@ -18,14 +18,6 @@ namespace DAL.Repositories
             await _authDbContext.Accounts.AddAsync(entity);
         }
 
-        public void Delete(Account entity)
-        {
-            if (_authDbContext.Entry(entity).State == EntityState.Detached)
-                _authDbContext.Accounts?.Attach(entity);
-
-            _authDbContext.Entry(entity).State = EntityState.Deleted;
-        }
-
         public async Task<Account> DeleteByIdAsync(int id)
         {
             var entity = await _authDbContext.Accounts.FindAsync(id);
@@ -40,20 +32,26 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<Account>> GetAllAsync()
         {
-            return await _authDbContext.Accounts.ToListAsync();
+            return await _authDbContext.Accounts
+                .Include(a => a.Role)
+                .ToListAsync();
         }
 
         public async Task<Account> GetByEmailAsync(string email)
         {
-            return await _authDbContext.Accounts.FirstOrDefaultAsync(a => a.Email == email);
+            return await _authDbContext.Accounts
+                .Include(a => a.Role)
+                .FirstOrDefaultAsync(a => a.Email == email);
         }
 
         public async Task<Account> GetByIdAsync(int id)
         {
-            return await _authDbContext.Accounts.FindAsync(id);
+            return await _authDbContext.Accounts
+                .Include(a => a.Role)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<bool> IsEmailExist(string email)
+        public async Task<bool> IsEmailExistAsync(string email)
         {
             var acc = await _authDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == email);
 

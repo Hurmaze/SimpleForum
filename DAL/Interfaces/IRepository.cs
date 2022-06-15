@@ -12,8 +12,6 @@ namespace DAL.Interfaces
 
         void Update(TEntity entity);
 
-        void Delete(TEntity entity);
-
         Task<TEntity> DeleteByIdAsync(int id);
     }
 }

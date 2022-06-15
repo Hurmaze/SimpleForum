@@ -34,7 +34,7 @@ namespace BLL.Services
 
         public async Task ChangeNickNameAsync(UserModel userModel, string nickName)
         {
-            bool isTaken = await _unitOfWork.UserRepository.IsNicknameTaken(nickName);
+            bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(nickName);
 
             if (isTaken)
             {
@@ -171,7 +171,7 @@ namespace BLL.Services
 
         public async Task<UserModel> RegisterAsync(RegistrationModel authModel)
         {
-            bool isExist = await _unitOfWork.AccountRepository.IsEmailExist(authModel.Email);
+            bool isExist = await _unitOfWork.AccountRepository.IsEmailExistAsync(authModel.Email);
 
             if (isExist)
             {
@@ -194,7 +194,7 @@ namespace BLL.Services
 
         public async Task UpdateAsync(UserModel userModel)
         { 
-            var user =  await _unitOfWork.UserRepository.GetByEmail(userModel.Email);
+            var user =  await _unitOfWork.UserRepository.GetByEmailAsync(userModel.Email);
 
             if(user == null)
             {

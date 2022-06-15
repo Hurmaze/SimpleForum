@@ -21,14 +21,6 @@ namespace DAL.Repositories
             await _authDbContext.Roles.AddAsync(entity);
         }
 
-        public void Delete(Role entity)
-        {
-            if (_authDbContext.Entry(entity).State == EntityState.Detached)
-                _authDbContext.Roles?.Attach(entity);
-
-            _authDbContext.Entry(entity).State = EntityState.Deleted;
-        }
-
         public async Task<Role> DeleteByIdAsync(int id)
         {
             var entity = await _authDbContext.Roles.FindAsync(id);
@@ -43,7 +35,9 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<Role>> GetAllAsync()
         {
-            return await _authDbContext.Roles.ToListAsync();
+            return await _authDbContext.Roles
+                .Include(r => r.Accounts)
+                .ToListAsync();
         }
 
         public void Update(Role entity)
@@ -53,7 +47,9 @@ namespace DAL.Repositories
 
         public async Task<Role> GetByIdAsync(int id)
         {
-            return await _authDbContext.Roles.FindAsync(id);
+            return await _authDbContext.Roles
+                .Include(r => r.Accounts)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
     }
 }

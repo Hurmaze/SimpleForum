@@ -10,7 +10,7 @@ namespace DAL.Interfaces
 {
     public interface IAccountRepository : IRepository<Account>
     {
-        Task<bool> IsEmailExist(string email);
+        Task<bool> IsEmailExistAsync(string email);
         Task<Account> GetByEmailAsync(string email);
     }
 }
