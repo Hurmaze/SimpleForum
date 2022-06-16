@@ -1,8 +1,11 @@
 ﻿using BLL.Interfaces;
 using BLL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ForumApi.Controllers
@@ -19,6 +22,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult<IEnumerable<UserModel>>> GetAllAsync()
         {
             var users = await _userAccountService.GetAllAsync();
@@ -27,6 +31,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet("roles")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<IEnumerable<RoleModel>>> GetAllRolesAsync()
         {
             var roles = await _userAccountService.GetAllRolesAsync();
@@ -35,6 +40,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult<UserModel>> GetById(int id)
         {
             var user = await _userAccountService.GetByIdAsync(id);
@@ -43,6 +49,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPut("{userId}/role/{roleId}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> ChangeRole(string email, int roleId)
         {
             await _userAccountService.ChangeRoleAsync(email, roleId);
@@ -51,6 +58,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> Login(LoginModel model)
         {
             var token = await _userAccountService.LoginAsync(model);
@@ -60,6 +68,7 @@ namespace ForumApi.Controllers
 
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<UserModel>> Register(RegistrationModel model)
         {
             var user = await _userAccountService.RegisterAsync(model);
@@ -68,6 +77,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPost("roles")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<RoleModel>> CreateRole(RoleModel model)
         {
             var role = await _userAccountService.CreateRoleIfNotExist(model);
@@ -76,6 +86,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> DeleteUser(int id)
         {
             await _userAccountService.DeleteByIdAsync(id);
@@ -84,6 +95,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpDelete("roles/{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> DeleteRole(int id)
         {
             await _userAccountService.DeleteRoleAsync(id);
@@ -92,6 +104,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult> Update(UserModel model)
         {
             await _userAccountService.UpdateAsync(model);

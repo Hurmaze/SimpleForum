@@ -6,6 +6,7 @@ using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
 using NUnit.Framework;
 using Services.Validation.Exceptions;
@@ -361,6 +362,7 @@ namespace Forum.Tests.Services
             Assert.ThrowsAsync<AlreadyExistException>(() => userAccountService.CreateRoleIfNotExist(data.GetRoleModels[0]));
         }
 
+        //It doens`t work
         [Test]
         public async Task UserAccountservice_LoginAsync_logins()
         {
@@ -381,7 +383,11 @@ namespace Forum.Tests.Services
                 .ReturnsAsync(account);
 
             var mockLogger = new Mock<ILogger<UserAccountService>>();
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKeydsfsdf342"));
             var jwtoptions = new Mock<IOptions<JwtOptions>>();
+            jwtoptions.Setup(j => j.Value.GetSymmetricSecurityKey())
+                .Returns(key);
 
             var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
 
@@ -389,5 +395,7 @@ namespace Forum.Tests.Services
             Assert.IsNotNull(token);
             Assert.IsNotEmpty(token);
         }
+
+        
     }
 }

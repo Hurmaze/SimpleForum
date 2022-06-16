@@ -1,5 +1,6 @@
 ﻿using BLL.Interfaces;
 using BLL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -50,7 +51,17 @@ namespace ForumApi.Controllers
             return Ok(posts);
         }
 
+        [HttpPut("{id}")]
+        [Authorize(Roles = "admin, moderator")]
+        public async Task<ActionResult> Update(ForumThreadModel model)
+        {
+            await _forumThreadService.UpdateAsync(model);
+
+            return NoContent();
+        }
+
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Add(ForumThreadModel model)
         {
             var created = await _forumThreadService.AddAsync(model);
@@ -59,6 +70,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPost("/themes")]
+        [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult> AddTheme(ThemeModel model)
         {
             var created = await _forumThreadService.AddThemeAsync(model);
@@ -66,7 +78,17 @@ namespace ForumApi.Controllers
             return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
         }
 
+        [HttpPost("/themes/{id}")]
+        [Authorize(Roles = "admin, moderator")]
+        public async Task<ActionResult> DeleteTheme(int id)
+        {
+            await _forumThreadService.DeleteThemeByIdAsync(id);
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult> Delete(int id)
         {
             await _forumThreadService.DeleteByIdAsync(id);

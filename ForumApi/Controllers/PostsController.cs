@@ -1,5 +1,6 @@
 ﻿using BLL.Interfaces;
 using BLL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize( Roles = "admin, moderator")]
         public async Task<ActionResult> Delete(int id)
         {
             await _postService.DeleteByIdAsync(id);
@@ -51,6 +53,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult> Update(PostModel model)
         {
             await _postService.UpdateAsync(model);
@@ -59,6 +62,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Add(PostModel model)
         {
             var created = await _postService.AddAsync(model);

@@ -245,11 +245,10 @@ namespace BLL.Services
             };
 
             var key = authParams.GetSymmetricSecurityKey();
-            var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
-            var token = new JwtSecurityToken(authParams.Issuer,
-                authParams.Audience,
-                claims,
+            var token = new JwtSecurityToken(
+                claims: claims,
                 expires: DateTime.Now.AddSeconds(authParams.TokenLifeTime),
                 signingCredentials: credantials);
 
