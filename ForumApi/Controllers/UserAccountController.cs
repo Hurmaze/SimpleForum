@@ -42,18 +42,10 @@ namespace ForumApi.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{id}/nickname")]
-        public async Task<ActionResult> ChangeNickName(UserModel model, string nickname)
-        {
-            await _userAccountService.ChangeNickNameAsync(model, nickname);
-
-            return NoContent();
-        }
-
         [HttpPut("{userId}/role/{roleId}")]
         public async Task<ActionResult> ChangeRole(string email, int roleId)
         {
-            await _userAccountService.ChangeUserRoleAsync(email, roleId);
+            await _userAccountService.ChangeRoleAsync(email, roleId);
 
             return NoContent();
         }

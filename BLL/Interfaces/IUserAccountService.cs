@@ -8,8 +8,7 @@ namespace BLL.Interfaces
         public Task<UserModel> RegisterAsync(RegistrationModel authModel); 
         public Task<RoleModel> CreateRoleIfNotExist(RoleModel model);
         public Task DeleteRoleAsync(int id);
-        public Task ChangeNickNameAsync(UserModel userModel, string nickName);
-        public Task ChangeUserRoleAsync(string email, int roleId);
+        public Task ChangeRoleAsync(string email, int roleId);
         public Task<UserModel> GetByIdAsync(int id);
         public Task<IEnumerable<UserModel>> GetAllAsync();
         public Task<IEnumerable<RoleModel>> GetAllRolesAsync();

@@ -33,28 +33,7 @@ namespace BLL.Services
             _logger = logger;
         }
 
-        public async Task ChangeNickNameAsync(UserModel userModel, string nickName)
-        {
-            bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(nickName);
-
-            if (isTaken)
-            {
-                throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, nickName));
-            }
-
-            userModel.Nickname = nickName;
-
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userModel.Id);
-
-            user = _mapper.Map(userModel, user);
-
-            _unitOfWork.UserRepository.Update(user);
-
-            await _unitOfWork.SaveAsync();
-            _logger.LogInformation("User {email} has changed nickname to {nickname}", userModel.Email, nickName);
-        }
-
-        public async Task ChangeUserRoleAsync(string email, int roleId)
+        public async Task ChangeRoleAsync(string email, int roleId)
         {
             var account = await _unitOfWork.AccountRepository.GetByEmailAsync(email);
             if(account == null)
@@ -125,7 +104,7 @@ namespace BLL.Services
 
             if(model == null)
             {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", id.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Role).Name, "Id", id.ToString()));
             }
 
             _logger.LogInformation("Role {rolename} has been deleted.", model.RoleName);
@@ -199,12 +178,23 @@ namespace BLL.Services
         }
 
         public async Task UpdateAsync(UserModel userModel)
+
         { 
             var user =  await _unitOfWork.UserRepository.GetByEmailAsync(userModel.Email);
 
             if(user == null)
             {
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", userModel.Email.ToString()));
+            }
+
+            if(user.Nickname != userModel.Nickname)
+            {
+                bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(userModel.Nickname);
+
+                if (isTaken)
+                {
+                    throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, userModel.Nickname));
+                }
             }
 
             user = _mapper.Map(userModel, user);
