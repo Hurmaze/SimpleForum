@@ -248,6 +248,8 @@ namespace BLL.Services
             var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var token = new JwtSecurityToken(
+                authParams.Issuer,
+                authParams.Audience,
                 claims: claims,
                 expires: DateTime.Now.AddSeconds(authParams.TokenLifeTime),
                 signingCredentials: credantials);

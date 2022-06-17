@@ -6,8 +6,8 @@ namespace DAL.DbAccess
 {
     public class AccountDbContext : DbContext
     {
-        public DbSet<Role>? Roles { get; set; }
-        public DbSet<Account>? Accounts { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
         public AccountDbContext(DbContextOptions<AccountDbContext> options) : base(options)
         {

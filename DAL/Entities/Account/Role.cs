@@ -8,7 +8,7 @@ namespace DAL.Entities.Account
 {
     public class Role : BaseEntity
     {
-        public string? RoleName { get; set; }
-        public ICollection<Account>? Accounts { get; set; }
+        public string RoleName { get; set; }
+        public ICollection<Account> Accounts { get; set; }
     }
 }

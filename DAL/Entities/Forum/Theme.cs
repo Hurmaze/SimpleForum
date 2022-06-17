@@ -8,7 +8,7 @@ namespace DAL.Entities.Forum
 {
     public class Theme : BaseEntity
     {
-        public string? ThemeName { get; set; }
-        public ICollection<ForumThread>? ForumThreads { get; set; }
+        public string ThemeName { get; set; }
+        public ICollection<ForumThread> ForumThreads { get; set; }
     }
 }

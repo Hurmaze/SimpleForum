@@ -61,7 +61,7 @@ namespace Forum.Tests.Services
                 .ReturnsAsync((ForumThread)null);
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
             var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
-
+            
             Assert.ThrowsAsync<NotFoundException>(() => forumThreadService.DeleteByIdAsync(It.IsAny<int>()));
         }
 

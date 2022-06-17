@@ -5,10 +5,10 @@ namespace DAL.DbAccess
 {
     public class ForumDbContext : DbContext
     {
-        public DbSet<User>? Users { get; set; }
-        public DbSet<Post>? Posts { get; set; }
-        public DbSet<ForumThread>? Threads { get; set; }
-        public DbSet<Theme>? Themes { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<ForumThread> Threads { get; set; }
+        public DbSet<Theme> Themes { get; set; }
 
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         {
