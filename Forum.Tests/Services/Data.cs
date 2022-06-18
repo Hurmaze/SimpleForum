@@ -42,7 +42,7 @@ namespace Forum.Tests.Services
         public List<ForumThread> GetForumThreadEntities =>
             new List<ForumThread>
             {
-                new ForumThread { Id = 1, Author = GetUserEntities[0], Content = "Some text", Title = "Super elephants", Theme = GetThemeEntities[1], TimeCreated = DateTime.Now },
+                new ForumThread { Id = 1, Author = GetUserEntities[0], Content = "Some text", Title = "Super elephants", Theme = GetThemeEntities[1], TimeCreated = DateTime.Parse("2022-01-02") },
                 new ForumThread { Id = 2, Author = GetUserEntities[3], Content = "My first book was...", Title = "Man I love books", Theme = GetThemeEntities[0], TimeCreated = DateTime.Now }
             };
 

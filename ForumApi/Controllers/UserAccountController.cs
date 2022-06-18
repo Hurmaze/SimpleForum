@@ -3,6 +3,7 @@ using BLL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Services.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -83,6 +84,25 @@ namespace ForumApi.Controllers
             var role = await _userAccountService.CreateRoleIfNotExist(model);
 
             return CreatedAtAction(nameof(CreateRole), new { id = role.Id }, role);
+        }
+
+        [HttpPost("/changenickname")]
+        [Authorize]
+        public async Task<ActionResult<NicknameModel>> ChangeNickname(NicknameModel model)
+        {
+            var email = HttpContext.User.Claims.Single(x => x.Type == ClaimTypes.Email).Value;
+
+            await _userAccountService.ChangeNicknameAsync(email, model);
+
+            return NoContent();
+        }
+
+        [HttpGet("/statistic/{count}")]
+        public async Task<ActionResult<ForumThreadModel>> GetMostPopular(int count = 3)
+        {
+            var post = await _userAccountService.GetMostActiveAsync(count);
+
+            return Ok(post);
         }
 
         [HttpDelete("{id}")]

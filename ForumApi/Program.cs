@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Services.Validation.FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,7 @@ builder.Services.AddControllers().AddFluentValidation(fv =>
     fv.RegisterValidatorsFromAssemblyContaining<RoleModelValidator>(lifetime: ServiceLifetime.Singleton);
     fv.RegisterValidatorsFromAssemblyContaining<ThemeModelValidator>(lifetime: ServiceLifetime.Singleton);
     fv.RegisterValidatorsFromAssemblyContaining<UserModelValidator>(lifetime: ServiceLifetime.Singleton);
+    fv.RegisterValidatorsFromAssemblyContaining<NicknameModelValidator>(lifetime: ServiceLifetime.Singleton);
 });
 ValidatorOptions.Global.LanguageManager.Enabled = false;
 

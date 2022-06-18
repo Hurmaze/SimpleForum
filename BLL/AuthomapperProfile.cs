@@ -16,7 +16,7 @@ namespace BLL
         {
             CreateMap<User, UserModel>()
                 .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.ThreadPosts.Select(y => y.Id)))
-                .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
+                .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
                 .ReverseMap();
 
             CreateMap<User, RegistrationModel>()

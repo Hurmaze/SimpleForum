@@ -23,7 +23,7 @@ namespace Forum.Tests.Services
         {
             data = new Data();
 
-            var forumThread = new ForumThreadModel { AuthorId = 1, Content = "kekd", ThemeName = "Books", Title = "kekd", TimeCreated = DateTime.Now, ThreadPostsIds = new List<int>{ 1 } };
+            var forumThread = new ForumThreadModel { AuthorId = 1, Content = "kekd", ThemeName = "Books", Title = "kekd", TimeCreated = DateTime.Now, ThreadPostsIds = new List<int> { 1 } };
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.AddAsync(It.IsAny<ForumThread>()));
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
@@ -61,7 +61,7 @@ namespace Forum.Tests.Services
                 .ReturnsAsync((ForumThread)null);
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
             var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
-            
+
             Assert.ThrowsAsync<NotFoundException>(() => forumThreadService.DeleteByIdAsync(It.IsAny<int>()));
         }
 
@@ -291,6 +291,30 @@ namespace Forum.Tests.Services
             var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
             Assert.ThrowsAsync<NotFoundException>(() => forumThreadService.GetThreadPostsAsync(It.IsAny<int>()));
+        }
+
+        [Test]
+        public async Task ForumThreadService_GetMostPopularAsync_ReturnsCorrectValues()
+        {
+            data = new Data();
+            var returnData = data.GetForumThreadEntities;
+            returnData[0].ThreadPosts = new List<Post> { data.GetPostEntities[0], data.GetPostEntities[1] };
+            returnData[1].ThreadPosts = new List<Post> { data.GetPostEntities[2], data.GetPostEntities[3] };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.ForumThreadRepository.GetAllAsync())
+                .ReturnsAsync(returnData);
+            var mockLogger = new Mock<ILogger<ForumThreadService>>();
+            var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
+
+            var expected = new List<ForumThreadModel> { data.GetForumThreadModels[0] };
+            expected[0].ThreadPostsIds = new List<int> { 1, 2 };
+
+            var threads = await forumThreadService.GetMostPopularAsync(1);
+
+            mockUnitOfWork.Verify(x => x.ForumThreadRepository.GetAllAsync(), Times.Once());
+            Assert.NotNull(threads);
+            Assert.That(threads, Is.EqualTo(expected).Using(new ForumThreadModelEqualityComparer()), message: "GetMostPopularAsync method works incorrect");
         }
     }
 }

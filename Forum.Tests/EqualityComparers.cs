@@ -1,4 +1,5 @@
-﻿using DAL.Entities.Account;
+﻿using BLL.Models;
+using DAL.Entities.Account;
 using DAL.Entities.Forum;
 using System;
 using System.Collections.Generic;
@@ -120,6 +121,52 @@ namespace Forum.Tests
         }
 
         public int GetHashCode([DisallowNull] Account obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
+    internal class ForumThreadModelEqualityComparer : IEqualityComparer<ForumThreadModel>
+    {
+        public bool Equals([AllowNull] ForumThreadModel x, [AllowNull] ForumThreadModel y)
+        {
+            if (x == null && y == null)
+                return true;
+            if (x == null || y == null)
+                return false;
+            var posts1 = x.ThreadPostsIds.OrderBy(x => x);
+            var posts2 = y.ThreadPostsIds.OrderBy(y => y);
+
+            return x.Id == y.Id
+                && posts1.SequenceEqual(posts2);
+        }
+
+        public int GetHashCode([DisallowNull] ForumThreadModel obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
+    internal class UserModelEqualityComparer : IEqualityComparer<UserModel>
+    {
+        public bool Equals([AllowNull] UserModel x, [AllowNull] UserModel y)
+        {
+            if (x == null && y == null)
+                return true;
+            if (x == null || y == null)
+                return false;
+            var posts1 = x.ThreadsIds.OrderBy(x => x);
+            var posts2 = y.ThreadsIds.OrderBy(y => y);
+
+            var thread1 = x.PostsIds.OrderBy(x => x);
+            var thread2 = y.PostsIds.OrderBy(y => y);
+
+            return x.Id == y.Id
+                && posts1.SequenceEqual(posts2)
+                && thread1.SequenceEqual(thread2);
+        }
+
+        public int GetHashCode([DisallowNull] UserModel obj)
         {
             return obj.GetHashCode();
         }

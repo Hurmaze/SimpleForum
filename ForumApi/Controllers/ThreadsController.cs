@@ -43,6 +43,14 @@ namespace ForumApi.Controllers
             return Ok(post);
         }
 
+        [HttpGet("/statistic/{count}")]
+        public async Task<ActionResult<ForumThreadModel>> GetMostPopular(int count = 3)
+        {
+            var post = await _forumThreadService.GetMostPopularAsync(count);
+
+            return Ok(post);
+        }
+
         [HttpGet("{id}/posts")]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetThreadPosts(int id)
         {

@@ -16,6 +16,7 @@ using DAL.Entities.Account;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 using Services.Validation.Exceptions;
+using Services.Models;
 
 namespace BLL.Services
 {
@@ -178,7 +179,6 @@ namespace BLL.Services
         }
 
         public async Task UpdateAsync(UserModel userModel)
-
         { 
             var user =  await _unitOfWork.UserRepository.GetByEmailAsync(userModel.Email);
 
@@ -203,6 +203,48 @@ namespace BLL.Services
             await _unitOfWork.SaveAsync();
 
             _logger.LogInformation("The user with email {email} is updated.", user.Email);
+        }
+
+        public async Task<IEnumerable<UserModel>> GetMostActiveAsync(int count)
+        {
+            var mostActive = await _unitOfWork.UserRepository.GetAllAsync();
+
+            mostActive = mostActive.OrderByDescending(x => x.ThreadPosts.Count).ThenByDescending(y => y.Threads.Count).Take(count);
+
+            mostActive = mostActive.ToList();
+
+            var ret = _mapper.Map<IEnumerable<UserModel>>(mostActive);
+
+            return ret;
+        }
+
+        public async Task ChangeNicknameAsync(string issuerEmail, NicknameModel nickname)
+        {
+            var user = await _unitOfWork.UserRepository.GetByEmailAsync(issuerEmail);
+
+            if (user == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", issuerEmail.ToString()));
+            }
+
+            if (user.Nickname == nickname.Name)
+            {
+                throw new NicknameTakenException(ExceptionMessages.NicknamesAreEqual);
+            }
+
+            bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(nickname.Name);
+
+            if (isTaken)
+            {
+                throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, nickname.Name));
+            }
+
+            user.Nickname = nickname.Name;
+
+            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.SaveAsync();
+
+            _logger.LogInformation("The user with email {email} has changed the nickname to {nickname}.", user.Email, nickname.Name);
         }
 
         private AccountModel CreateAccount(string password, RegistrationModel registrationModel)
@@ -258,6 +300,5 @@ namespace BLL.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-       
     }
 }

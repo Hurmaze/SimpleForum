@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 using NUnit.Framework;
+using Services.Models;
 using Services.Validation.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -396,6 +397,92 @@ namespace Forum.Tests.Services
             Assert.IsNotEmpty(token);
         }
 
-        
+        [Test]
+        public async Task UserAccountService_GetMostPopularAsync_ReturnsCorrectValues()
+        {
+            data = new Data();
+            List<User> returnData = new List<User>
+            {
+                new User { Id = 1, Email = "email1@gmail.com", Nickname = "nickname1", Threads = new List<ForumThread> { new ForumThread() { Id = 1} }, ThreadPosts = new List<Post> { new Post() { Id = 1}, new Post() { Id = 2} } },
+                new User { Id = 2, Email = "email2@gmail.com", Nickname = "nickname2", Threads = new List<ForumThread>(), ThreadPosts = new List<Post> { new Post(), new Post() } },
+                new User { Id = 3, Email = "email3@gmail.com", Nickname = "nickname3", Threads = new List<ForumThread>(), ThreadPosts = new List<Post> { new Post() } },
+                new User { Id = 4, Email = "email4@gmail.com", Nickname = "nickname4", Threads = new List<ForumThread> {new ForumThread() }, ThreadPosts = new List<Post> { new Post() } },
+                new User { Id = 5, Email = "email5@gmail.com", Nickname = "nickname5",Threads = new List<ForumThread>(), ThreadPosts = new List<Post>() }
+            };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.GetAllAsync())
+                .ReturnsAsync(returnData);
+            var mockLogger = new Mock<ILogger<UserAccountService>>();
+            var jwtoptions = new Mock<IOptions<JwtOptions>>();
+            var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object) ;
+
+            var expected = new List<UserModel> { new UserModel { Id = 1, Email = "email1@gmail.com", Nickname = "nickname1", ThreadsIds = new List<int> { 1 }, PostsIds = new List<int> { 1, 2 } } };
+
+            var threads = await userAccountService.GetMostActiveAsync(1);
+
+            mockUnitOfWork.Verify(x => x.UserRepository.GetAllAsync(), Times.Once());
+            Assert.NotNull(threads);
+            Assert.That(threads, Is.EqualTo(expected).Using(new UserModelEqualityComparer()), message: "GetMostPopularAsync method works incorrect");
+        }
+
+        [Test]
+        public async Task UserAccountService_ChangeNicknameAsync_Changes()
+        {
+            data = new Data();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork.Setup(m => m.UserRepository.Update(It.IsAny<User>()));
+            mockUnitOfWork.Setup(m => m.UserRepository.GetByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(data.GetUserEntities[0]);
+
+            var mockLogger = new Mock<ILogger<UserAccountService>>();
+            var jwtoptions = new Mock<IOptions<JwtOptions>>();
+
+            var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
+
+            await userAccountService.ChangeNicknameAsync(data.GetUserEntities[0].Email, new NicknameModel() { Name ="fdfdsfsdf"});
+
+            mockUnitOfWork.Verify(x => x.UserRepository.Update(It.IsAny<User>()), Times.Once());
+            mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once());
+        }
+
+        [Test]
+        public async Task UserAccountService_ChangeNicknameAsync_ThrowsNotFoundException()
+        {
+            data = new Data();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork.Setup(m => m.UserRepository.GetByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            var mockLogger = new Mock<ILogger<UserAccountService>>();
+            var jwtoptions = new Mock<IOptions<JwtOptions>>();
+
+            var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
+
+            Assert.ThrowsAsync<NotFoundException>(() => userAccountService.ChangeNicknameAsync("dsfsd", new NicknameModel() { Name = "fdfdsfsdf" }));
+        }
+
+        [TestCase(true, "dsfdssdf")]
+        [TestCase(false, "nickname2")]
+        public async Task UserAccountService_ChangeNicknameAsync_ThrowsNicknameTakenException(bool isTaken, string nickname)
+        {
+            data = new Data();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork.Setup(m => m.UserRepository.GetByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(data.GetUserEntities[1]);
+
+            mockUnitOfWork.Setup(m => m.UserRepository.IsNicknameTakenAsync(It.IsAny<string>()))
+                .ReturnsAsync(isTaken);
+
+            var mockLogger = new Mock<ILogger<UserAccountService>>();
+            var jwtoptions = new Mock<IOptions<JwtOptions>>();
+
+            var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
+
+            Assert.ThrowsAsync<NicknameTakenException>(() => userAccountService.ChangeNicknameAsync(data.GetUserEntities[1].Email, new NicknameModel() { Name = nickname }));
+        }
     }
 }
