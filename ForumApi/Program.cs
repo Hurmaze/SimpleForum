@@ -21,6 +21,8 @@ using Serilog;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Services.Validation.FluentValidation;
+using Services.Services;
+using Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +79,7 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IUserAccountService, UserAccountService>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<IForumThreadService, ForumThreadService>();
+builder.Services.AddTransient<IStatisticService, StatisticService>();
 
 var forumConnectionString = builder.Configuration.GetConnectionString("ForumDb");
 builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(forumConnectionString));

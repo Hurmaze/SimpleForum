@@ -205,19 +205,6 @@ namespace BLL.Services
             _logger.LogInformation("The user with email {email} is updated.", user.Email);
         }
 
-        public async Task<IEnumerable<UserModel>> GetMostActiveAsync(int count)
-        {
-            var mostActive = await _unitOfWork.UserRepository.GetAllAsync();
-
-            mostActive = mostActive.OrderByDescending(x => x.ThreadPosts.Count).ThenByDescending(y => y.Threads.Count).Take(count);
-
-            mostActive = mostActive.ToList();
-
-            var ret = _mapper.Map<IEnumerable<UserModel>>(mostActive);
-
-            return ret;
-        }
-
         public async Task ChangeNicknameAsync(string issuerEmail, NicknameModel nickname)
         {
             var user = await _unitOfWork.UserRepository.GetByEmailAsync(issuerEmail);

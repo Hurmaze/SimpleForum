@@ -35,7 +35,7 @@ namespace ForumApi.Controllers
             return Ok(post);
         }
 
-        [HttpGet("users/id")]
+        [HttpGet("users/{id}")]
         public async Task<ActionResult<PostModel>> GetByuserId(int userId)
         {
             var posts = await _postService.GetPostsByUserIdAsync(userId);

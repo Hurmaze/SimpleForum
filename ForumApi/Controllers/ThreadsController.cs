@@ -27,7 +27,7 @@ namespace ForumApi.Controllers
             return Ok(threads);
         }
 
-        [HttpGet("/users/{id}")]
+        [HttpGet("users/{id}")]
         public async Task<ActionResult<IEnumerable<ForumThreadModel>>> GetByUserId(int id)
         {
             var threads = await _forumThreadService.GetThreadsByUserIdAsync(id);
@@ -39,14 +39,6 @@ namespace ForumApi.Controllers
         public async Task<ActionResult<ForumThreadModel>> GetById(int id)
         {
             var post = await _forumThreadService.GetByIdAsync(id);
-
-            return Ok(post);
-        }
-
-        [HttpGet("/statistic/{count}")]
-        public async Task<ActionResult<ForumThreadModel>> GetMostPopular(int count = 3)
-        {
-            var post = await _forumThreadService.GetMostPopularAsync(count);
 
             return Ok(post);
         }
@@ -77,7 +69,7 @@ namespace ForumApi.Controllers
             return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
         }
 
-        [HttpPost("/themes")]
+        [HttpPost("themes")]
         [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult> AddTheme(ThemeModel model)
         {
@@ -86,7 +78,7 @@ namespace ForumApi.Controllers
             return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
         }
 
-        [HttpPost("/themes/{id}")]
+        [HttpPost("themes/{id}")]
         [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult> DeleteTheme(int id)
         {

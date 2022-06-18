@@ -12,7 +12,6 @@ namespace BLL.Interfaces
         public Task ChangeRoleAsync(string email, int roleId);
         public Task<UserModel> GetByIdAsync(int id);
         public Task<IEnumerable<UserModel>> GetAllAsync();
-        public Task<IEnumerable<UserModel>> GetMostActiveAsync(int count);
         public Task<IEnumerable<RoleModel>> GetAllRolesAsync();
         public Task UpdateAsync(UserModel userModel);
         public Task ChangeNicknameAsync(string issuerEmail, NicknameModel nickname);

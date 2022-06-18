@@ -106,15 +106,6 @@ namespace BLL.Services
             return _mapper.Map<ForumThreadModel>(forumThread);
         }
 
-        public async Task<IEnumerable<ForumThreadModel>> GetMostPopularAsync(int count)
-        {
-            var mostPopular = await _unitOfWork.ForumThreadRepository.GetAllAsync();
-
-            mostPopular = mostPopular.OrderByDescending(x => x.ThreadPosts.Count).ThenBy(y => y.TimeCreated).Take(count).ToList();
-
-            return _mapper.Map<IEnumerable<ForumThreadModel>>(mostPopular);
-        }
-
         public async Task<IEnumerable<PostModel>> GetThreadPostsAsync(int id)
         {
             var forumThread = await _unitOfWork.ForumThreadRepository.GetByIdAsync(id);

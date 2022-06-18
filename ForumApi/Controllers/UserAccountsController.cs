@@ -13,11 +13,11 @@ namespace ForumApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserAccountController : ControllerBase
+    public class UserAccountsController : ControllerBase
     {
         private readonly IUserAccountService _userAccountService;
 
-        public UserAccountController(IUserAccountService userAccountService)
+        public UserAccountsController(IUserAccountService userAccountService)
         {
             _userAccountService = userAccountService;
         }
@@ -86,7 +86,7 @@ namespace ForumApi.Controllers
             return CreatedAtAction(nameof(CreateRole), new { id = role.Id }, role);
         }
 
-        [HttpPost("/changenickname")]
+        [HttpPost("changenickname")]
         [Authorize]
         public async Task<ActionResult<NicknameModel>> ChangeNickname(NicknameModel model)
         {
@@ -95,14 +95,6 @@ namespace ForumApi.Controllers
             await _userAccountService.ChangeNicknameAsync(email, model);
 
             return NoContent();
-        }
-
-        [HttpGet("/statistic/{count}")]
-        public async Task<ActionResult<ForumThreadModel>> GetMostPopular(int count = 3)
-        {
-            var post = await _userAccountService.GetMostActiveAsync(count);
-
-            return Ok(post);
         }
 
         [HttpDelete("{id}")]
