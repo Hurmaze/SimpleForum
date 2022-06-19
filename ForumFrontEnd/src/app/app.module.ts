@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { JwtModule} from '@auth0/angular-jwt';
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppComponent } from './app.component';
 import { ForumThreadComponent } from './forum-thread/forum-thread.component';
@@ -11,6 +13,13 @@ import { ThreadListComponent } from './thread-list/thread-list.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { RoleListComponent } from './role-list/role-list.component';
 import { ThemeListComponent } from './theme-list/theme-list.component';
+import { LogoComponent } from './logo/logo.component';
+import { FORUM_API_URL } from './app-injection-tokens';
+import { environment } from 'src/environments/environment';
+
+export function tokenGetter() {
+  return localStorage.getItem("jwt");
+}
 
 @NgModule({
   declarations: [
@@ -24,11 +33,19 @@ import { ThemeListComponent } from './theme-list/theme-list.component';
     UserListComponent,
     RoleListComponent,
     ThemeListComponent,
+    LogoComponent,
+
   ],
   imports: [
-    BrowserModule
+    HttpClientModule,
+    BrowserModule,
+
+    JwtModule
   ],
-  providers: [],
+  providers: [{
+    provide: FORUM_API_URL,
+    useValue: environment.forumApiUrl
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
