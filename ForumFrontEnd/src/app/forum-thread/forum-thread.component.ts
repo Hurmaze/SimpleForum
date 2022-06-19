@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ForumThread } from '../models/forum-thread.model';
+import { ForumThreadService } from '../shared/forum-thread.service';
 
 @Component({
   selector: 'app-forum-thread',
@@ -6,8 +8,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./forum-thread.component.css']
 })
 export class ForumThreadComponent implements OnInit {
-
-  constructor() { }
+  public forumThread: ForumThread;
+  
+  constructor(private service: ForumThreadService) { }
 
   ngOnInit(): void {
   }

@@ -1,4 +1,4 @@
-export class LoginModel {
+export class Login {
     Email: string;
     Password: string;
     constructor(email: string, password: string){

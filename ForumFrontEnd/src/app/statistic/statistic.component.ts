@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ForumThread } from '../models/forum-thread.model';
+import { User } from '../models/user.model';
+import { StatisticService } from '../shared/statistic.service';
 
 @Component({
   selector: 'app-statistic',
@@ -6,8 +9,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./statistic.component.css']
 })
 export class StatisticComponent implements OnInit {
+  public users: User[];
+  public forumThreads: ForumThread[];
 
-  constructor() { }
+  constructor(private servive: StatisticService) { }
 
   ngOnInit(): void {
   }

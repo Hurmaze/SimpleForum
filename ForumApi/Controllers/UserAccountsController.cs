@@ -64,7 +64,7 @@ namespace ForumApi.Controllers
         {
             var token = await _userAccountService.LoginAsync(model);
 
-            return Ok(token);
+            return Ok(new { access_token = token });
         }
 
 
