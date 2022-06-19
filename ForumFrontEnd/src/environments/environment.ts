@@ -4,7 +4,11 @@
 
 export const environment = {
   production: false,
-  forumApiUrl: 'http://localhost:44387/',
+  baseApiUrl: 'http://localhost:44387/',
+  userAccountsUrl:  'http://localhost:44387/api/useraccounts/',
+  postsUrl:  'http://localhost:44387/api/posts/',
+  forumThreadsUrl:  'http://localhost:44387/api/forumthreads/',
+  statisticsUrl:  'http://localhost:44387/api/statistics/',
   whiteListedDomains: ['localhost:44387']
 };
 

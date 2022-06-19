@@ -14,11 +14,14 @@ import { UserListComponent } from './user-list/user-list.component';
 import { RoleListComponent } from './role-list/role-list.component';
 import { ThemeListComponent } from './theme-list/theme-list.component';
 import { LogoComponent } from './logo/logo.component';
-import { FORUM_API_URL } from './app-injection-tokens';
+import { BASE_API_URL, FORUM_THREADS_API_URL, POSTS_API_URL, STATISTICS_API_URL, USER_ACCOUNT_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
+import { ACCES_TOKEN } from './shared/user-account.service';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 export function tokenGetter() {
-  return localStorage.getItem("jwt");
+  return localStorage.getItem(ACCES_TOKEN);
 }
 
 @NgModule({
@@ -34,18 +37,47 @@ export function tokenGetter() {
     RoleListComponent,
     ThemeListComponent,
     LogoComponent,
+    
 
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
+    FormsModule,
+    RouterModule.forRoot(
+      [
+        { path: "", component: LoginComponent}
+      ]
+    ),
 
-    JwtModule
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: environment.whiteListedDomains
+      }
+    })
   ],
   providers: [{
-    provide: FORUM_API_URL,
-    useValue: environment.forumApiUrl
-  }],
+    provide: BASE_API_URL,
+    useValue: environment.baseApiUrl
+  },
+  {
+    provide: POSTS_API_URL,
+    useValue: environment.postsUrl
+  },
+  {
+    provide: FORUM_THREADS_API_URL,
+    useValue: environment.forumThreadsUrl
+  },
+  {
+    provide: STATISTICS_API_URL,
+    useValue: environment.statisticsUrl
+  },
+  {
+    provide: USER_ACCOUNT_API_URL,
+    useValue: environment.userAccountsUrl
+  }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
