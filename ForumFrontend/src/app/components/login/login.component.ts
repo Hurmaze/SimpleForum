@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Login } from '../models/login.model';
-import { UserAccountService } from '../shared/user-account.service';
+import { UserAccountService } from 'src/app/shared/user-account.service';
 
 @Component({
   selector: 'app-login',
@@ -8,7 +7,6 @@ import { UserAccountService } from '../shared/user-account.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  public LoginModel: Login;
 
   constructor(private service: UserAccountService) { }
 

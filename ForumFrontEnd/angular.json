@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ForumFrontEnd": {
+    "ForumFrontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/forum-front-end",
+            "outputPath": "dist/forum-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ForumFrontEnd:build:production"
+              "browserTarget": "ForumFrontend:build:production"
             },
             "development": {
-              "browserTarget": "ForumFrontEnd:build:development"
+              "browserTarget": "ForumFrontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ForumFrontEnd:build"
+            "browserTarget": "ForumFrontend:build"
           }
         },
         "test": {
@@ -103,6 +103,6 @@
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": "484879de-24fc-4501-b62e-8a2bf21db942"
   }
 }

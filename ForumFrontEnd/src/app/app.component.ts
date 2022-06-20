@@ -8,7 +8,7 @@ import { UserAccountService } from './shared/user-account.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'The best Forum';
+  title = 'ForumFrontend';
 
   constructor(private userAccountService: UserAccountService){
 

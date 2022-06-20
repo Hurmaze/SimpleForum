@@ -1,10 +1,9 @@
-import { Inject, inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-
-import { USER_ACCOUNT_API_URL } from '../app-injection-tokens';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Observable, tap } from 'rxjs';
+import { USER_ACCOUNT_API_URL } from '../app-injection';
 import { Token } from '../models/token';
 
 export const ACCES_TOKEN = 'jwt acces token';
@@ -13,6 +12,7 @@ export const ACCES_TOKEN = 'jwt acces token';
   providedIn: 'root'
 })
 export class UserAccountService {
+
   constructor(
     private http: HttpClient,
     @Inject(USER_ACCOUNT_API_URL) private userAccountUrl: string,

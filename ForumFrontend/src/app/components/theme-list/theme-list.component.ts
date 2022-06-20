@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Theme } from '../models/theme.model';
-import { ForumThreadService } from '../shared/forum-thread.service';
 
 @Component({
   selector: 'app-theme-list',
@@ -8,9 +6,8 @@ import { ForumThreadService } from '../shared/forum-thread.service';
   styleUrls: ['./theme-list.component.css']
 })
 export class ThemeListComponent implements OnInit {
-  public themes: Theme[];
 
-  constructor(private service: ForumThreadService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
