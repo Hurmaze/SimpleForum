@@ -41,6 +41,7 @@ export class UserAccountService {
     this.router.navigate(['']);
   }
 
+  
   register(registerModel: Registration): void{
     this.http.post(`${this.userAccountUrl}register`,{
       registerModel
