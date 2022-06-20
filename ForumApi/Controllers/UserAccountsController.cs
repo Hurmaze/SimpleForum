@@ -74,7 +74,7 @@ namespace ForumApi.Controllers
         {
             var user = await _userAccountService.RegisterAsync(model);
 
-            return CreatedAtAction(nameof(Register), new { id = user.Id }, user);
+            return CreatedAtAction(nameof(Register), new { id = user.Id, }, user);
         }
 
         [HttpPost("roles")]

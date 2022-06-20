@@ -4,12 +4,12 @@
 
 export const environment = {
   production: false,
-  baseApiUrl: 'http://localhost:44387/',
-  userAccountsUrl:  'http://localhost:44387/api/useraccounts/',
-  postsUrl:  'http://localhost:44387/api/posts/',
-  forumThreadsUrl:  'http://localhost:44387/api/forumthreads/',
-  statisticsUrl:  'http://localhost:44387/api/statistics/',
-  whiteListedDomains: ['localhost:44387']
+  baseApiUrl: 'https://localhost:7265/',
+  userAccountsUrl:  'https://localhost:7265/api/UserAccounts/',
+  postsUrl:  'https://localhost:7265/api/posts/',
+  forumThreadsUrl:  'https://localhost:7265/api/forumthreads/',
+  statisticsUrl:  'https://localhost:7265/api/statistics/',
+  whiteListedDomains: ['localhost:7265']
 };
 
 /*

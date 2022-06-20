@@ -53,6 +53,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(build =>
+    {
+        build.AllowAnyOrigin().
+        AllowAnyMethod().
+        AllowAnyHeader();
+    });
+});
+
 builder.Services.AddControllers().AddFluentValidation(fv =>
 {
     fv.RegisterValidatorsFromAssemblyContaining<RegistrationModelValidator>(lifetime: ServiceLifetime.Singleton);
@@ -103,6 +113,8 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

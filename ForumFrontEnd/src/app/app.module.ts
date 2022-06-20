@@ -20,6 +20,7 @@ import { BASE_API_URL, FORUM_THREADS_API_URL, POSTS_API_URL, STATISTICS_API_URL,
 import { environment } from 'src/environments/environment';
 import { ACCES_TOKEN } from './shared/user-account.service';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCES_TOKEN);
@@ -43,6 +44,7 @@ export function tokenGetter() {
   imports: [
     HttpClientModule,
     BrowserModule,
+    FormsModule,
     RouterModule.forRoot(
       [
         {path: '', component: HomeComponent},
