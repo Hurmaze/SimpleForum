@@ -1,0 +1,20 @@
+.borders {
+    border-radius: 2%;
+    border-color:darksalmon;
+    border-width: thin;
+    border-style: solid;
+}
+
+.row {
+    margin-top: 7%;
+}
+
+.center-content{
+    align-items: center;
+    justify-content: center ;
+}
+
+.alert{
+    color: red;
+    font-size:xx-small;
+}

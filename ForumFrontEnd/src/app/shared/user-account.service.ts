@@ -6,6 +6,7 @@ import { flatMap, Observable, tap } from 'rxjs';
 import { USER_ACCOUNT_API_URL } from '../app-injection';
 import { Registration } from '../models/registration.model';
 import { Token } from '../models/token';
+import { User } from '../models/user.model';
 
 export const ACCES_TOKEN = 'jwt acces token';
 
@@ -41,10 +42,14 @@ export class UserAccountService {
     this.router.navigate(['']);
   }
 
-  
-  register(registerModel: Registration): void{
-    this.http.post(`${this.userAccountUrl}register`,{
-      registerModel
-    }).pipe(flatMap(()=> this.login(registerModel.Email, registerModel.Password)));
+  register(registerModel: Registration): Observable<User>{
+
+    return this.http.post<User>(`${this.userAccountUrl}`,{
+      Email: registerModel.Email,
+      Password: registerModel.Password,
+      PasswordRepeat: registerModel.PasswordRepeat,
+      Nickname: registerModel.Nickname,
+      RoleName: registerModel.RoleName
+    }, this.options);
   }
 }

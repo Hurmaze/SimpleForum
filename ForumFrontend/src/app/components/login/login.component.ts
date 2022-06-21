@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Login } from 'src/app/models/login.model';
 import { UserAccountService } from 'src/app/shared/user-account.service';
 
 @Component({
@@ -10,15 +12,21 @@ import { UserAccountService } from 'src/app/shared/user-account.service';
 })
 export class LoginComponent implements OnInit {
 
-  public email: string='';
-  public password: string='';
+  public loginModel: Login= new Login('','');
+
+  public emailControl = new FormControl();
+  public passwordControl = new FormControl();
+
+  public isError: boolean=false;
+  public errorMessage: string='';
 
   constructor(private service: UserAccountService, private router: Router) { }
 
   login(){
-    this.service.login(this.email, this.password).subscribe(
+    this.service.login(this.loginModel.Email, this.loginModel.Password).subscribe(
       result => {},
-      (error : HttpErrorResponse) => console.log(error.error)
+      (err : HttpErrorResponse) => {this.isError = true,
+      this.errorMessage = err.error.ErrorMessage}
     )
   }
 

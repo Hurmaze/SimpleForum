@@ -20,8 +20,6 @@ namespace BLL
                 .ReverseMap();
 
             CreateMap<User, RegistrationModel>()
-                .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.ThreadPosts.Select(y => y.Id)))
-                .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
                 .ReverseMap();
 
             CreateMap<Account, AccountModel>()

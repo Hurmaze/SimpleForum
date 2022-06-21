@@ -1,5 +1,20 @@
-.form-signin {
-    border-radius: 5%;
-    border-color: gray;
-    border-width: 5px;
+.borders {
+    border-radius: 2%;
+    border-color:darksalmon;
+    border-width: thin;
+    border-style: solid;
+}
+
+.row {
+    margin-top: 10%;
+}
+
+.center-content{
+    align-items: center;
+    justify-content: center ;
+}
+
+.alert{
+    color: red;
+    font-size:xx-small;
 }

@@ -1,23 +1,27 @@
 <div class="row">
-  <div class="col-md-4"></div>
-  <div class="col-md-4">
-    <form  class="form-signin" (ngSubmit)="login()">
+  <div class="col-lg-4 col-md-3"></div>
+  <div class="col-lg-4 col-md-6 borders ">
+    <form  class="form-signin d-flex justify-content-center" (ngSubmit)="login()">
       <div class="container-fluid">
-        <h2 class="form-signin-heading">Login</h2>
+        <h2>Login</h2>
+        <span class="alert" *ngIf="isError">{{errorMessage}}</span>
         <br/>
         <label for="email" >Email address</label>
-        <input [(ngModel)]="email" [ngModelOptions]="{standalone: true}" type="text" name="email" class="form-control" id="AuthEmail" placeholder="Enter Email">
+        <input class="form-control" [(ngModel)]="loginModel.Email" #email="ngModel" required  [ngModelOptions]="{standalone: true}" 
+              type="text" name="email"
+              pattern=".+@.+\..+" placeholder="Enter Email">
+        <span class="alert" *ngIf="email.errors?.['pattern']" >Enter a correct email.</span>
         <br/>
         <label for="password" >Password</label>
-        <input [(ngModel)]="password" [ngModelOptions]="{standalone: true}" type="password" name="password" class="form-control" id="AuthPassword" placeholder="Enter Password">
+        <input class="form-control" [(ngModel)]="loginModel.Password" #password="ngModel" required [ngModelOptions]="{standalone: true}" 
+              type="password" name="password" 
+              pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$" placeholder="Enter Password">
+        <span class="alert" *ngIf="password.errors?.['pattern']">Password must contain 8-16 characters, at least one letter and one number.</span>
         <br/>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block"
+        [disabled]="email.errors || password.errors" type="submit">Sign in</button>
       </div>
     </form>
-    <button *ngIf="isAuthenticated()" (click)="logout()" class="btn btn-primary"></button>
   </div>
-  <div class="col-md-4"></div>
-  
-  <h1 *ngIf="isAuthenticated()">YEEEEEEEEEEESSSSSSSSSs</h1>
-  
+  <div class="col-lg-4 col-md-3"></div>
 </div>

@@ -164,6 +164,18 @@ namespace BLL.Services
                 throw new InvalidRegistrationException(String.Format(ExceptionMessages.EmailIsAlreadyUsed, authModel.Email));
             }
 
+            if(authModel.Nickname == "")
+            {
+                authModel.Nickname = null;
+            }
+
+            bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(authModel.Nickname);
+
+            if (isTaken)
+            {
+                throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, authModel.Nickname));
+            }
+
             var accountModel = CreateAccount(authModel.Password, authModel);
 
             var account = _mapper.Map<Account>(accountModel);

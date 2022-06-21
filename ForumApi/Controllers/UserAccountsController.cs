@@ -70,12 +70,13 @@ namespace ForumApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult<UserModel>> Register(RegistrationModel model)
+        public async Task<ActionResult<UserModel>> Register([FromBody] RegistrationModel model)
         {
             var user = await _userAccountService.RegisterAsync(model);
 
             return CreatedAtAction(nameof(Register), new { id = user.Id, }, user);
         }
+
 
         [HttpPost("roles")]
         [Authorize(Roles = "admin")]

@@ -56,7 +56,18 @@ namespace DAL.Repositories
 
         public async Task<bool> IsNicknameTakenAsync(string nickname)
         {
-            return await _forumDbContext.Users.AnyAsync(u => u.Nickname == nickname);
+            if(nickname == null)
+            {
+                return false;
+            }
+            var nick = await _forumDbContext.Users.FirstOrDefaultAsync(u => u.Nickname == nickname);
+
+            if (nick == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public void Update(User entity)
