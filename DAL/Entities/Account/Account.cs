@@ -10,6 +10,7 @@ namespace DAL.Entities.Account
     public class Account : BaseEntity
     {
         public string Email { get; set; }
+        public int RoleId { get; set; }
         public Role Role { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }

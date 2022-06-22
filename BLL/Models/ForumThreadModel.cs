@@ -2,6 +2,7 @@
 {
     public class ForumThreadModel : BaseModel
     {
+        public int ThemeId { get; set; }
         public string ThemeName { get; set; }
         public string Title { get; set; }
         public DateTime TimeCreated { get; set; }
