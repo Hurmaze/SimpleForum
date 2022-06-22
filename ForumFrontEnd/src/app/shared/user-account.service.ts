@@ -49,7 +49,6 @@ export class UserAccountService {
       Password: registerModel.Password,
       PasswordRepeat: registerModel.PasswordRepeat,
       Nickname: registerModel.Nickname,
-      RoleName: registerModel.RoleName
     }, this.options);
   }
 }

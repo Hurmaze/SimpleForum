@@ -19,8 +19,9 @@ import { ThemeListComponent } from './components/theme-list/theme-list.component
 import { BASE_API_URL, FORUM_THREADS_API_URL, POSTS_API_URL, STATISTICS_API_URL, USER_ACCOUNT_API_URL } from './app-injection';
 import { environment } from 'src/environments/environment';
 import { ACCES_TOKEN } from './shared/user-account.service';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from './components/header/header.component';
+import { AppRoutingModule } from './app-routing.module';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCES_TOKEN);
@@ -39,18 +40,14 @@ export function tokenGetter() {
     StatisticComponent,
     LogoComponent,
     ThreadListComponent,
-    ThemeListComponent
+    ThemeListComponent,
+    HeaderComponent
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(
-      [
-        {path: '', component: HomeComponent},
-        { path: "login", component: LoginComponent}
-      ]
-    ),
+    AppRoutingModule,
 
     JwtModule.forRoot({
       config:{
