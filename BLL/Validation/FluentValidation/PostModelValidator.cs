@@ -1,7 +1,7 @@
-﻿using BLL.Models;
+﻿using Services.Models;
 using FluentValidation;
 
-namespace BLL.Validation.FluentValidation
+namespace Services.Validation.FluentValidation
 {
     public class PostModelValidator : AbstractValidator<PostModel>
     {

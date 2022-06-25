@@ -1,4 +1,4 @@
-﻿using BLL.Models;
+﻿using Services.Models;
 using DAL.Entities.Forum;
 using NUnit.Framework;
 using Moq;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.Interfaces;
-using BLL.Services;
+using Services.Services;
 using Microsoft.Extensions.Logging;
 using Services.Validation.Exceptions;
 

@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using BLL.Interfaces;
-using BLL.Models;
-using BLL.Validation;
+using Services.Interfaces;
+using Services.Models;
+using Services.Validation;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 using Services.Validation.Exceptions;
 
-namespace BLL.Services
+namespace Services.Services
 {
     public class ForumThreadService : IForumThreadService
     {

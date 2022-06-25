@@ -11,4 +11,11 @@ namespace DAL.Entities.Account
         public string RoleName { get; set; }
         public ICollection<Account> Accounts { get; set; }
     }
+
+    public enum BasicRoles
+    {
+        User,
+        Admin,
+        Moderator
+    }
 }

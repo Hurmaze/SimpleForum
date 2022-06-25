@@ -1,5 +1,5 @@
-﻿using BLL.Interfaces;
-using BLL.Models;
+﻿using Services.Interfaces;
+using Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +10,11 @@ namespace ForumApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ThreadsController : ControllerBase
+    public class ForumThreadsController : ControllerBase
     {
         private readonly IForumThreadService _forumThreadService;
 
-        public ThreadsController(IForumThreadService forumThreadService)
+        public ForumThreadsController(IForumThreadService forumThreadService)
         {
             _forumThreadService = forumThreadService;
         }

@@ -1,4 +1,4 @@
-﻿namespace BLL.Models
+﻿namespace Services.Models
 {
     public class ForumThreadModel : BaseModel
     {
@@ -8,6 +8,8 @@
         public DateTime TimeCreated { get; set; }
         public string Content { get; set; }
         public int AuthorId { get; set; }
+        public string AuthorEmail { get; set; }
+        public string AuthorNickname { get; set; }
         public ICollection<int> ThreadPostsIds { get; set; }
     }
 }

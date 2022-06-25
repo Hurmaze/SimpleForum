@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BLL;
-using BLL.Models;
+using Services;
+using Services.Models;
 using DAL.Entities.Account;
 using DAL.Entities.Forum;
 using System;

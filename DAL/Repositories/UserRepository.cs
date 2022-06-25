@@ -35,6 +35,7 @@ namespace DAL.Repositories
             return await _forumDbContext.Users
                 .Include(u => u.ThreadPosts)
                 .ThenInclude(tp => tp.Thread)
+                .Include(u => u.Threads)
                 .ToListAsync();
         }
 
@@ -43,6 +44,7 @@ namespace DAL.Repositories
             return await _forumDbContext.Users
                 .Include(u => u.ThreadPosts)
                 .ThenInclude(tp => tp.Thread)
+                .Include(u => u.Threads)
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 

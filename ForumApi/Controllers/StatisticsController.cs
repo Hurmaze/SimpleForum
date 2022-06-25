@@ -1,4 +1,4 @@
-﻿using BLL.Models;
+﻿using Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -17,7 +17,7 @@ namespace ForumApi.Controllers
             _statisticService = statisticService;
         }
 
-        [HttpGet("threads/{count}")]
+        [HttpGet("threads/popular/{count}")]
         public async Task<ActionResult<ForumThreadModel>> GetMostPopularThreads(int count = 3)
         {
             var post = await _statisticService.GetMostPopularThreadsAsync(count);
@@ -25,7 +25,7 @@ namespace ForumApi.Controllers
             return Ok(post);
         }
 
-        [HttpGet("users/{count}")]
+        [HttpGet("users/active/{count}")]
         public async Task<ActionResult<ForumThreadModel>> GetMostActiveUsers(int count = 3)
         {
             var post = await _statisticService.GetMostActiveUsersAsync(count);

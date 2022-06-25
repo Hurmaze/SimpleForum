@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BLL.Models;
+using Services.Models;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 using Services.Interfaces;
@@ -25,7 +25,7 @@ namespace Services.Services
         {
             var mostActive = await _unitOfWork.UserRepository.GetAllAsync();
 
-            mostActive = mostActive.OrderByDescending(x => x.ThreadPosts.Count).ThenByDescending(y => y.Threads.Count).Take(count);
+            mostActive = mostActive.OrderByDescending(x => x.ThreadPosts?.Count ?? 0).ThenByDescending(y => y.Threads?.Count?? 0).Take(count);
 
             mostActive = mostActive.ToList();
 
@@ -38,7 +38,7 @@ namespace Services.Services
         {
             var mostPopular = await _unitOfWork.ForumThreadRepository.GetAllAsync();
 
-            mostPopular = mostPopular.OrderByDescending(x => x.ThreadPosts.Count).ThenBy(y => y.TimeCreated).Take(count).ToList();
+            mostPopular = mostPopular.OrderByDescending(x => x.ThreadPosts?.Count ?? 0).ThenBy(y => y.TimeCreated).Take(count).ToList();
 
             return _mapper.Map<IEnumerable<ForumThreadModel>>(mostPopular);
         }

@@ -1,5 +1,5 @@
-﻿using BLL.Interfaces;
-using BLL.Models;
+﻿using Services.Interfaces;
+using Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
-﻿using BLL;
-using BLL.Models;
-using BLL.Services;
+﻿using Services;
+using Services.Models;
+using Services.Services;
 using DAL.Entities.Account;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 using NUnit.Framework;
-using Services.Models;
 using Services.Validation.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -30,7 +29,7 @@ namespace Forum.Tests.Services
         {
             data = new Data();
 
-            var registerModel = new RegistrationModel { Email = "valid@email.com", Nickname = "SuperNIckname", Password = "Passw0rd", PasswordRepeat = "Passw0rd", RoleName = "user" };
+            var registerModel = new RegistrationModel { Email = "valid@email.com", Nickname = "SuperNIckname", Password = "Passw0rd", PasswordRepeat = "Passw0rd"};
             
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.AccountRepository.AddAsync(It.IsAny<Account>()));
@@ -52,7 +51,7 @@ namespace Forum.Tests.Services
         {
             data = new Data();
 
-            var registerModel = new RegistrationModel { Email = "valid@email.com", Nickname = "SuperNIckname", Password = "Passw0rd", PasswordRepeat = "Passw0rd", RoleName = "user" };
+            var registerModel = new RegistrationModel { Email = "valid@email.com", Nickname = "SuperNIckname", Password = "Passw0rd", PasswordRepeat = "Passw0rd"};
 
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.AccountRepository.IsEmailExistAsync(It.IsAny<string>()))
@@ -412,7 +411,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
 
-            await userAccountService.ChangeNicknameAsync(data.GetUserEntities[0].Email, new NicknameModel() { Name ="fdfdsfsdf"});
+            await userAccountService.ChangeNicknameAsync(data.GetUserEntities[0].Email, new NicknameModel() { Nickname ="fdfdsfsdf"});
 
             mockUnitOfWork.Verify(x => x.UserRepository.Update(It.IsAny<User>()), Times.Once());
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once());
@@ -432,7 +431,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
 
-            Assert.ThrowsAsync<NotFoundException>(() => userAccountService.ChangeNicknameAsync("dsfsd", new NicknameModel() { Name = "fdfdsfsdf" }));
+            Assert.ThrowsAsync<NotFoundException>(() => userAccountService.ChangeNicknameAsync("dsfsd", new NicknameModel() { Nickname = "fdfdsfsdf" }));
         }
 
         [TestCase(true, "dsfdssdf")]
@@ -453,7 +452,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
 
-            Assert.ThrowsAsync<NicknameTakenException>(() => userAccountService.ChangeNicknameAsync(data.GetUserEntities[1].Email, new NicknameModel() { Name = nickname }));
+            Assert.ThrowsAsync<NicknameTakenException>(() => userAccountService.ChangeNicknameAsync(data.GetUserEntities[1].Email, new NicknameModel() { Nickname = nickname }));
         }
     }
 }

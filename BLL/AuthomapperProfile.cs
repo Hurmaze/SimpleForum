@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using BLL.Models;
+using Services.Models;
 using DAL.Entities.Account;
 using DAL.Entities.Forum;
 
-namespace BLL
+namespace Services
 {
     public class AutomapperProfile : Profile
     {
@@ -26,13 +26,19 @@ namespace BLL
                 .ForMember(pm => pm.ThreadId, x => x.MapFrom(p => p.Thread.Id))
                 .ForMember(pm => pm.AuthorId, x => x.MapFrom(p => p.Author.Id))
                 .ForMember(pm => pm.TimeCreated, x => x.MapFrom(p => p.TimeCreated))
-                .ReverseMap();
+                .ForMember(pm => pm.AuthorEmail, x => x.MapFrom(p => p.Author.Email))
+                .ForMember(pm => pm.AuthorNickname, x => x.MapFrom(p => p.Author.Nickname));
+
+            CreateMap<PostModel, Post>();
 
             CreateMap<ForumThread, ForumThreadModel>()
                 .ForMember(fm => fm.ThemeName, x => x.MapFrom(p => p.Theme.ThemeName))
                 .ForMember(pm => pm.AuthorId, x => x.MapFrom(p => p.Author.Id))
-                .ForMember(pm => pm.ThreadPostsIds, x => x.MapFrom(p => p.ThreadPosts.Select(y => y.Id)))
-                .ReverseMap();
+                .ForMember(pm => pm.AuthorEmail, x => x.MapFrom(p => p.Author.Email))
+                .ForMember(pm => pm.AuthorNickname, x => x.MapFrom(p => p.Author.Nickname))
+                .ForMember(pm => pm.ThreadPostsIds, x => x.MapFrom(p => p.ThreadPosts.Select(y => y.Id)));
+
+            CreateMap<ForumThreadModel, ForumThread>();
 
             CreateMap<Theme, ThemeModel>()
                 .ForMember(tm => tm.ForumThreads, x => x.MapFrom(t => t.ForumThreads.Select(y => y.Id)))

@@ -2,11 +2,6 @@
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -40,6 +35,7 @@ namespace DAL.Repositories
             return await _forumDbContext.Posts
                 .Include(p => p.Author)
                 .Include(p => p.Thread)
+                .ThenInclude(t => t.Author)
                 .ToListAsync();
         }
 
@@ -48,6 +44,7 @@ namespace DAL.Repositories
             return await _forumDbContext.Posts
                 .Include(p => p.Author)
                 .Include(p => p.Thread)
+                .ThenInclude(t => t.Author)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 

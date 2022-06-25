@@ -1,6 +1,6 @@
-﻿using BLL.Models;
+﻿using Services.Models;
 
-namespace BLL.Interfaces
+namespace Services.Interfaces
 {
     public interface IForumThreadService : IBaseService<ForumThreadModel>
     {

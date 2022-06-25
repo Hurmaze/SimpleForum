@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Forum.Tests
 {
-    public class DataSeeder
+    internal class DataSeeder
     {
         public static DbContextOptions<ForumDbContext> GetForumDbOptions()
         {

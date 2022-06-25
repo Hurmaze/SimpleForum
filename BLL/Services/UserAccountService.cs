@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BLL.Interfaces;
-using BLL.Models;
+using Services.Interfaces;
+using Services.Models;
 using DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
-using BLL.Validation;
+using Services.Validation;
 using DAL.Entities.Forum;
 using DAL.Entities.Account;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,7 @@ using System.Text.RegularExpressions;
 using Services.Validation.Exceptions;
 using Services.Models;
 
-namespace BLL.Services
+namespace Services.Services
 {
     public class UserAccountService : IUserAccountService
     {
@@ -175,10 +175,14 @@ namespace BLL.Services
             {
                 throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, authModel.Nickname));
             }
+            var roles = await _unitOfWork.RoleRepository.GetAllAsync();
 
-            var accountModel = CreateAccount(authModel.Password, authModel);
+            var role = roles.FirstOrDefault(x => x.RoleName == BasicRoles.User.ToString());
+
+            var accountModel = CreateAccount(authModel.Password, authModel, role.Id);
 
             var account = _mapper.Map<Account>(accountModel);
+            account.Role = role;
 
             var user = _mapper.Map<User>(authModel);
 
@@ -226,27 +230,27 @@ namespace BLL.Services
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", issuerEmail.ToString()));
             }
 
-            if (user.Nickname == nickname.Name)
+            if (user.Nickname == nickname.Nickname)
             {
                 throw new NicknameTakenException(ExceptionMessages.NicknamesAreEqual);
             }
 
-            bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(nickname.Name);
+            bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(nickname.Nickname);
 
             if (isTaken)
             {
-                throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, nickname.Name));
+                throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, nickname.Nickname));
             }
 
-            user.Nickname = nickname.Name;
+            user.Nickname = nickname.Nickname;
 
             _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("The user with email {email} has changed the nickname to {nickname}.", user.Email, nickname.Name);
+            _logger.LogInformation("The user with email {email} has changed the nickname to {nickname}.", user.Email, nickname.Nickname);
         }
 
-        private AccountModel CreateAccount(string password, RegistrationModel registrationModel)
+        private AccountModel CreateAccount(string password, RegistrationModel registrationModel, int roleId)
         {
             byte[] passwordHash;
             byte[] passwordSalt;
@@ -260,7 +264,7 @@ namespace BLL.Services
                 Email = registrationModel.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RoleName = registrationModel.RoleName
+                RoleId = roleId
             };
 
             return accountModel;
@@ -284,6 +288,7 @@ namespace BLL.Services
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.RoleName)
             };
+            claims.Add(new Claim("id",user.Id.ToString()));    
 
             var key = authParams.GetSymmetricSecurityKey();
             var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);

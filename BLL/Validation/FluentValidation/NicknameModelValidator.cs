@@ -7,7 +7,7 @@ namespace Services.Validation.FluentValidation
     {
         public NicknameModelValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.Nickname)
                 .NotNull()
                 .MaximumLength(30);
         }

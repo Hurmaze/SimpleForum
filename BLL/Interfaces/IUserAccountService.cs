@@ -1,7 +1,6 @@
-﻿using BLL.Models;
-using Services.Models;
+﻿using Services.Models;
 
-namespace BLL.Interfaces
+namespace Services.Interfaces
 {
     public interface IUserAccountService
     {

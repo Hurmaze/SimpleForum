@@ -41,6 +41,7 @@ namespace DAL.Repositories
                 .Include(t => t.Author)
                 .Include(t => t.Theme)
                 .Include(t => t.ThreadPosts)
+                .ThenInclude(p => p.Author)
                 .ToListAsync();
         }
 
@@ -50,6 +51,7 @@ namespace DAL.Repositories
                 .Include(t => t.Author)
                 .Include(t => t.Theme)
                 .Include(t => t.ThreadPosts)
+                .ThenInclude(p => p.Author)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 

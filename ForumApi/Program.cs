@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.DbAccess;
 using NLog.Web;
 using FluentValidation.AspNetCore;
-using BLL.Validation.FluentValidation;
+using Services.Validation.FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -10,9 +10,9 @@ using System;
 using Microsoft.Extensions.Configuration;
 using ForumApi.Extensions;
 using AutoMapper;
-using BLL;
-using BLL.Interfaces;
-using BLL.Services;
+using Services;
+using Services.Interfaces;
+using Services.Services;
 using DAL.Interfaces;
 using DAL.Repositories;
 using DAL;
@@ -20,9 +20,6 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Services.Validation.FluentValidation;
-using Services.Services;
-using Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,10 +43,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
 
+        ValidateIssuer = true,
+        ValidIssuer = auth.Issuer,
+
+        ValidateAudience = true,
+        ValidAudience = auth.Audience,
+
         ValidateLifetime = true,
 
         IssuerSigningKey = auth.GetSymmetricSecurityKey(),
         ValidateIssuerSigningKey = true,
+
     };
 });
 
@@ -99,6 +103,7 @@ var authConnectionString = builder.Configuration.GetConnectionString("Authentica
 builder.Services.AddDbContext<AccountDbContext>(x => x.UseSqlServer(authConnectionString));
 builder.Services.AddTransient<AccountDbContext>();
 
+
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new AutomapperProfile());
@@ -110,6 +115,8 @@ builder.Services.AddSingleton(mapper);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 
 
 var app = builder.Build();

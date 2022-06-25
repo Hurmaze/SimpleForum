@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using BLL.Interfaces;
-using BLL.Models;
-using BLL.Validation;
+using Services.Interfaces;
+using Services.Models;
+using Services.Validation;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 using Services.Validation.Exceptions;
 
-namespace BLL.Services
+namespace Services.Services
 {
     public class PostService : IPostService
     {
@@ -29,7 +29,7 @@ namespace BLL.Services
             await _unitOfWork.PostRepository.AddAsync(post);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("Added a new post by user {email} in thread id {thread}", post.Author.Email, post.Thread.Id);
+            _logger.LogInformation("Added a new post by user with id {id} in thread id {thread}", post.AuthorId, post.ThreadId);
 
             var postView = _mapper.Map<PostModel>(post);
             return postView;

@@ -1,4 +1,4 @@
-﻿namespace BLL.Models
+﻿namespace Services.Models
 {
     public class BaseModel
     {

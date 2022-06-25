@@ -1,5 +1,5 @@
-﻿using BLL.Models;
-using BLL.Services;
+﻿using Services.Models;
+using Services.Services;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;

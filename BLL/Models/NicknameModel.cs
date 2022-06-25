@@ -8,6 +8,6 @@ namespace Services.Models
 {
     public class NicknameModel
     {
-        public string Name { get; set; }
+        public string Nickname { get; set; }
     }
 }

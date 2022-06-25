@@ -4,6 +4,7 @@ using DAL.DbAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    partial class ForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220622115222_DataSeeding")]
+    partial class DataSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,19 +63,19 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             AuthorId = 1,
-                            Content = "Elephants are the largest existing land animals. Three living species are currently recognised: the African bush elephant, the African forest elephant, and the Asian elephant. They are an informal grouping within the subfamily Elephantinae of the order Proboscidea; extinct members include the mastodons.",
+                            Content = "Some text",
                             ThemeId = 1,
-                            TimeCreated = new DateTime(2022, 6, 25, 18, 5, 44, 645, DateTimeKind.Local).AddTicks(5626),
+                            TimeCreated = new DateTime(2022, 6, 22, 14, 52, 22, 53, DateTimeKind.Local).AddTicks(8570),
                             Title = "Super elephants"
                         },
                         new
                         {
                             Id = 2,
                             AuthorId = 2,
-                            Content = "Let`s talk about Mykola Khvylovy and his novel 'I(Romance)' ",
+                            Content = "My first book was...",
                             ThemeId = 2,
-                            TimeCreated = new DateTime(2022, 6, 25, 18, 5, 44, 645, DateTimeKind.Local).AddTicks(5631),
-                            Title = "Mykola Khvylovy"
+                            TimeCreated = new DateTime(2022, 6, 22, 14, 52, 22, 53, DateTimeKind.Local).AddTicks(8574),
+                            Title = "Man I love books"
                         });
                 });
 
@@ -112,17 +114,17 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             AuthorId = 2,
-                            Content = "Man i love elephants!I recently learned that elephants drink up to 300 liters of water a day!",
+                            Content = "Man i love elephants!",
                             ThreadId = 1,
-                            TimeCreated = new DateTime(2022, 6, 25, 18, 5, 44, 645, DateTimeKind.Local).AddTicks(5645)
+                            TimeCreated = new DateTime(2022, 6, 22, 14, 52, 22, 53, DateTimeKind.Local).AddTicks(8586)
                         },
                         new
                         {
                             Id = 2,
                             AuthorId = 3,
-                            Content = "My favourite elephant is Asian elephant",
+                            Content = "My favourite elephant is...",
                             ThreadId = 1,
-                            TimeCreated = new DateTime(2022, 6, 25, 18, 5, 44, 645, DateTimeKind.Local).AddTicks(5650)
+                            TimeCreated = new DateTime(2022, 6, 22, 14, 52, 22, 53, DateTimeKind.Local).AddTicks(8589)
                         },
                         new
                         {
@@ -130,7 +132,7 @@ namespace DAL.Migrations
                             AuthorId = 5,
                             Content = "Books are great you know.",
                             ThreadId = 2,
-                            TimeCreated = new DateTime(2022, 6, 25, 18, 5, 44, 645, DateTimeKind.Local).AddTicks(5652)
+                            TimeCreated = new DateTime(2022, 6, 22, 14, 52, 22, 53, DateTimeKind.Local).AddTicks(8591)
                         },
                         new
                         {
@@ -138,7 +140,7 @@ namespace DAL.Migrations
                             AuthorId = 1,
                             Content = "Read recently about Segriy Zhadan... He is cool.",
                             ThreadId = 2,
-                            TimeCreated = new DateTime(2022, 6, 25, 18, 5, 44, 645, DateTimeKind.Local).AddTicks(5654)
+                            TimeCreated = new DateTime(2022, 6, 22, 14, 52, 22, 53, DateTimeKind.Local).AddTicks(8593)
                         });
                 });
 

@@ -1,9 +1,8 @@
-﻿using BLL.Interfaces;
-using BLL.Models;
+﻿using Services.Interfaces;
+using Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Services.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -41,7 +40,6 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult<UserModel>> GetById(int id)
         {
             var user = await _userAccountService.GetByIdAsync(id);
