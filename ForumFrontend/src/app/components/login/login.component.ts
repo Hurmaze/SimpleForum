@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.service.login(this.loginModel.Email, this.loginModel.Password).subscribe(
-      result => {},
+      result => {this.router.navigate(['/'])},
       (err : HttpErrorResponse) => {this.isError = true,
       this.errorMessage = err.error.ErrorMessage}
     )

@@ -1,0 +1,23 @@
+.thread {
+    background-color: #dfe0e1;
+    padding: 20px;
+    margin-top: 20px;
+ }
+
+ p{
+    font-size: 0.9em;
+    margin: 0;
+ }
+
+ img{
+    width: 1em;
+    height: 1em;
+ }
+
+ .create-thread{
+   margin: 20px 0 0 20px;
+ }
+
+ .buttons > * {
+   margin: 0 10px 0 10px;
+ }

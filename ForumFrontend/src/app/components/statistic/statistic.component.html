@@ -1,1 +1,16 @@
-<p>statistic works!</p>
+<div class="statistics">
+    <h5>Top users</h5>
+    <hr class="line">
+    <div *ngFor="let user of users">
+        <img src="/assets/img/user_icon.png" alt="">
+        <a [routerLink]="['/users',user.id]">{{user.email}}</a> 
+    </div>
+    <br>
+    <h5>Top threads</h5>
+    <hr class="line">
+    <div *ngFor="let thread of threads">
+        <img src="/assets/img/thread_icon.png" alt="">
+        <a [routerLink]="['/threads',thread.id]">{{thread.title}}</a> 
+    </div>
+</div>
+

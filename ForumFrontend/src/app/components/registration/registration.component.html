@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="col-lg-4 col-md-3"></div>
-    <div class="col-lg-4 col-md-6 borders ">
+    <div class="col-lg-3 col-md-3"></div>
+    <div class="col-lg-6 col-md-6 borders ">
       <form  class="form-signin d-flex justify-content-center" (ngSubmit)="register()">
         <div class="container-fluid">
           <h2>Registration</h2>
@@ -31,10 +31,10 @@
           <span class="alert" *ngIf="!passwordsEqual()">Passwords have to be equal .</span>
           <br/>
           <button class="btn btn-lg btn-primary btn-block"
-          [disabled]="email.errors || password.errors ||  !passwordsEqual()" type="submit">Sign up</button>
+          [disabled]="email.errors || password.errors ||  !passwordsEqual()" type="submit">Register</button>
         </div>
       </form>
       <button class="btn" *ngIf="isAuthenticated()">Wow</button>
     </div>
-    <div class="col-lg-4 col-md-3"></div>
+    <div class="col-lg-3 col-md-3"></div>
   </div>

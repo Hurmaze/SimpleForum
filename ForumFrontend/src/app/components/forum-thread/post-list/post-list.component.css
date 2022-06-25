@@ -1,0 +1,14 @@
+img{
+    width: 1em;
+    height: 1em;
+ }
+ 
+ .post {
+    background-color: #dfe0e1;
+    padding: 20px;
+    margin-top: 20px;
+ }
+ 
+ .buttons > * {
+   margin: 0 10px 0 10px;
+ }

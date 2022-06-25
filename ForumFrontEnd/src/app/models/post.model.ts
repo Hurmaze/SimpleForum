@@ -1,14 +1,9 @@
 export class Post {
-    Id: number;
-    AuthorId: number;
-    ThreadId: number;
-    Content: string;
-    TimeCreated: Date;
-    constructor(id: number, authorid: number, threadid: number, content: string, time: Date){
-        this.Id = id;
-        this.AuthorId = authorid;
-        this.ThreadId = threadid;
-        this.Content = content;
-        this.TimeCreated = time;
-    }
+    id: number=0;
+    authorId: number=0;
+    threadId: number=0;
+    authorEmail: string='';
+    authorNickname:string='';
+    content: string='';
+    timeCreated: Date=new Date();
 }

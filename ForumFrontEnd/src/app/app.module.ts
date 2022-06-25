@@ -22,8 +22,9 @@ import { ACCES_TOKEN } from './shared/user-account.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { AppRoutingModule } from './app-routing.module';
+import { UserComponent } from './components/user/user.component';
 
-export function tokenGetter() {
+export function getToken() {
   return localStorage.getItem(ACCES_TOKEN);
 }
 @NgModule({
@@ -41,7 +42,8 @@ export function tokenGetter() {
     LogoComponent,
     ThreadListComponent,
     ThemeListComponent,
-    HeaderComponent
+    HeaderComponent,
+    UserComponent
   ],
   imports: [
     HttpClientModule,
@@ -51,8 +53,9 @@ export function tokenGetter() {
 
     JwtModule.forRoot({
       config:{
-        tokenGetter: tokenGetter,
-        allowedDomains: environment.whiteListedDomains
+        tokenGetter: getToken,
+        allowedDomains:["localhost:7265"]
+        
       }
     })
   ],

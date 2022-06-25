@@ -1,0 +1,19 @@
+.statistics {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-top: 20px;
+ }
+
+ p{
+    font-size: 0.9em;
+    margin: 0;
+ }
+
+ img{
+    width: 1em;
+    height: 1em;
+ }
+
+ hr.line{
+    border-top: 2px solid black;
+ }

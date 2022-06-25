@@ -19,11 +19,26 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
+  logout(){
+    this.authService.logout();
+  }
+
   toRegister(){
-    this.router.navigate(['register']);
+    this.router.navigate(['registration']);
+  }
+
+  isAdmin(){
+    let role = this.authService.getUserRole();
+    return "admin" === role.toLowerCase();
+  }
+
+  isModerator(){
+    let role = this.authService.getUserRole();
+    return "moderator" === role.toLowerCase();
   }
 
   ngOnInit(): void {
+    
   }
 
 }

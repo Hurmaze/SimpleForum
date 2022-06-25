@@ -1,1 +1,29 @@
-<p>post-list works!</p>
+
+        <div *ngFor="let post of posts">
+            <div class="post">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <img src="/assets/img/user_icon.png" alt="">
+                            <a *ngIf="post.authorNickname === null || post.authorNickname===''"
+                                [routerLink]="['accounts',post.authorId]">{{post.authorEmail}}
+                            </a>
+                            <a *ngIf="post.authorNickname !== null && post.authorNickname !==''"
+                                [routerLink]="['accounts',post.authorId]">{{post.authorNickname}}
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            Posted: {{post.timeCreated | date: 'short'}}
+                        </li>
+                    </ul>
+                    <p>
+                        {{post.content}}
+                    </p>
+                    <div class="buttons">
+                        <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Delete post</button>
+                        <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Update post</button>
+                    </div>
+                <br>
+            </div>
+        </div>        
+
+

@@ -1,1 +1,49 @@
-<p>thread-list works!</p>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="row">
+            <div class="col-lg-4">
+                <button type="button" class="btn btn-primary create-thread"
+                 *ngIf="isAuthenticated()" [routerLink]="['threads']">
+                 Start new thread</button>
+            </div>
+            <div class="col-lg-auto"></div>
+        </div>
+        
+        <div *ngFor="let thread of threads">
+            <div class="thread">
+                <a [routerLink]="['threads', thread.id]"><h3>{{thread.title}}</h3></a>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <img src="/assets/img/user_icon.png" alt="">
+                            <a *ngIf="thread.authorNickname === null || thread.authorNickname===''"
+                                [routerLink]="['accounts',thread.authorId]">{{thread.authorEmail}}
+                            </a>
+                            <a *ngIf="thread.authorNickname !== null && thread.authorNickname !==''"
+                                [routerLink]="['accounts',thread.authorId]">{{thread.authorNickname}}
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            Theme: {{thread.themeName}}
+                        </li>
+                        <li class="list-inline-item">
+                            Started: {{thread.timeCreated | date: 'shortDate'}}
+                        </li>
+                    </ul>
+                    <p>
+                        {{thread.content}}
+                    </p>
+                    <br>
+                <div class="buttons">
+                    <a [routerLink]="['threads', thread.id]" class="btn btn-outline-secondary btn-sm">Read thread</a>
+                    <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Delete thread</button>
+                    <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Update thread</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="col-lg-4">
+        <app-statistic></app-statistic>
+    </div>
+</div>
+

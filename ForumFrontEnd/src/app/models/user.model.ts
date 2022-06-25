@@ -1,16 +1,14 @@
-import { withLatestFrom } from "rxjs";
-
 export class User {
-    Id: number;
-    Email: string;
-    Nickname: string;
-    ThreadsIds: number[];
-    PostsIds: number[];
+    id: number;
+    email: string;
+    nickname: string;
+    threadsIds: number[];
+    postsIds: number[];
     constructor(id:number, email: string, nickname: string, threads: number[], posts: number[]){
-        this.Id = id;
-        this.Email = email,
-        this.Nickname = nickname;
-        this.ThreadsIds = threads;
-        this.PostsIds = posts;
+        this.id = id;
+        this.email = email,
+        this.nickname = nickname;
+        this.threadsIds = threads;
+        this.postsIds = posts;
     }
 }

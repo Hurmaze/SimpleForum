@@ -9,7 +9,7 @@ export const environment = {
   postsUrl:  'https://localhost:7265/api/posts/',
   forumThreadsUrl:  'https://localhost:7265/api/forumthreads/',
   statisticsUrl:  'https://localhost:7265/api/statistics/',
-  whiteListedDomains: ['localhost:7265']
+  whiteListedDomains: ["localhost:7265"]
 };
 
 /*
