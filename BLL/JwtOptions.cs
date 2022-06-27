@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Services
 {
+    /// <summary>
+    /// Jwt Token options
+    /// </summary>
     public class JwtOptions
     {
         public string Issuer { get; set; }

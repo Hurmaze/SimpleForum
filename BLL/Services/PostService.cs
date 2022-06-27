@@ -9,12 +9,31 @@ using Services.Validation.Exceptions;
 
 namespace Services.Services
 {
+    /// <summary>
+    /// Post service
+    /// </summary>
+    /// <seealso cref="IPostService" />
     public class PostService : IPostService
     {
+        /// <summary>
+        /// The unit of work
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
+        /// <summary>
+        /// The mapper
+        /// </summary>
         private readonly IMapper _mapper;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<PostService> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PostService"/> class.
+        /// </summary>
+        /// <param name="unitOfWork">The unit of work.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="logger">The logger.</param>
         public PostService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<PostService> logger)
         {
             _unitOfWork = unitOfWork;
@@ -22,6 +41,13 @@ namespace Services.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// Adds TModel the asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// Task&lt;PostModel&gt;
+        /// </returns>
         public async Task<PostModel> AddAsync(PostModel model)
         {
             var post = _mapper.Map<Post>(model);
@@ -35,6 +61,11 @@ namespace Services.Services
             return postView;
         }
 
+        /// <summary>
+        /// Deletes the Post by identifier asynchronous.
+        /// </summary>
+        /// <param name="modelId">The model identifier.</param>
+        /// <exception cref="NotFoundException"></exception>
         public async Task DeleteByIdAsync(int modelId)
         {
             var entity = await _unitOfWork.PostRepository.DeleteByIdAsync(modelId);
@@ -48,6 +79,12 @@ namespace Services.Services
             _logger.LogInformation("Post with an id {id} has been deleted.", modelId);
         }
 
+        /// <summary>
+        /// Gets all asynchronous.
+        /// </summary>
+        /// <returns>
+        /// Task&lt;IEnumerable&lt;PostModel&gt;&gt;.
+        /// </returns>
         public async Task<IEnumerable<PostModel>> GetAllAsync()
         {
             var posts = await _unitOfWork.PostRepository.GetAllAsync();
@@ -55,6 +92,14 @@ namespace Services.Services
             return _mapper.Map<IEnumerable<PostModel>>(posts);
         }
 
+        /// <summary>
+        /// Gets the TModel by identifier asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        /// Task&lt;PostModel&gt;
+        /// </returns>
+        /// <exception cref="NotFoundException"></exception>
         public async Task<PostModel> GetByIdAsync(int id)
         {
             var post = await _unitOfWork.PostRepository.GetByIdAsync(id);
@@ -67,6 +112,14 @@ namespace Services.Services
             return _mapper.Map<PostModel>(post);
         }
 
+        /// <summary>
+        /// Gets the posts by user identifier asynchronous.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>
+        /// Task&lt;IEnumerable&lt;PostModel&gt;&gt;.
+        /// </returns>
+        /// <exception cref="NotFoundException"></exception>
         public async Task<IEnumerable<PostModel>> GetPostsByUserIdAsync(int userId)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
@@ -79,6 +132,11 @@ namespace Services.Services
             return _mapper.Map<IEnumerable<PostModel>>(user.ThreadPosts);
         }
 
+        /// <summary>
+        /// Updates the PostModel asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <exception cref="NotFoundException"></exception>
         public async Task UpdateAsync(PostModel model)
         {
             var post = await _unitOfWork.PostRepository.GetByIdAsync(model.Id);

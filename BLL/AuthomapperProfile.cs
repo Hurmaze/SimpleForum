@@ -5,8 +5,15 @@ using DAL.Entities.Forum;
 
 namespace Services
 {
+    /// <summary>
+    /// Auttomapper profile.
+    /// </summary>
+    /// <seealso cref="Profile" />
     public class AutomapperProfile : Profile
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutomapperProfile"/> class.
+        /// </summary>
         public AutomapperProfile()
         {
             CreateMap<User, UserModel>()

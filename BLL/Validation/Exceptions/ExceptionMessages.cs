@@ -1,5 +1,8 @@
 ﻿namespace Services.Validation.Exceptions
 {
+    /// <summary>
+    /// Privides basic exception messages.
+    /// </summary>
     public static class ExceptionMessages
     {
         public static string EmailIsAlreadyUsed = "The email {0} is already used.";
