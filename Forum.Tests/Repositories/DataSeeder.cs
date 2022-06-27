@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Forum.Tests
+namespace Forum.Tests.Repositories
 {
     internal class DataSeeder
     {

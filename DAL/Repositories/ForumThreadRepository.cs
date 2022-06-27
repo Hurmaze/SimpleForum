@@ -10,19 +10,39 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
+    /// <summary>
+    /// ForumThread repository
+    /// </summary>
+    /// <seealso cref="IForumThreadRepository" />
     public class ForumThreadRepository : IForumThreadRepository
     {
+        /// <summary>
+        /// The forum database context
+        /// </summary>
         private readonly ForumDbContext _forumDbContext;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ForumThreadRepository"/> class.
+        /// </summary>
+        /// <param name="forumDbContext">The forum database context.</param>
         public ForumThreadRepository(ForumDbContext forumDbContext)
         {
             _forumDbContext = forumDbContext;
         }
 
+        /// <summary>
+        /// Adds the ForumThread asynchronous.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
         public async Task AddAsync(ForumThread entity)
         {
             await _forumDbContext.Threads.AddAsync(entity);
         }
 
+        /// <summary>
+        /// Deletes the by identifier asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task&lt;ForumThread&gt;.</returns>
         public async Task<ForumThread> DeleteByIdAsync(int id)
         {
             var entity = await _forumDbContext.Threads.FindAsync(id);
@@ -35,6 +55,10 @@ namespace DAL.Repositories
             return entity;
         }
 
+        /// <summary>
+        /// Gets all asynchronous.
+        /// </summary>
+        /// <returns>Task&lt;IEnumerable&lt;ForumThread&gt;&gt;.</returns>
         public async Task<IEnumerable<ForumThread>> GetAllAsync()
         {
             return await _forumDbContext.Threads
@@ -45,6 +69,11 @@ namespace DAL.Repositories
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Gets the by identifier asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task&lt;ForumThread&gt;.</returns>
         public async Task<ForumThread> GetByIdAsync(int id)
         {
             return await _forumDbContext.Threads
@@ -55,6 +84,10 @@ namespace DAL.Repositories
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
+        /// <summary>
+        /// Updates the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
         public void Update(ForumThread entity)
         {
             _forumDbContext.Entry(entity).State = EntityState.Modified;

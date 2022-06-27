@@ -9,8 +9,17 @@ using System.Threading.Tasks;
 
 namespace DAL.DbAccess.Helper
 {
+    /// <summary>
+    /// Helper to seed data into AccountDbContext
+    /// </summary>
     internal class AccountCreation
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         internal static Account CreateAccount(Account account, string password)
         {
             byte[] passwordHash;

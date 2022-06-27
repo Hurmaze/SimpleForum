@@ -34,6 +34,8 @@ namespace Forum.Tests.Services
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.AccountRepository.AddAsync(It.IsAny<Account>()));
             mockUnitOfWork.Setup(m => m.UserRepository.AddAsync(It.IsAny<User>()));
+            mockUnitOfWork.Setup(m => m.RoleRepository.GetAllAsync())
+                .ReturnsAsync(data.GetRoleEntities);
             var mockLogger = new Mock<ILogger<UserAccountService>>();
             var jwtoptions = new Mock<IOptions<JwtOptions>>();
 
@@ -362,7 +364,6 @@ namespace Forum.Tests.Services
             Assert.ThrowsAsync<AlreadyExistException>(() => userAccountService.CreateRoleIfNotExist(data.GetRoleModels[0]));
         }
 
-        //It doens`t work
         [Test]
         public async Task UserAccountservice_LoginAsync_logins()
         {
@@ -374,8 +375,18 @@ namespace Forum.Tests.Services
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes("Passw0rd"));
             }
-            var account = new Account { Email = "valid@email.com", PasswordHash = passwordHash, PasswordSalt = passwordSalt, Role = data.GetRoleEntities[0] };
-            var loginModel = new LoginModel { Email = "valid@email.com", Password = "Passw0rd" };
+            var account = new Account 
+            { 
+                Email = "valid@email.com",
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Role = data.GetRoleEntities[0]
+            };
+            var loginModel = new LoginModel 
+            { 
+                Email = "valid@email.com", 
+                Password = "Passw0rd" 
+            };
 
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
@@ -386,8 +397,8 @@ namespace Forum.Tests.Services
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKeydsfsdf342"));
             var jwtoptions = new Mock<IOptions<JwtOptions>>();
-            jwtoptions.Setup(j => j.Value.GetSymmetricSecurityKey())
-                .Returns(key);
+            jwtoptions.Setup(j => j.Value)
+                .Returns(new JwtOptions() {Secret = "superSecretKeydsfsdf342" });
 
             var userAccountService = new UserAccountService(mockUnitOfWork.Object, data.CreateMapperProfile(), jwtoptions.Object, mockLogger.Object);
 

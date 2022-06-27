@@ -5,16 +5,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.DbAccess
 {
+    /// <summary>
+    /// AccountDbContext
+    /// </summary>
     public class AccountDbContext : DbContext
     {
+        /// <summary>
+        /// DbSet of Roles
+        /// </summary>
         public DbSet<Role> Roles { get; set; }
+
+        /// <summary>
+        /// DbSet of Accounts
+        /// </summary>
         public DbSet<Account> Accounts { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="options"></param>
         public AccountDbContext(DbContextOptions<AccountDbContext> options) : base(options)
         {
             
         }
 
+        /// <summary>
+        /// Configures database
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region FluentApi
@@ -34,7 +52,11 @@ namespace DAL.DbAccess
             Seed(modelBuilder);
         }
 
-        public static void Seed(ModelBuilder modelBuilder)
+        /// <summary>
+        /// Data seeder
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        private static void Seed(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, RoleName = Enum.GetName(BasicRoles.User).ToLower() },

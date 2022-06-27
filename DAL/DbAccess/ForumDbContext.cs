@@ -3,17 +3,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.DbAccess
 {
+    /// <summary>
+    /// ForumDbContext
+    /// </summary>
     public class ForumDbContext : DbContext
     {
+        /// <summary>
+        /// DbSet of Users
+        /// </summary>
         public DbSet<User> Users { get; set; }
+
+        /// <summary>
+        /// DbSet of Posts
+        /// </summary>
         public DbSet<Post> Posts { get; set; }
+
+        /// <summary>
+        /// DbSet of ForumThreads
+        /// </summary>
         public DbSet<ForumThread> Threads { get; set; }
+
+        /// <summary>
+        /// DbSet of Themes
+        /// </summary>
         public DbSet<Theme> Themes { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="options"></param>
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         {
         }
 
+        /// <summary>
+        /// Configures the database
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region FluentApi
@@ -46,6 +72,10 @@ namespace DAL.DbAccess
             Seed(modelBuilder);
         }
 
+        /// <summary>
+        /// Data seeder
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         private void Seed(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(
