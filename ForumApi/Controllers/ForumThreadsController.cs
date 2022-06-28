@@ -78,14 +78,14 @@ namespace ForumApi.Controllers
 
         [HttpPost("themes")]
         [Authorize(Roles = "admin, moderator")]
-        public async Task<ActionResult> AddTheme(ThemeModel model)
+        public async Task<ActionResult> AddTheme([FromBody]ThemeModel model)
         {
             var created = await _forumThreadService.AddThemeAsync(model);
 
-            return CreatedAtAction(nameof(Add), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(AddTheme), new { id = created.Id }, created);
         }
 
-        [HttpPost("themes/{id}")]
+        [HttpDelete("themes/{id}")]
         [Authorize(Roles = "admin, moderator")]
         public async Task<ActionResult> DeleteTheme(int id)
         {

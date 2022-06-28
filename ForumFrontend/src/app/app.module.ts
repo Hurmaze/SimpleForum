@@ -6,7 +6,6 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { PostComponent } from './components/post/post.component';
 import { ForumThreadComponent } from './components/forum-thread/forum-thread.component';
 import { PostListComponent } from './components/forum-thread/post-list/post-list.component';
 import { RegistrationComponent } from './components/registration/registration.component';
@@ -23,6 +22,8 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { UserComponent } from './components/user/user.component';
+import { ThreadUpdateComponent } from './components/thread-update/thread-update.component';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 export function getToken() {
   return localStorage.getItem(ACCES_TOKEN);
@@ -32,7 +33,6 @@ export function getToken() {
     AppComponent,
     HomeComponent,
     LoginComponent,
-    PostComponent,
     ForumThreadComponent,
     PostListComponent,
     RegistrationComponent,
@@ -43,19 +43,23 @@ export function getToken() {
     ThreadListComponent,
     ThemeListComponent,
     HeaderComponent,
-    UserComponent
+    UserComponent,
+    ThreadUpdateComponent,
   ],
+
   imports: [
     HttpClientModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger' 
+    }),
 
     JwtModule.forRoot({
       config:{
         tokenGetter: getToken,
         allowedDomains:["localhost:7265"]
-        
       }
     })
   ],

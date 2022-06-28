@@ -32,7 +32,7 @@ export class RegistrationComponent implements OnInit {
     this.service.register(this.registrationModel)
     .pipe(concatMap(()=>this.service.login(this.registrationModel.Email, this.registrationModel.Password)))
     .subscribe(
-      result => {},
+      result => {this.router.navigate(['/'])},
       (err : HttpErrorResponse) => {this.isError = true,
       this.errorMessage = err.error.ErrorMessage}
     );

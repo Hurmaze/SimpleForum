@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
 import { ThemeListComponent } from './components/theme-list/theme-list.component';
+import { ThreadUpdateComponent } from './components/thread-update/thread-update.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserComponent } from './components/user/user.component';
 import { HasRoleGuard } from './guards/has-role.guard';
@@ -13,6 +14,9 @@ import { HasRoleGuard } from './guards/has-role.guard';
 const routes: Routes =[
     {
         path: '', component: HomeComponent
+    },
+    {
+        path: 'threads', component: HomeComponent
     },
     {
         path: 'login', component: LoginComponent
@@ -42,6 +46,13 @@ const routes: Routes =[
     },
     {
         path: 'themes', component: ThemeListComponent,
+        canActivate: [HasRoleGuard],
+        data:{
+            role: ['admin', 'moderator']
+        }
+    },
+    {
+        path: 'threads/edit/:id', component: ThreadUpdateComponent,
         canActivate: [HasRoleGuard],
         data:{
             role: ['admin', 'moderator']

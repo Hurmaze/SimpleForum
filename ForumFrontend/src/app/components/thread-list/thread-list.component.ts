@@ -52,10 +52,6 @@ export class ThreadListComponent implements OnInit {
     this.forumThreadService.postThread(this.newThread).subscribe(res => {}, err => console.log(err));
   }
 
-  updateThread(thread: ForumThread){
-    this.forumThreadService.updateThread(thread).subscribe(res => {}, err => console.log(err));
-  }
-
   isAuthenticated(){
     return this.authService.isAuthenticated();
   }
@@ -64,5 +60,9 @@ export class ThreadListComponent implements OnInit {
     let role = this.authService.getUserRole();
     role = role.toLowerCase()
     return "admin" === role || role === "moderator";
+  }
+
+  deleteThread(id: number){
+    this.forumThreadService.deleteThread(id);
   }
 }

@@ -4,14 +4,11 @@
             <div class="col-lg">
                 <button type="button" class="btn btn-primary create-button"
                  *ngIf="isAuthenticated()" (click)="toggleCreation()">
-                 Start new thread
-                </button>
-                <button *ngIf="isAllowedToChange()" class="btn btn-primary create-button" (click)="toggleUpdation()">
-                    Update mode
+                    Start new thread
                 </button>
             </div>
             <div class="row">
-                <div class="clo-lg">
+                <div class="col-lg">
                     <form (ngSubmit)="postThread()" #f="ngForm" [hidden]="isHiddenCreation"  *ngIf="isAuthenticated()">
                     <div class="form-group create-thread">
                         <input name="title" class="form-control" [(ngModel)]="newThread.title" placeholder="Title"
@@ -20,7 +17,7 @@
                         <br>
                         Theme:
                         <select class="form-select" [(ngModel)]="selectedTheme" name="theme">
-                            <option *ngFor="let theme of themes" [ngValue]="theme" [selected]="theme.themeName === 'Other'">
+                            <option *ngFor="let theme of themes" [ngValue]="theme">
                                 {{theme.themeName}}
                             </option>
                         </select>
@@ -66,32 +63,15 @@
                     <br>
                 <div class="buttons">
                     <a [routerLink]="['/threads', thread.id]" class="btn btn-outline-secondary btn-sm">Read thread</a>
-                    <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Delete thread</button>
+                    <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm"
+                    mwlConfirmationPopover
+                    [popoverTitle]="'Delete'"
+                    [popoverMessage]="'Do you really want to delete this thread?'"
+                    placement="left"
+                    (confirm)="deleteThread(thread.id)"
+                    >Delete thread</button>
+                    <a *ngIf="isAllowedToChange()" [routerLink]="['/threads/edit',thread.id]" class="btn btn-secondary btn-sm">Update thread</a>
                 </div>
-                <form (ngSubmit)="updateThread(thread)" #f="ngForm" [hidden]="isHiddenUpdation"  *ngIf="isAuthenticated()">
-                    <div class="form-group create-thread">
-                        <input name="title" class="form-control" [(ngModel)]="thread.title" placeholder="Title"
-                        required pattern="^[a-zA-Z0-9_.-]*$"
-                        #titleUpdate="ngModel"> 
-                        <br>
-                        Theme:
-                        <select class="form-select" [(ngModel)]="selectedTheme" name="theme">
-                            <option *ngFor="let theme of themes" [ngValue]="theme" [selected]="theme.id === thread.themeId">
-                                {{theme.themeName}}
-                            </option>
-                        </select>
-                        <br>
-                        <br>
-                        <label>Thread body.</label>
-                        <textarea class="form-control" [(ngModel)]="thread.content" rows="3"
-                         required name="content"
-                         pattern="^[a-zA-Z0-9_.-]*$"
-                         #contentUpdate="ngModel"></textarea>
-        
-                        <button class="btn btn-outline-secondary btn-sm"  type="submit" name="button"
-                        [disabled]="contentUpdate.errors || titleUpdate.errors">Update</button>
-                    </div>
-                </form>
             </div>
         </div>
         

@@ -21,6 +21,9 @@ namespace Services
                 .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
                 .ReverseMap();
 
+            CreateMap<Account, UserModel>()
+                .ForMember(um => um.RoleName, x => x.MapFrom(u => u.Role.RoleName));
+
             CreateMap<User, RegistrationModel>()
                 .ReverseMap();
 
@@ -48,8 +51,10 @@ namespace Services
             CreateMap<ForumThreadModel, ForumThread>();
 
             CreateMap<Theme, ThemeModel>()
-                .ForMember(tm => tm.ForumThreads, x => x.MapFrom(t => t.ForumThreads.Select(y => y.Id)))
-                .ReverseMap();
+                .ForMember(tm => tm.ForumThreads, x => x.MapFrom(t => t.ForumThreads.Select(y => y.Id)));
+
+            CreateMap<ThemeModel, Theme>()
+                .ForMember(t => t.ThemeName, x => x.MapFrom(tm => tm.ThemeName));
 
             CreateMap<Role, RoleModel>()
                 .ForMember(rm => rm.AccountAuthsIds, x => x.MapFrom(r => r.Accounts.Select(a => a.Id)))

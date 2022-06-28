@@ -159,10 +159,13 @@ namespace Services.Services
         /// Task&lt;IEnumerable&lt;UserModel&gt;&gt;.
         /// </returns>
         public async Task<IEnumerable<UserModel>> GetAllAsync()
-        {
+        { 
             var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
 
-            return _mapper.Map<IEnumerable<UserModel>>(users);
+            var userModels = _mapper.Map<IEnumerable<UserModel>>(users);
+            userModels = _mapper.Map(accounts, userModels);
+            return userModels;
         }
 
         /// <summary>
@@ -181,8 +184,10 @@ namespace Services.Services
             {
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", id.ToString()));
             }
+            var account = await _unitOfWork.AccountRepository.GetByEmailAsync(user.Email);
 
-            return _mapper.Map<UserModel>(user);
+            var userModel = _mapper.Map<UserModel>(user);
+            return _mapper.Map(account, userModel);
         }
 
         /// <summary>

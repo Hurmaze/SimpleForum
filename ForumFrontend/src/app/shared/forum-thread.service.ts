@@ -46,8 +46,9 @@ export class ForumThreadService {
     }, this.options);
   }
 
-  updateThread(thread: ForumThread): Observable<ForumThread>{
-    return this.http.put<ForumThread>(this.forumThreadsUrl,{
+  updateThread(id:Number, thread: ForumThread): Observable<ForumThread>{
+    return this.http.put<ForumThread>(`${this.forumThreadsUrl}${id}`,{
+      Id: thread.id,
       Title: thread.title,
       Content: thread.content,
       ThemeId: thread.themeId,
@@ -55,5 +56,19 @@ export class ForumThreadService {
       TimeCreated: thread.timeCreated
 
     }, this.options);
+  }
+
+  deleteThread(id:number){
+    this.http.delete(`${this.forumThreadsUrl}${id}`).subscribe((res)=> {res}, err => err);
+  }
+
+  createTheme(theme: Theme): Observable<Theme>{
+    return this.http.post<Theme>(`${this.forumThreadsUrl}themes`,
+    {
+      Id: 0,
+      ThemeName: theme.themeName,
+      ForumThreads: []
+    }
+    ,this.options);
   }
 }

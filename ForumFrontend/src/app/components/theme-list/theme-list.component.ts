@@ -11,6 +11,8 @@ import { UserAccountService } from 'src/app/shared/user-account.service';
 })
 export class ThemeListComponent implements OnInit {
   themes: Theme[]=[];
+  isHiddenCreation: boolean=true;
+  newTheme: Theme=new Theme(0,'',[]);
 
   constructor(
       private forumThreadService: ForumThreadService,
@@ -28,4 +30,13 @@ export class ThemeListComponent implements OnInit {
     role = role.toLowerCase()
     return "admin" === role || role === "moderator";
   }
+
+  toggleCreation(){
+    this.isHiddenCreation = !this.isHiddenCreation;
+  }
+
+  createTheme(){
+    this.forumThreadService.createTheme(this.newTheme).subscribe(res => {this.router.navigate(['/'])}, err => console.log(err));
+  }
+
 }

@@ -13,7 +13,6 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private userService: UserAccountService,
-    private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit(): void {
