@@ -26,6 +26,14 @@ namespace ForumApi.Controllers
             return Ok(threads);
         }
 
+        [HttpGet("themes")]
+        public async Task<ActionResult<IEnumerable<ForumThreadModel>>> GetThemes()
+        {
+            var themes = await _forumThreadService.GetAllThemesAsync();
+
+            return Ok(themes);
+        }
+
         [HttpGet("users/{id}")]
         public async Task<ActionResult<IEnumerable<ForumThreadModel>>> GetByUserId(int id)
         {

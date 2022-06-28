@@ -145,6 +145,19 @@ namespace Services.Services
         }
 
         /// <summary>
+        /// Gets all themes a synchronize.
+        /// </summary>
+        /// <returns>
+        /// Task&lt;IEnumerable&lt;ThemeModel&gt;&gt;.
+        /// </returns>
+        public async Task<IEnumerable<ThemeModel>> GetAllThemesAsync()
+        {
+            var themes = await _unitOfWork.ThemeRepository.GetAllAsync();
+
+            return _mapper.Map<IEnumerable<ThemeModel>>(themes);
+        }
+
+        /// <summary>
         /// Gets the TModel by identifier asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>

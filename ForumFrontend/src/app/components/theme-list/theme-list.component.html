@@ -1,1 +1,33 @@
-<p>theme-list works!</p>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="row">
+            <div class="col-lg-4">
+                <button type="button" class="btn btn-primary create-button"
+                 [routerLink]="['threads']">
+                 Create new theme</button>
+            </div>
+            <div class="col-lg-auto"></div>
+        </div>
+            <div class="display-body">
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Theme</th>
+                        <th scope="col">Delete</th>
+                      </tr>
+                    </thead>
+                <tbody>
+                    <tr *ngFor="let theme of themes">
+                        <td>{{theme.id}}</td>
+                        <td>{{theme.themeName}}</td>
+                        <td><button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Delete</button></td>
+                    </tr>        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <app-statistic></app-statistic>
+    </div>
+</div>

@@ -14,18 +14,27 @@ namespace Services.Interfaces
         /// <param name="id">The identifier.</param>
         /// <returns>Task&lt;IEnumerable&lt;PostModel&gt;&gt;.</returns>
         Task<IEnumerable<PostModel>> GetThreadPostsAsync(int id);
+
         /// <summary>
         /// Gets the threads by user identifier asynchronous.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns>Task&lt;IEnumerable&lt;ForumThreadModel&gt;&gt;.</returns>
         Task<IEnumerable<ForumThreadModel>> GetThreadsByUserIdAsync(int userId);
+
+        /// <summary>
+        /// Gets all themes a synchronize.
+        /// </summary>
+        /// <returns>Task&lt;IEnumerable&lt;ThemeModel&gt;&gt;.</returns>
+        Task<IEnumerable<ThemeModel>> GetAllThemesAsync();
+
         /// <summary>
         /// Adds the theme asynchronous.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>Task&lt;ThemeModel&gt;</returns>
         Task<ThemeModel> AddThemeAsync(ThemeModel model);
+
         /// <summary>
         /// Deletes the theme by identifier asynchronous.
         /// </summary>

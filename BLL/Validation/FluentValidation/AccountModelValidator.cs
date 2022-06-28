@@ -17,7 +17,7 @@ namespace Services.Validation.FluentValidation
 
             RuleFor(a => a.PasswordSalt).NotNull().NotEmpty();
 
-            RuleFor(a => a.RoleName).NotNull().NotEmpty();
+            RuleFor(a => a.RoleId).NotNull().NotEmpty();
         }
     }
 }

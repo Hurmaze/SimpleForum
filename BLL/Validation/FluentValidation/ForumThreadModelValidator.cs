@@ -9,13 +9,14 @@ namespace Services.Validation.FluentValidation
         {
             RuleFor(t => t.Title)
                 .NotNull().NotEmpty()
-                .MaximumLength(3)
+                .MinimumLength(3)
                 .MaximumLength(100);
 
             RuleFor(t => t.ThemeName)
-                .NotNull().NotEmpty()
-                .MinimumLength(3)
                 .MaximumLength(50);
+
+            RuleFor(t => t.ThemeId)
+                .NotNull().NotEmpty();
 
             RuleFor(t => t.TimeCreated)
                 .NotEmpty()

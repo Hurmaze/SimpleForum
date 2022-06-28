@@ -1,25 +1,56 @@
 <div class="row">
     <div class="col-lg-8">
         <div class="row">
-            <div class="col-lg-4">
-                <button type="button" class="btn btn-primary create-thread"
-                 *ngIf="isAuthenticated()" [routerLink]="['threads']">
-                 Start new thread</button>
+            <div class="col-lg">
+                <button type="button" class="btn btn-primary create-button"
+                 *ngIf="isAuthenticated()" (click)="toggleCreation()">
+                 Start new thread
+                </button>
+                <button *ngIf="isAllowedToChange()" class="btn btn-primary create-button" (click)="toggleUpdation()">
+                    Update mode
+                </button>
             </div>
-            <div class="col-lg-auto"></div>
+            <div class="row">
+                <div class="clo-lg">
+                    <form (ngSubmit)="postThread()" #f="ngForm" [hidden]="isHiddenCreation"  *ngIf="isAuthenticated()">
+                    <div class="form-group create-thread">
+                        <input name="title" class="form-control" [(ngModel)]="newThread.title" placeholder="Title"
+                        required pattern="^[a-zA-Z0-9_.-]*$" 
+                        #title="ngModel"> 
+                        <br>
+                        Theme:
+                        <select class="form-select" [(ngModel)]="selectedTheme" name="theme">
+                            <option *ngFor="let theme of themes" [ngValue]="theme" [selected]="theme.themeName === 'Other'">
+                                {{theme.themeName}}
+                            </option>
+                        </select>
+                        <br>
+                        <br>
+                        <label>Thread body.</label>
+                        <textarea class="form-control" [(ngModel)]="newThread.content" rows="3"
+                         required name="content"
+                         pattern="^[a-zA-Z0-9_.-]*$"
+                         #content="ngModel"></textarea>
+        
+                        <button class="btn btn-outline-secondary btn-sm"  type="submit"
+                        [disabled]="content.errors || title.errors" (click)="toggleCreation()" name="button">Post</button>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
         
         <div *ngFor="let thread of threads">
-            <div class="thread">
-                <a [routerLink]="['threads', thread.id]"><h3>{{thread.title}}</h3></a>
+            <div class="display-body">
+                <a [routerLink]="['/threads', thread.id]"><h3>{{thread.title}}</h3></a>
                     <ul class="list-inline">
                         <li class="list-inline-item">
                             <img src="/assets/img/user_icon.png" alt="">
                             <a *ngIf="thread.authorNickname === null || thread.authorNickname===''"
-                                [routerLink]="['accounts',thread.authorId]">{{thread.authorEmail}}
+                                [routerLink]="['/users',thread.authorId]">{{thread.authorEmail}}
                             </a>
                             <a *ngIf="thread.authorNickname !== null && thread.authorNickname !==''"
-                                [routerLink]="['accounts',thread.authorId]">{{thread.authorNickname}}
+                                [routerLink]="['/users',thread.authorId]">{{thread.authorNickname}}
                             </a>
                         </li>
                         <li class="list-inline-item">
@@ -34,10 +65,33 @@
                     </p>
                     <br>
                 <div class="buttons">
-                    <a [routerLink]="['threads', thread.id]" class="btn btn-outline-secondary btn-sm">Read thread</a>
+                    <a [routerLink]="['/threads', thread.id]" class="btn btn-outline-secondary btn-sm">Read thread</a>
                     <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Delete thread</button>
-                    <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Update thread</button>
                 </div>
+                <form (ngSubmit)="updateThread(thread)" #f="ngForm" [hidden]="isHiddenUpdation"  *ngIf="isAuthenticated()">
+                    <div class="form-group create-thread">
+                        <input name="title" class="form-control" [(ngModel)]="thread.title" placeholder="Title"
+                        required pattern="^[a-zA-Z0-9_.-]*$"
+                        #titleUpdate="ngModel"> 
+                        <br>
+                        Theme:
+                        <select class="form-select" [(ngModel)]="selectedTheme" name="theme">
+                            <option *ngFor="let theme of themes" [ngValue]="theme" [selected]="theme.id === thread.themeId">
+                                {{theme.themeName}}
+                            </option>
+                        </select>
+                        <br>
+                        <br>
+                        <label>Thread body.</label>
+                        <textarea class="form-control" [(ngModel)]="thread.content" rows="3"
+                         required name="content"
+                         pattern="^[a-zA-Z0-9_.-]*$"
+                         #contentUpdate="ngModel"></textarea>
+        
+                        <button class="btn btn-outline-secondary btn-sm"  type="submit" name="button"
+                        [disabled]="contentUpdate.errors || titleUpdate.errors">Update</button>
+                    </div>
+                </form>
             </div>
         </div>
         

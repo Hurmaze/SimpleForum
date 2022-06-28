@@ -1,10 +1,4 @@
-.thread {
-    background-color: #dfe0e1;
-    padding: 20px;
-    margin-top: 20px;
- }
-
- p{
+p{
     font-size: 0.9em;
     margin: 0;
  }
@@ -14,10 +8,16 @@
     height: 1em;
  }
 
- .create-thread{
+ .create-thread-button{
    margin: 20px 0 0 20px;
  }
 
  .buttons > * {
    margin: 0 10px 0 10px;
  }
+
+ .create-thread {
+  background-color: #f8f9fa;
+  padding: 20px;
+  margin-top: 20px;
+}

@@ -5,6 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, tap } from 'rxjs';
 import { USER_ACCOUNT_API_URL } from '../app-injection';
 import { Registration } from '../models/registration.model';
+import { Role } from '../models/role.model';
 import { Token } from '../models/token';
 import { UserToken } from '../models/user-token.model';
 import { User } from '../models/user.model';
@@ -17,16 +18,20 @@ export const ACCES_TOKEN = 'jwt acces token';
 export class UserAccountService implements OnInit {
 
   private options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
-  user: UserToken = new UserToken(0,'','');
+  user: UserToken;
   constructor(
     private http: HttpClient,
     @Inject(USER_ACCOUNT_API_URL) private userAccountUrl: string,
     private jwtHelper: JwtHelperService,
     private router: Router
-    ) { }
+    )
+     {
+      this.user = this.getUser(localStorage.getItem(ACCES_TOKEN)!);
+     }
+
 
   ngOnInit(){
-    this.user = this.getUser(ACCES_TOKEN);
+    this.user = this.getUser(localStorage.getItem(ACCES_TOKEN)!);
   }
 
   login(email: string, password: string): Observable<Token>{
@@ -51,7 +56,11 @@ export class UserAccountService implements OnInit {
   isAuthenticated(): boolean{
     var token = localStorage.getItem(ACCES_TOKEN);
     
-    return token !== null && !this.jwtHelper.isTokenExpired(token)
+    if(token !== null && !this.jwtHelper.isTokenExpired(token)){
+      return true;
+    }
+    this.user = new UserToken(0,'','');
+    return false;
   }
 
   logout():void {
@@ -78,12 +87,16 @@ export class UserAccountService implements OnInit {
     return this.http.get<User[]>(`${this.userAccountUrl}`, this.options)
   }
 
+  getRoles():Observable<Role[]>{
+    return this.http.get<Role[]>(`${this.userAccountUrl}roles`, this.options)
+  }
+
   private getUser(token:string): UserToken{
     if(token === null){
       return new UserToken(0,'','');
     }
 
-    let user = this.jwtHelper.decodeToken(token);
+    let user = this.jwtHelper?.decodeToken(token);
     let userToken = new UserToken(
       Number(user.id), 
       user["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"], 

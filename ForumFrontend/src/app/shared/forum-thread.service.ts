@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { FORUM_THREADS_API_URL } from '../app-injection';
 import { ForumThread } from '../models/forum-thread.model';
 import { Post } from '../models/post.model';
+import { Theme } from '../models/theme.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,31 @@ export class ForumThreadService {
 
   getThreadPosts(id: number): Observable<Post[]>{
     return this.http.get<Post[]>(`${this.forumThreadsUrl}${id}/posts`);
+  }
+
+  getThemes():Observable<Theme[]>{
+    return this.http.get<Theme[]>(`${this.forumThreadsUrl}themes`);
+  }
+
+  postThread(thread: ForumThread): Observable<ForumThread>{
+    return this.http.post<ForumThread>(this.forumThreadsUrl,{
+      Title: thread.title,
+      Content: thread.content,
+      ThemeId: thread.themeId,
+      AuthorId: thread.authorId,
+      TimeCreated: thread.timeCreated
+
+    }, this.options);
+  }
+
+  updateThread(thread: ForumThread): Observable<ForumThread>{
+    return this.http.put<ForumThread>(this.forumThreadsUrl,{
+      Title: thread.title,
+      Content: thread.content,
+      ThemeId: thread.themeId,
+      AuthorId: thread.authorId,
+      TimeCreated: thread.timeCreated
+
+    }, this.options);
   }
 }

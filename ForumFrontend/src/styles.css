@@ -1,3 +1,12 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 
 
+.create-button{
+    margin: 20px 0 0 20px;
+}
+
+.display-body {
+    background-color: #dfe0e1;
+    padding: 20px;
+    margin-top: 20px;
+ }

@@ -6,10 +6,10 @@
                     <li class="list-inline-item">
                         <img src="/assets/img/user_icon.png" alt="">
                         <a *ngIf="thread.authorNickname === null || thread.authorNickname===''"
-                            [routerLink]="['accounts',thread.authorId]">{{thread.authorEmail}}
+                            [routerLink]="['/users',thread.authorId]">{{thread.authorEmail}}
                         </a>
                         <a *ngIf="thread.authorNickname !== null && thread.authorNickname !==''"
-                            [routerLink]="['accounts',thread.authorId]">{{thread.authorNickname}}
+                            [routerLink]="['/users',thread.authorId]">{{thread.authorNickname}}
                         </a>
                     </li>
                     <li class="list-inline-item">
