@@ -31,7 +31,15 @@
                     <tr *ngFor="let theme of themes">
                         <td>{{theme.id}}</td>
                         <td>{{theme.themeName}}</td>
-                        <td><button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm">Delete</button></td>
+                        <td>
+                            <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm"
+                            mwlConfirmationPopover
+                            [popoverTitle]="'Delete'"
+                            [popoverMessage]="'Do you really want to delete this thread?'"
+                            placement="left"
+                            (confirm)="deleteTheme(theme.id)"
+                            >Delete theme</button>
+                        </td>
                     </tr>        
                 </tbody>
             </table>

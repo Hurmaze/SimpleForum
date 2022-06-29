@@ -3,6 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 import { ForumThreadComponent } from './components/forum-thread/forum-thread.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { PostUpdateComponent } from './components/post-update/post-update.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
 import { ThemeListComponent } from './components/theme-list/theme-list.component';
@@ -53,6 +54,13 @@ const routes: Routes =[
     },
     {
         path: 'threads/edit/:id', component: ThreadUpdateComponent,
+        canActivate: [HasRoleGuard],
+        data:{
+            role: ['admin', 'moderator']
+        }
+    },
+    {
+        path: 'posts/edit/:id', component: PostUpdateComponent,
         canActivate: [HasRoleGuard],
         data:{
             role: ['admin', 'moderator']

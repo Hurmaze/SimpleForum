@@ -29,6 +29,7 @@ export class ForumThreadComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(routeParams => {
       this.loadPage(routeParams['id'])
+      this.id = routeParams['id'];
     });
   }
 
@@ -54,7 +55,7 @@ export class ForumThreadComponent implements OnInit {
     postModel.timeCreated= new Date();
     postModel.authorEmail = userToken.email;
 
-    this.postService.post(postModel).subscribe(res => {}, err => err);
+    this.postService.post(postModel).subscribe(res => window.location.reload(), err => err);
   }
 
 }

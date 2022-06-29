@@ -18,8 +18,14 @@
                     <h5 *ngIf="user.nickname !== '' && user.nickname !== null">Nickname: {{user.nickname}}</h5>
                 </div>
                 <div class="buttons">
-                    <button class="btn btn-secondary btn-sm">Delete</button>
-                    <button class="btn btn-secondary btn-sm">Update</button>
+                    <a [routerLink]="['/users',user.id]" class="btn btn-secondary btn-sm">Change role</a>
+                    <button class="btn btn-secondary btn-sm"
+                    mwlConfirmationPopover
+                    [popoverTitle]="'Delete'"
+                    [popoverMessage]="'Do you really want to delete this user?'"
+                    placement="left"
+                    (confirm)="deleteUser(user.id)"
+                    >Delete user</button>
                 </div>
             </div>
         </div>

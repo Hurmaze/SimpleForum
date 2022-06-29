@@ -3,3 +3,8 @@
     padding: 20px;
     margin-top: 20px;
  }
+
+ .alert{
+    color: red;
+    font-size:xx-small;
+}

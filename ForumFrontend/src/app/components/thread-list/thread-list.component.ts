@@ -49,7 +49,7 @@ export class ThreadListComponent implements OnInit {
     this.newThread.authorId=this.authService.currentUser().id;
     this.newThread.timeCreated = new Date();
     this.newThread.themeId = this.selectedTheme.id;
-    this.forumThreadService.postThread(this.newThread).subscribe(res => {}, err => console.log(err));
+    this.forumThreadService.postThread(this.newThread).subscribe(res => { window.location.reload()}, err => console.log(err));
   }
 
   isAuthenticated(){
@@ -63,6 +63,6 @@ export class ThreadListComponent implements OnInit {
   }
 
   deleteThread(id: number){
-    this.forumThreadService.deleteThread(id);
+    this.forumThreadService.deleteThread(id).subscribe(res => window.location.reload());
   }
 }

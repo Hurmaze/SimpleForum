@@ -50,7 +50,7 @@
                                 [routerLink]="['/users',thread.authorId]">{{thread.authorNickname}}
                             </a>
                         </li>
-                        <li class="list-inline-item">
+                        <li class="list-inline-item" *ngIf="thread.themeName!=='' && thread.themeName!==null">
                             Theme: {{thread.themeName}}
                         </li>
                         <li class="list-inline-item">

@@ -58,8 +58,12 @@ export class ForumThreadService {
     }, this.options);
   }
 
-  deleteThread(id:number){
-    this.http.delete(`${this.forumThreadsUrl}${id}`).subscribe((res)=> {res}, err => err);
+  deleteThread(id:number): Observable<any>{
+    return this.http.delete(`${this.forumThreadsUrl}${id}`);
+  }
+
+  deleteTheme(id:number): Observable<any>{
+    return this.http.delete(`${this.forumThreadsUrl}themes/${id}`);
   }
 
   createTheme(theme: Theme): Observable<Theme>{

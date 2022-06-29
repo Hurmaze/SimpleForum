@@ -103,4 +103,18 @@ export class UserAccountService implements OnInit {
       user['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']);
     return userToken;
   }
+
+  changeRole(userId: number, email: string, roleId: number): Observable<any>{
+    return this.http.put(`${this.userAccountUrl}${email}/role/${roleId}`, this.options)
+  }
+
+  changeNickname(nickname: string):Observable<any>{
+    return this.http.put(`${this.userAccountUrl}changenickname`,
+    {Nickname:nickname},
+    this.options);
+  }
+
+  deleteUser(userId: number): Observable<any>{
+    return this.http.delete(`${this.userAccountUrl}${userId}`);
+  }
 }

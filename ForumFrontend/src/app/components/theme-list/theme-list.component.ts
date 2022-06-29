@@ -36,7 +36,11 @@ export class ThemeListComponent implements OnInit {
   }
 
   createTheme(){
-    this.forumThreadService.createTheme(this.newTheme).subscribe(res => {this.router.navigate(['/'])}, err => console.log(err));
+    this.forumThreadService.createTheme(this.newTheme).subscribe(res => window.location.reload(), err => console.log(err));
+  }
+
+  deleteTheme(id: number){
+    this.forumThreadService.deleteTheme(id).subscribe(res => window.location.reload());
   }
 
 }

@@ -22,6 +22,10 @@ export class PostService {
     return this.http.get<Post[]>(this.postsUrl, this.options);
   }
 
+  getById(id: number): Observable<Post>{
+    return this.http.get<Post>(`${this.postsUrl}${id}`, this.options);
+  }
+
   post(postModel: Post): Observable<Post>{
 
     return this.http.post<Post>(this.postsUrl,{
@@ -31,5 +35,20 @@ export class PostService {
       ThreadId: postModel.threadId,
       TimeCreated: postModel.timeCreated
       }, this.options);
+  }
+
+  updatePost(postModel: Post): Observable<Post>{
+    return this.http.put<Post>(`${this.postsUrl}${postModel.id}`,{
+      Id: postModel.id,
+      AuthorEmail: postModel.authorEmail,
+      AuthorId: postModel.authorId,
+      Content: postModel.content,
+      ThreadId: postModel.threadId,
+      TimeCreated: postModel.timeCreated
+    }, this.options);
+  }
+
+  deletePost(id:number): Observable<any>{
+    return this.http.delete(`${this.postsUrl}${id}`);
   }
 }

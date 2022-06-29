@@ -24,6 +24,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { UserComponent } from './components/user/user.component';
 import { ThreadUpdateComponent } from './components/thread-update/thread-update.component';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+import { PostUpdateComponent } from './components/post-update/post-update.component';
 
 export function getToken() {
   return localStorage.getItem(ACCES_TOKEN);
@@ -45,6 +46,7 @@ export function getToken() {
     HeaderComponent,
     UserComponent,
     ThreadUpdateComponent,
+    PostUpdateComponent,
   ],
 
   imports: [

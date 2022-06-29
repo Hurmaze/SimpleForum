@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from 'src/app/models/post.model';
 import { ForumThreadService } from 'src/app/shared/forum-thread.service';
+import { PostService } from 'src/app/shared/post.service';
 import { UserAccountService } from 'src/app/shared/user-account.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class PostListComponent implements OnInit {
   constructor(
     private threadsService: ForumThreadService,
      private route: ActivatedRoute,
-     private authService: UserAccountService) { }
+     private authService: UserAccountService,
+     private postService: PostService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(routeParams => {
@@ -33,5 +35,9 @@ export class PostListComponent implements OnInit {
     let role = this.authService.getUserRole();
     role = role.toLowerCase()
     return "admin" === role || role === "moderator";
+  }
+
+  deletePost(id: number){
+    this.postService.deletePost(id).subscribe(res => window.location.reload());
   }
 }
