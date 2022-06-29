@@ -47,7 +47,7 @@ namespace ForumApi.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{userId}/role/{roleId}")]
+        [HttpPut("{email}/role/{roleId}")]
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> ChangeRole(string email, int roleId)
         {
@@ -85,7 +85,7 @@ namespace ForumApi.Controllers
             return CreatedAtAction(nameof(CreateRole), new { id = role.Id }, role);
         }
 
-        [HttpPost("changenickname")]
+        [HttpPut("changenickname")]
         [Authorize]
         public async Task<ActionResult<NicknameModel>> ChangeNickname(NicknameModel model)
         {

@@ -8,7 +8,7 @@
         /// <summary>
         /// Id of the author
         /// </summary>
-        public int AuthorId { get; set; }
+        public int? AuthorId { get; set; }
 
         /// <summary>
         /// Id of the thread

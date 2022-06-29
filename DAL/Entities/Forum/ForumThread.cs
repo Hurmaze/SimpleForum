@@ -8,12 +8,12 @@
         /// <summary>
         /// Id of the theme
         /// </summary>
-        public int ThemeId { get; set; }
+        public int? ThemeId { get; set; }
 
         /// <summary>
         /// Id of the author
         /// </summary>
-        public int AuthorId { get; set; }
+        public int? AuthorId { get; set; }
 
         /// <summary>
         /// Theme

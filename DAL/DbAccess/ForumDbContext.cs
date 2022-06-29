@@ -44,10 +44,12 @@ namespace DAL.DbAccess
         {
             #region FluentApi
             var user = modelBuilder.Entity<User>();
-            user.HasMany(a => a.ThreadPosts).WithOne(t => t.Author)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-            user.HasMany(a => a.Threads).WithOne(t => t.Author)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            user.HasMany(a => a.ThreadPosts)
+                .WithOne(t => t.Author)
+                .OnDelete(DeleteBehavior.SetNull);
+            user.HasMany(a => a.Threads)
+                .WithOne(t => t.Author)
+                .OnDelete(DeleteBehavior.SetNull);
             user.HasIndex(a => a.Email).IsUnique();
             user.Property(a => a.Email).HasMaxLength(100).IsRequired();
             user.Property(a => a.Nickname).HasMaxLength(30);
@@ -55,17 +57,21 @@ namespace DAL.DbAccess
 
             var thread = modelBuilder.Entity<ForumThread>();
             thread.ToTable("Threads");
-            thread.HasOne(a => a.Theme).WithMany(t => t.ForumThreads)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-            thread.HasMany(p => p.ThreadPosts).WithOne(c => c.Thread);
-            thread.Property(p => p.Title).HasMaxLength(100);
+            thread.HasMany(p => p.ThreadPosts)
+                .WithOne(c => c.Thread);
+            thread.Property(p => p.Title).HasMaxLength(100).IsRequired();
+            thread.Property(t => t.Content).IsRequired();
             thread.Property(p => p.TimeCreated).HasDefaultValueSql("GETDATE()");
 
             var theme = modelBuilder.Entity<Theme>();
+            theme.HasMany(t => t.ForumThreads)
+                .WithOne(ft => ft.Theme)
+                .OnDelete(DeleteBehavior.SetNull);
             theme.Property(th => th.ThemeName).HasMaxLength(50).IsRequired();
 
             var post = modelBuilder.Entity<Post>();
             post.Property(p => p.TimeCreated).HasDefaultValueSql("GETDATE()");
+            post.Property(p => p.Content).IsRequired();
             post.ToTable("ThreadPosts");
             #endregion
 

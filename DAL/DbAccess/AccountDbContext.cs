@@ -37,7 +37,8 @@ namespace DAL.DbAccess
         {
             #region FluentApi
             var account = modelBuilder.Entity<Account>();
-            account.HasOne(a => a.Role).WithMany(r => r.Accounts)
+            account.HasOne(a => a.Role)
+                .WithMany(r => r.Accounts)
                 .OnDelete(DeleteBehavior.NoAction);
             account.HasIndex(a => a.Email).IsUnique();
             account.Property(a => a.PasswordSalt).IsRequired();

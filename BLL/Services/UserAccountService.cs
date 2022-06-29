@@ -73,6 +73,7 @@ namespace Services.Services
             }
 
             account.Role = role;
+            account.RoleId = role.Id;
 
             _unitOfWork.AccountRepository.Update(account);
             await _unitOfWork.SaveAsync();
@@ -163,9 +164,16 @@ namespace Services.Services
             var users = await _unitOfWork.UserRepository.GetAllAsync();
             var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
 
-            var userModels = _mapper.Map<IEnumerable<UserModel>>(users);
-            userModels = _mapper.Map(accounts, userModels);
-            return userModels;
+            var tuple = users
+                .Join(
+                accounts,
+                u => u.Email,
+                a => a.Email,
+                (u, a) => new { u, a })
+                .AsEnumerable()
+                .Select(c => new Tuple<User, Account>(c.u, c.a));
+
+            return _mapper.Map<IEnumerable<UserModel>>(tuple);
         }
 
         /// <summary>
@@ -186,8 +194,9 @@ namespace Services.Services
             }
             var account = await _unitOfWork.AccountRepository.GetByEmailAsync(user.Email);
 
-            var userModel = _mapper.Map<UserModel>(user);
-            return _mapper.Map(account, userModel);
+            var tuple = new Tuple<User, Account>(user, account);
+            var ret =  _mapper.Map<UserModel>(tuple);
+            return ret;
         }
 
         /// <summary>

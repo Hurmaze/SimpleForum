@@ -24,6 +24,17 @@ namespace Services
             CreateMap<Account, UserModel>()
                 .ForMember(um => um.RoleName, x => x.MapFrom(u => u.Role.RoleName));
 
+            CreateMap<Tuple<User, Account>, UserModel>()
+                .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.Item1.ThreadPosts.Select(y => y.Id)))
+                .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Item1.Threads.Select(y => y.Id)))
+                .ForMember(um => um.RoleName, x => x.MapFrom(u => u.Item2.Role.RoleName))
+                .ForMember(um => um.Email, x => x.MapFrom(u => u.Item1.Email))
+                .ForMember(um => um.RoleId, x => x.MapFrom(u => u.Item2.RoleId))
+                .ForMember(um => um.Nickname, x => x.MapFrom(u => u.Item1.Nickname))
+                .ForMember(um => um.Id, x => x.MapFrom(u => u.Item1.Id));
+
+
+
             CreateMap<User, RegistrationModel>()
                 .ReverseMap();
 

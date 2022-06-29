@@ -118,6 +118,8 @@ namespace Forum.Tests.Services
 
             mockUnitOfWork.Setup(m => m.UserRepository.GetAllAsync())
                 .ReturnsAsync(data.GetUserEntities);
+            mockUnitOfWork.Setup(m => m.AccountRepository.GetAllAsync())
+                .ReturnsAsync(data.GetAccountEntities);
 
             var mockLogger = new Mock<ILogger<UserAccountService>>();
             var jwtoptions = new Mock<IOptions<JwtOptions>>();
@@ -139,6 +141,9 @@ namespace Forum.Tests.Services
 
             mockUnitOfWork.Setup(m => m.UserRepository.GetByIdAsync(id))
                 .ReturnsAsync(data.GetUserEntities[id - 1]);
+            var email = data.GetUserEntities[id - 1].Email;
+            mockUnitOfWork.Setup(m => m.AccountRepository.GetByEmailAsync(email))
+                .ReturnsAsync(data.GetAccountEntities.First(x => x.Email == email));
             var mockLogger = new Mock<ILogger<UserAccountService>>();
             var jwtoptions = new Mock<IOptions<JwtOptions>>();
 
