@@ -200,6 +200,30 @@ namespace Services.Services
         }
 
         /// <summary>
+        /// Gets the users by role asynchronous.
+        /// </summary>
+        /// <param name="roleId">The role identifier.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<UserModel>> GetByRoleAsync(int roleId)
+        {
+            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
+
+            accounts = accounts?.Where(a => a.RoleId == roleId);
+
+            var tuple = users
+                .Join(
+                accounts,
+                u => u.Email,
+                a => a.Email,
+                (u, a) => new { u, a })
+                .AsEnumerable()
+                .Select(c => new Tuple<User, Account>(c.u, c.a));
+
+            return _mapper.Map<IEnumerable<UserModel>>(tuple);
+        }
+
+        /// <summary>
         /// Gets all roles asynchronous.
         /// </summary>
         /// <returns>

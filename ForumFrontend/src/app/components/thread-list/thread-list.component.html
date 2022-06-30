@@ -12,7 +12,7 @@
                     <form (ngSubmit)="postThread()" #f="ngForm" [hidden]="isHiddenCreation"  *ngIf="isAuthenticated()">
                     <div class="form-group create-thread">
                         <input name="title" class="form-control" [(ngModel)]="newThread.title" placeholder="Title"
-                        required pattern="^[a-zA-Z0-9_.-]*$" 
+                        required pattern="^[a-zA-Z0-9_.,;!-\s]*$"
                         #title="ngModel"> 
                         <br>
                         Theme:
@@ -26,7 +26,7 @@
                         <label>Thread body.</label>
                         <textarea class="form-control" [(ngModel)]="newThread.content" rows="3"
                          required name="content"
-                         pattern="^[a-zA-Z0-9_.-]*$"
+                         pattern="^[a-zA-Z0-9_.,;!-\s]*$"
                          #content="ngModel"></textarea>
         
                         <button class="btn btn-outline-secondary btn-sm"  type="submit"

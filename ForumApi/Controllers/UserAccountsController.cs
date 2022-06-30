@@ -47,6 +47,14 @@ namespace ForumApi.Controllers
             return Ok(user);
         }
 
+        [HttpGet("roles/{id}")]
+        public async Task<ActionResult<UserModel>> GetByRole(int id)
+        {
+            var user = await _userAccountService.GetByRoleAsync(id);
+
+            return Ok(user);
+        }
+
         [HttpPut("{email}/role/{roleId}")]
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> ChangeRole(string email, int roleId)

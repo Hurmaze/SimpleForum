@@ -52,6 +52,15 @@ namespace Services.Services
         {
             var forumThread = _mapper.Map<ForumThread>(model);
 
+            if (forumThread.ThemeId == 0)
+            {
+                forumThread.ThemeId = null;
+            }
+            if (forumThread.AuthorId == 0)
+            {
+                forumThread.AuthorId = null;
+            }
+
             await _unitOfWork.ForumThreadRepository.AddAsync(forumThread);
             await _unitOfWork.SaveAsync();
 
@@ -229,6 +238,16 @@ namespace Services.Services
             if (forumThread == null)
             {
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(ForumThread).Name, "Id", model.Id.ToString()));
+            }
+
+            if (forumThread.ThemeId == 0)
+            {
+                forumThread.ThemeId = null;
+            }
+
+            if (forumThread.AuthorId == 0)
+            {
+                forumThread.AuthorId = null;
             }
 
             forumThread = _mapper.Map(model, forumThread);

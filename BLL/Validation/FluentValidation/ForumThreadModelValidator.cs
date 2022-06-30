@@ -15,9 +15,6 @@ namespace Services.Validation.FluentValidation
             RuleFor(t => t.ThemeName)
                 .MaximumLength(50);
 
-            RuleFor(t => t.ThemeId)
-                .NotNull().NotEmpty();
-
             RuleFor(t => t.TimeCreated)
                 .NotEmpty()
                 .InclusiveBetween(DateTime.Parse("2020-10-10"), DateTime.Now)

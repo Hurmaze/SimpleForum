@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Role } from 'src/app/models/role.model';
 import { User } from 'src/app/models/user.model';
 import { UserAccountService } from 'src/app/shared/user-account.service';
 
@@ -12,15 +11,31 @@ import { UserAccountService } from 'src/app/shared/user-account.service';
 })
 export class UserListComponent implements OnInit {
   users: User[]=[];
+  roleId: number=0;
+  isEmpty: boolean=false;
 
   constructor(
     private userService: UserAccountService,
     private router: Router,
-    private location: Location) { }
+    private location: Location,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.userService.get().subscribe(res => this.users = res,
-      err => this.router.navigate(['/']));
+    this.route.queryParams.subscribe(params => this.roleId = params['roleId']);
+    if(this.roleId!==undefined){
+      this.userService.getByRole(this.roleId).subscribe(res => 
+        {
+          this.users = res;
+          if(this.users.length===0){
+            this.isEmpty= true;
+          }
+        },
+        err => this.router.navigate(['/']));
+    }
+    else{
+      this.userService.get().subscribe(res => this.users = res,
+        err => this.router.navigate(['/']));
+    }
   }
 
   deleteUser(id: number){

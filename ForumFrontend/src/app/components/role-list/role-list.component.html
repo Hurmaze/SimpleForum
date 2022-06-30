@@ -15,7 +15,9 @@
                     <tr *ngFor="let role of roles">
                         <td>{{role.id}}</td>
                         <td>{{role.roleName}}</td>
-                        <td><button class="btn btn-secondary btn-sm">Users</button></td>
+                        <td>
+                            <a [routerLink]="['/users']" [queryParams]="{ roleId:role.id}" class="btn btn-secondary btn-sm">Users</a>
+                        </td>
                     </tr>        
                 </tbody>
             </table>

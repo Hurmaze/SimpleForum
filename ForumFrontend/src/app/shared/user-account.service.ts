@@ -87,6 +87,10 @@ export class UserAccountService implements OnInit {
     return this.http.get<User[]>(`${this.userAccountUrl}`, this.options)
   }
 
+  getByRole(id:number){
+    return this.http.get<User[]>(`${this.userAccountUrl}roles/${id}`, this.options)
+  }
+
   getRoles():Observable<Role[]>{
     return this.http.get<Role[]>(`${this.userAccountUrl}roles`, this.options)
   }

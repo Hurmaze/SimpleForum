@@ -52,6 +52,11 @@ namespace Services.Services
         {
             var post = _mapper.Map<Post>(model);
 
+            if (post.AuthorId == 0)
+            {
+                post.AuthorId = null;
+            }
+
             await _unitOfWork.PostRepository.AddAsync(post);
             await _unitOfWork.SaveAsync();
 
