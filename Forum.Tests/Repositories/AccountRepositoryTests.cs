@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Account;
+using DAL.Entities;
 using DAL.Repositories;
 using NUnit.Framework;
 using System;
@@ -18,13 +18,13 @@ namespace Forum.Tests.Repositories
                 new Role { Id = 2, RoleName = "admin"}
             };
 
-        List<Account> expectedAccounts = new List<Account>
+        List<Credentials> expectedAccounts = new List<Credentials>
             {
-                new Account { Id = 1, Role = roles[0], Email = "email1@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Account { Id = 2, Role = roles[0], Email = "email2@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Account { Id = 3, Role = roles[0], Email = "email3@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Account { Id = 4, Role = roles[1], Email = "email4@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Account { Id = 5, Role = roles[1], Email = "email5@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
+                new Credentials { Id = 1, Role = roles[0], Email = "email1@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 2, Role = roles[0], Email = "email2@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 3, Role = roles[0], Email = "email3@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 4, Role = roles[1], Email = "email4@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 5, Role = roles[1], Email = "email5@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
             };
 
         [TestCase(1)]
@@ -60,7 +60,7 @@ namespace Forum.Tests.Repositories
             using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
 
             var accountRepository = new AccountRepository(context);
-            var account = new Account {
+            var account = new Credentials {
                 Email = "email6@gmail.com",
                 PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
                 PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }
@@ -91,7 +91,7 @@ namespace Forum.Tests.Repositories
             using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
 
             var accountRepository = new AccountRepository(context);
-            var theme = new Account { Id = 1, PasswordHash = new byte[] { 0x20, 0x20, 0x10, 0x20, 0x20, 0x20, 0x20 } };
+            var theme = new Credentials { Id = 1, PasswordHash = new byte[] { 0x20, 0x20, 0x10, 0x20, 0x20, 0x20, 0x20 } };
 
             Assert.DoesNotThrow(() => accountRepository.Update(theme));
         }

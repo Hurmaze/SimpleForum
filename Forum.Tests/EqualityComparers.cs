@@ -1,12 +1,11 @@
 ﻿using Services.Models;
-using DAL.Entities.Account;
-using DAL.Entities.Forum;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Entities;
 
 namespace Forum.Tests
 {
@@ -107,9 +106,9 @@ namespace Forum.Tests
         }
     }
 
-    internal class AccountEqualityComparer : IEqualityComparer<Account>
+    internal class AccountEqualityComparer : IEqualityComparer<Credentials>
     {
-        public bool Equals([AllowNull] Account x, [AllowNull] Account y)
+        public bool Equals([AllowNull] Credentials x, [AllowNull] Credentials y)
         {
             if (x == null && y == null)
                 return true;
@@ -120,7 +119,7 @@ namespace Forum.Tests
                 && x.Email == y.Email;
         }
 
-        public int GetHashCode([DisallowNull] Account obj)
+        public int GetHashCode([DisallowNull] Credentials obj)
         {
             return obj.GetHashCode();
         }

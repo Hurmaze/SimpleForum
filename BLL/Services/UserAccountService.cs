@@ -7,10 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
-using DAL.Entities.Forum;
-using DAL.Entities.Account;
 using Microsoft.Extensions.Logging;
 using Services.Validation.Exceptions;
+using DAL.Entities;
 
 namespace Services.Services
 {
@@ -171,7 +170,7 @@ namespace Services.Services
                 a => a.Email,
                 (u, a) => new { u, a })
                 .AsEnumerable()
-                .Select(c => new Tuple<User, Account>(c.u, c.a));
+                .Select(c => new Tuple<User, Credentials>(c.u, c.a));
 
             return _mapper.Map<IEnumerable<UserModel>>(tuple);
         }
@@ -194,7 +193,7 @@ namespace Services.Services
             }
             var account = await _unitOfWork.AccountRepository.GetByEmailAsync(user.Email);
 
-            var tuple = new Tuple<User, Account>(user, account);
+            var tuple = new Tuple<User, Credentials>(user, account);
             var ret =  _mapper.Map<UserModel>(tuple);
             return ret;
         }
@@ -218,7 +217,7 @@ namespace Services.Services
                 a => a.Email,
                 (u, a) => new { u, a })
                 .AsEnumerable()
-                .Select(c => new Tuple<User, Account>(c.u, c.a));
+                .Select(c => new Tuple<User, Credentials>(c.u, c.a));
 
             return _mapper.Map<IEnumerable<UserModel>>(tuple);
         }
@@ -298,7 +297,7 @@ namespace Services.Services
 
             var accountModel = CreateAccount(authModel.Password, authModel, role.Id);
 
-            var account = _mapper.Map<Account>(accountModel);
+            var account = _mapper.Map<Credentials>(accountModel);
             account.Role = role;
 
             var user = _mapper.Map<User>(authModel);

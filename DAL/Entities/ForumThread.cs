@@ -1,4 +1,4 @@
-﻿namespace DAL.Entities.Forum
+﻿namespace DAL.Entities
 {
     /// <summary>
     /// ForumThread

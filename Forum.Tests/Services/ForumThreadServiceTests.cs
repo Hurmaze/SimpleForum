@@ -1,6 +1,5 @@
 ﻿using Services.Models;
 using Services.Services;
-using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Entities;
 
 namespace Forum.Tests.Services
 {

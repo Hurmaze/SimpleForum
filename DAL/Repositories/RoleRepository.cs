@@ -1,7 +1,7 @@
 ﻿
 
 using DAL.DbAccess;
-using DAL.Entities.Account;
+using DAL.Entities.Credentials;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

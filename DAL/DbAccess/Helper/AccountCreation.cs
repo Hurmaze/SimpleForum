@@ -1,4 +1,4 @@
-﻿using DAL.Entities.Account;
+﻿using DAL.Entities;
 using DAL.Entities.Forum;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace DAL.DbAccess.Helper
         /// <param name="account"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        internal static Account CreateAccount(Account account, string password)
+        internal static Credentials CreateAccount(Credentials account, string password)
         {
             byte[] passwordHash;
             byte[] passwordSalt;
@@ -30,7 +30,7 @@ namespace DAL.DbAccess.Helper
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            Account newaccount = new Account
+            Credentials newaccount = new Credentials
             {
                 Id = account.Id,
                 Email = account.Email,

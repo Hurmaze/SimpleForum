@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Account;
+using DAL.Entities.Credentials;
 using DAL.Entities.Forum;
 using DAL.Interfaces;
 using DAL.Repositories;

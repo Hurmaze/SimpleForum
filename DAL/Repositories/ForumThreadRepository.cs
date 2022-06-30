@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Forum;
+using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

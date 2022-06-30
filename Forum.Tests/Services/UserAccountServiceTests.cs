@@ -1,8 +1,6 @@
 ﻿using Services;
 using Services.Models;
 using Services.Services;
-using DAL.Entities.Account;
-using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,6 +14,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Entities;
 
 namespace Forum.Tests.Services
 {
@@ -32,7 +31,7 @@ namespace Forum.Tests.Services
             var registerModel = new RegistrationModel { Email = "valid@email.com", Nickname = "SuperNIckname", Password = "Passw0rd", PasswordRepeat = "Passw0rd"};
             
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            mockUnitOfWork.Setup(m => m.AccountRepository.AddAsync(It.IsAny<Account>()));
+            mockUnitOfWork.Setup(m => m.AccountRepository.AddAsync(It.IsAny<Credentials>()));
             mockUnitOfWork.Setup(m => m.UserRepository.AddAsync(It.IsAny<User>()));
             mockUnitOfWork.Setup(m => m.RoleRepository.GetAllAsync())
                 .ReturnsAsync(data.GetRoleEntities);
@@ -44,7 +43,7 @@ namespace Forum.Tests.Services
             await userAccountService.RegisterAsync(registerModel);
 
             mockUnitOfWork.Verify(x => x.UserRepository.AddAsync(It.IsAny<User>()), Times.Once);
-            mockUnitOfWork.Verify(x => x.AccountRepository.AddAsync(It.IsAny<Account>()), Times.Once);
+            mockUnitOfWork.Verify(x => x.AccountRepository.AddAsync(It.IsAny<Credentials>()), Times.Once);
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);
         }
 
@@ -304,7 +303,7 @@ namespace Forum.Tests.Services
 
             await userAccountService.ChangeRoleAsync(data.GetUserModels[0].Email, 1);
 
-            mockUnitOfWork.Verify(x => x.AccountRepository.Update(It.IsAny<Account>()), Times.Once());
+            mockUnitOfWork.Verify(x => x.AccountRepository.Update(It.IsAny<Credentials>()), Times.Once());
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once());
         }
 
@@ -380,7 +379,7 @@ namespace Forum.Tests.Services
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes("Passw0rd"));
             }
-            var account = new Account 
+            var account = new Credentials 
             { 
                 Email = "valid@email.com",
                 PasswordHash = passwordHash,

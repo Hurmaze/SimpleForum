@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Account;
+using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +28,7 @@ namespace DAL.Repositories
         /// Adds the Account asynchronous.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public async Task AddAsync(Account entity)
+        public async Task AddAsync(Credentials entity)
         {
             await _authDbContext.Accounts.AddAsync(entity);
         }
@@ -40,7 +40,7 @@ namespace DAL.Repositories
         /// <returns>
         /// Task&lt;Account&gt;
         /// </returns>
-        public async Task<Account> DeleteByIdAsync(int id)
+        public async Task<Credentials> DeleteByIdAsync(int id)
         {
             var entity = await _authDbContext.Accounts.FindAsync(id);
 
@@ -58,7 +58,7 @@ namespace DAL.Repositories
         /// <returns>
         /// Task&lt;IEnumerable&lt;Account&gt;&gt;.
         /// </returns>
-        public async Task<IEnumerable<Account>> GetAllAsync()
+        public async Task<IEnumerable<Credentials>> GetAllAsync()
         {
             return await _authDbContext.Accounts
                 .Include(a => a.Role)
@@ -72,7 +72,7 @@ namespace DAL.Repositories
         /// <returns>
         /// Returns entity or null.
         /// </returns>
-        public async Task<Account> GetByEmailAsync(string email)
+        public async Task<Credentials> GetByEmailAsync(string email)
         {
             return await _authDbContext.Accounts
                 .Include(a => a.Role)
@@ -84,7 +84,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Task&lt;Account&gt;</returns>
-        public async Task<Account> GetByIdAsync(int id)
+        public async Task<Credentials> GetByIdAsync(int id)
         {
             return await _authDbContext.Accounts
                 .Include(a => a.Role)
@@ -113,7 +113,7 @@ namespace DAL.Repositories
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public void Update(Account entity)
+        public void Update(Credentials entity)
         {
             _authDbContext.Entry(entity).State = EntityState.Modified;
         }

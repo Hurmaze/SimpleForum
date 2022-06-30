@@ -1,4 +1,4 @@
-﻿using DAL.Entities.Account;
+﻿using DAL.Entities;
 using DAL.Entities.Forum;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace DAL.Interfaces
     /// Interface of the account repository
     /// </summary>
     /// <seealso cref="IRepository&lt;Account&gt;" />
-    public interface IAccountRepository : IRepository<Account>
+    public interface IAccountRepository : IRepository<Credentials>
     {
         /// <summary>
         /// Determines whether is email exist asynchronous
@@ -25,6 +25,6 @@ namespace DAL.Interfaces
         /// </summary>
         /// <param name="email">The email.</param>
         /// <returns>Returns entity of null.</returns>
-        Task<Account> GetByEmailAsync(string email);
+        Task<Credentials> GetByEmailAsync(string email);
     }
 }

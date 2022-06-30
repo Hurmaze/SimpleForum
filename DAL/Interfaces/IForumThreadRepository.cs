@@ -1,4 +1,4 @@
-﻿using DAL.Entities.Forum;
+﻿using DAL.Entities;
 
 namespace DAL.Interfaces
 {

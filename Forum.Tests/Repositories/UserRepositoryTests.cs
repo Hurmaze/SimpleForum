@@ -1,5 +1,5 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Forum;
+using DAL.Entities;
 using DAL.Repositories;
 using NUnit.Framework;
 using System;

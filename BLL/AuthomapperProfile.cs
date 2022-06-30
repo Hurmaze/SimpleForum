@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Services.Models;
-using DAL.Entities.Account;
-using DAL.Entities.Forum;
+using DAL.Entities;
 
 namespace Services
 {
@@ -21,10 +20,10 @@ namespace Services
                 .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
                 .ReverseMap();
 
-            CreateMap<Account, UserModel>()
+            CreateMap<Credentials, UserModel>()
                 .ForMember(um => um.RoleName, x => x.MapFrom(u => u.Role.RoleName));
 
-            CreateMap<Tuple<User, Account>, UserModel>()
+            CreateMap<Tuple<User, Credentials>, UserModel>()
                 .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.Item1.ThreadPosts.Select(y => y.Id)))
                 .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Item1.Threads.Select(y => y.Id)))
                 .ForMember(um => um.RoleName, x => x.MapFrom(u => u.Item2.Role.RoleName))
@@ -38,7 +37,7 @@ namespace Services
             CreateMap<User, RegistrationModel>()
                 .ReverseMap();
 
-            CreateMap<Account, AccountModel>()
+            CreateMap<Credentials, AccountModel>()
                 .ForMember(um => um.RoleName, x => x.MapFrom(a => a.Role.RoleName))
                 .ReverseMap();
 

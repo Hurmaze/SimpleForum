@@ -1,5 +1,4 @@
 ﻿using Services.Models;
-using DAL.Entities.Forum;
 using NUnit.Framework;
 using Moq;
 using System;
@@ -11,6 +10,7 @@ using DAL.Interfaces;
 using Services.Services;
 using Microsoft.Extensions.Logging;
 using Services.Validation.Exceptions;
+using DAL.Entities;
 
 namespace Forum.Tests.Services
 {

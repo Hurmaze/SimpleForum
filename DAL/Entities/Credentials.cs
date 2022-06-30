@@ -1,21 +1,14 @@
-﻿using DAL.Entities.Forum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.Entities.Account
+﻿namespace DAL.Entities
 {
     /// <summary>
     /// Account entity
     /// </summary>
-    public class Account : BaseEntity
+    public class Credentials : BaseEntity
     {
         /// <summary>
         /// Email
         /// </summary>
-        public string Email { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
         /// Id of the role
@@ -36,5 +29,13 @@ namespace DAL.Entities.Account
         /// Password`s salt
         /// </summary>
         public byte[] PasswordSalt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
+        public User User { get; set; }
     }
 }

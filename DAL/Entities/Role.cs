@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Entities.Account
+namespace DAL.Entities
 {
     /// <summary>
     /// Role
@@ -19,7 +19,7 @@ namespace DAL.Entities.Account
         /// <summary>
         /// Accounts with this role
         /// </summary>
-        public ICollection<Account> Accounts { get; set; }
+        public ICollection<Credentials> Accounts { get; set; }
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using DAL.Entities.Account;
+﻿using DAL.Entities.Credentials;
 
 namespace DAL.Interfaces
 {

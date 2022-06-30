@@ -2,10 +2,10 @@
 using Services.Interfaces;
 using Services.Models;
 using Services.Validation;
-using DAL.Entities.Forum;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 using Services.Validation.Exceptions;
+using DAL.Entities;
 
 namespace Services.Services
 {
