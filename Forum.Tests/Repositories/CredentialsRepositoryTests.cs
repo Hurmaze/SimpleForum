@@ -18,13 +18,13 @@ namespace Forum.Tests.Repositories
                 new Role { Id = 2, RoleName = "admin"}
             };
 
-        List<Credentials> expectedAccounts = new List<Credentials>
+        List<Credentials> expectedCredentials = new List<Credentials>
             {
-                new Credentials { Id = 1, Role = roles[0], UserId = 1, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 2, Role = roles[0], UserId = 2, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 3, Role = roles[0], UserId = 3, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 4, Role = roles[1], UserId = 4, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 5, Role = roles[1], UserId = 5, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
+                new Credentials { Id = 1, Role = roles[0], RoleId = 1, UserId = 1, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 2, Role = roles[0], RoleId = 1, UserId = 2, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 3, Role = roles[0], RoleId = 1, UserId = 3, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 4, Role = roles[1], RoleId = 2, UserId = 4, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 5, Role = roles[1], RoleId = 2, UserId = 5, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
             };
 
         [TestCase(1)]
@@ -37,13 +37,13 @@ namespace Forum.Tests.Repositories
 
             var account = await credentialsRepository.GetByIdAsync(id);
 
-            var expected = expectedAccounts.FirstOrDefault(x => x.Id == id);
+            var expected = expectedCredentials.FirstOrDefault(x => x.Id == id);
 
             Assert.That(account, Is.EqualTo(expected).Using(new AccountEqualityComparer()), message: "GetByIdAsync method works incorrect");
         }
 
         [Test]
-        public async Task credentialsRepository_GetAllAsync_ReturnsAllValues()
+        public async Task CredentialsRepository_GetAllAsync_ReturnsAllValues()
         {
             using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
@@ -51,7 +51,7 @@ namespace Forum.Tests.Repositories
             var accounts = await credentialsRepository.GetAllAsync();
             accounts = accounts.OrderBy(x => x.Id);
 
-            Assert.That(accounts, Is.EqualTo(expectedAccounts).Using(new AccountEqualityComparer()), message: "GetAllAsync method works incorrect");
+            Assert.That(accounts, Is.EqualTo(expectedCredentials).Using(new AccountEqualityComparer()), message: "GetAllAsync method works incorrect");
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace Forum.Tests.Repositories
             await credentialsRepository.AddAsync(account);
             await context.SaveChangesAsync();
 
-            Assert.That(context.Credentials.Count(), Is.EqualTo(expectedAccounts.Count + 1), message: "AddAsync method works incorrect");
+            Assert.That(context.Credentials.Count(), Is.EqualTo(expectedCredentials.Count + 1), message: "AddAsync method works incorrect");
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace Forum.Tests.Repositories
             await credentialsRepository.DeleteByIdAsync(1);
             await context.SaveChangesAsync();
 
-            Assert.That(context.Credentials.Count(), Is.EqualTo(expectedAccounts.Count - 1), message: "DeleteByIdAsync works incorrect");
+            Assert.That(context.Credentials.Count(), Is.EqualTo(expectedCredentials.Count - 1), message: "DeleteByIdAsync works incorrect");
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Forum.Tests.Repositories
 
             var account = await credentialsRepository.GetByUserIdAsync(id);
 
-            var expected = expectedAccounts.FirstOrDefault(x => x.Id == id);
+            var expected = expectedCredentials.FirstOrDefault(x => x.Id == id);
 
             Assert.That(account, Is.EqualTo(expected).Using(new AccountEqualityComparer()), message: "GetByIdAsync method works incorrect");
         }

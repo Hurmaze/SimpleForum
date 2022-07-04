@@ -23,13 +23,16 @@ namespace Forum.Tests.Services
         {
             data = new Data();
 
-            var forumThread = new ForumThreadRequest { AuthorId = 1, Content = "kekd", ThemeId = 1, Title = "kekd"};
+            var forumThreadRequest = new ForumThreadRequest { AuthorId = 1, Content = "kekd", ThemeId = 1, Title = "kekd"};
+            var forumThreadEntity = new ForumThread { Id = 6, AuthorId = 1, Content = "kekd", ThemeId = 1, Title = "kekd" };
+
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            mockUnitOfWork.Setup(m => m.ForumThreadRepository.AddAsync(It.IsAny<ForumThread>()));
+            mockUnitOfWork.Setup(m => m.ForumThreadRepository.AddAsync(It.IsAny<ForumThread>()))
+                .ReturnsAsync(forumThreadEntity);
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
             var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            await forumThreadService.AddAsync(forumThread);
+            await forumThreadService.AddAsync(forumThreadRequest);
 
             mockUnitOfWork.Verify(x => x.ForumThreadRepository.AddAsync(It.IsAny<ForumThread>()), Times.Once);
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);

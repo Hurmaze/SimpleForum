@@ -67,7 +67,7 @@ namespace Forum.Tests.Repositories
             using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
             var threadRepository = new ForumThreadRepository(context);
-            var thread = new ForumThread {Content = "Content" };
+            var thread = new ForumThread {Content = "Content", Title = "Title"};
 
             await threadRepository.AddAsync(thread);
             await context.SaveChangesAsync();

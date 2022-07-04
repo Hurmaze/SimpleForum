@@ -210,22 +210,22 @@ namespace Forum.Tests.Services
             Assert.ThrowsAsync<NotFoundException>(() => userAccountService.DeleteRoleAsync(It.IsAny<int>()));
         }
 
-        [Test]
-        public async Task UserService_UpdateAsync_Updates()
+        [TestCase(3)]
+        public async Task UserService_UpdateAsync_Updates(int userId)
         {
             data = new Data();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.UserRepository.Update(It.IsAny<User>()));
-            mockUnitOfWork.Setup(m => m.UserRepository.GetByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(data.GetUserEntities[0]);
+            mockUnitOfWork.Setup(m => m.UserRepository.GetByIdAsync(userId))
+                .ReturnsAsync(data.GetUserEntities[userId-1]);
 
             var mockLogger = new Mock<ILogger<UserService>>();
             var jwtoptions = new Mock<IOptions<JwtOptions>>();
 
             var userAccountService = new UserService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            await userAccountService.UpdateAsync(data.GetUserModels[0].Id,data.GetUserModels[0]);
+            await userAccountService.UpdateAsync(userId,data.GetUserModels[userId-1]);
 
             mockUnitOfWork.Verify(x => x.UserRepository.Update(It.IsAny<User>()), Times.Once());
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once());
@@ -248,14 +248,16 @@ namespace Forum.Tests.Services
             Assert.ThrowsAsync<NotFoundException>(() => userAccountService.UpdateAsync(data.GetUserModels[0].Id, data.GetUserModels[0]));
         }
 
-        [Test]
-        public async Task UserService_UpdateAsync_ThrowsNicknameTakenException()
+        [TestCase(1)]
+        public async Task UserService_UpdateAsync_ThrowsNicknameTakenException(int id)
         {
             data = new Data();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var model = data.GetUserModels[id - 1];
+            model.Nickname = "nickname3";
 
-            mockUnitOfWork.Setup(m => m.UserRepository.GetByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(data.GetUserEntities[1]);
+            mockUnitOfWork.Setup(m => m.UserRepository.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(data.GetUserEntities[id-1]);
 
             mockUnitOfWork.Setup(m => m.UserRepository.IsNicknameTakenAsync(It.IsAny<string>()))
                 .ReturnsAsync(true);
@@ -265,20 +267,20 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            Assert.ThrowsAsync<NicknameTakenException>(() => userAccountService.UpdateAsync(data.GetUserModels[0].Id,data.GetUserModels[0]));
+            Assert.ThrowsAsync<NicknameTakenException>(() => userAccountService.UpdateAsync(1,model));
         }
 
-        [Test]
-        public async Task UserService_ChangeRoleAsync_ChangesRole()
+        [TestCase(1,1)]
+        public async Task UserService_ChangeRoleAsync_ChangesRole(int userId, int roleId)
         {
             data = new Data();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
-            mockUnitOfWork.Setup(m => m.CredentialsRepository.Update(data.GetAccountEntities[0]));
-            mockUnitOfWork.Setup(m => m.RoleRepository.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(data.GetRoleEntities[0]);
-            mockUnitOfWork.Setup(m => m.CredentialsRepository.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(data.GetAccountEntities[0]);
+            mockUnitOfWork.Setup(m => m.CredentialsRepository.Update(It.IsAny<Credentials>()));
+            mockUnitOfWork.Setup(m => m.CredentialsRepository.GetByUserIdAsync(userId))
+               .ReturnsAsync(data.GetAccountEntities.FirstOrDefault(x => x.UserId == userId));
+            mockUnitOfWork.Setup(m => m.RoleRepository.GetByIdAsync(roleId))
+                .ReturnsAsync(data.GetRoleEntities.FirstOrDefault(x => x.Id == roleId));
 
             var mockLogger = new Mock<ILogger<UserService>>();
             var jwtoptions = new Mock<IOptions<JwtOptions>>();
@@ -293,14 +295,14 @@ namespace Forum.Tests.Services
 
 
         [TestCase(342, 1)]
-        [TestCase("email1@gmail.com", 3423)]
-        public async Task UserService_ChangeRoleAsync_ThrowsNotFoundException(int id, int roleId)
+        [TestCase(1, 3423)]
+        public async Task UserService_ChangeRoleAsync_ThrowsNotFoundException(int userId, int roleId)
         {
             data = new Data();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
-            mockUnitOfWork.Setup(m => m.CredentialsRepository.GetByUserIdAsync(id))
-                .ReturnsAsync(data.GetAccountEntities.FirstOrDefault(x => x.UserId == id));
+            mockUnitOfWork.Setup(m => m.CredentialsRepository.GetByUserIdAsync(userId))
+                .ReturnsAsync(data.GetAccountEntities.FirstOrDefault(x => x.UserId == userId));
             mockUnitOfWork.Setup(m => m.RoleRepository.GetByIdAsync(roleId))
                 .ReturnsAsync(data.GetRoleEntities.FirstOrDefault(x => x.Id == roleId));
 
@@ -309,7 +311,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            Assert.ThrowsAsync<NotFoundException>(() => userAccountService.ChangeRoleAsync(id, roleId));
+            Assert.ThrowsAsync<NotFoundException>(() => userAccountService.ChangeRoleAsync(userId, roleId));
         }
 
         [Test]
