@@ -33,9 +33,11 @@ namespace DAL.Repositories
         /// Adds the ForumThread asynchronous.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public async Task AddAsync(ForumThread entity)
+        public async Task<ForumThread> AddAsync(ForumThread entity)
         {
             await _forumDbContext.Threads.AddAsync(entity);
+
+            return entity;
         }
 
         /// <summary>

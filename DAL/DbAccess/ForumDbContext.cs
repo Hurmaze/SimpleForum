@@ -37,7 +37,7 @@ namespace DAL.DbAccess
         /// <summary>
         /// DbSet of Accounts
         /// </summary>
-        public DbSet<Credentials> Accounts { get; set; }
+        public DbSet<Credentials> Credentials { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ForumDbContext"/> class.
@@ -55,47 +55,50 @@ namespace DAL.DbAccess
         {
             #region FluentApi
             var user = modelBuilder.Entity<User>();
-            user.HasMany(a => a.ThreadPosts)
+            user.HasMany(u => u.ThreadPosts)
                 .WithOne(t => t.Author)
                 .OnDelete(DeleteBehavior.SetNull);
-            user.HasMany(a => a.Threads)
+            user.HasMany(u => u.Threads)
                 .WithOne(t => t.Author)
                 .OnDelete(DeleteBehavior.SetNull);
             user.HasOne(u => u.Credentials)
-                .WithOne(c => c.User)
+                .WithOne(p => p.User)
+                .HasForeignKey<Credentials>(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-            user.HasIndex(a => a.Email).IsUnique();
-            user.Property(a => a.Email).HasMaxLength(100).IsRequired();
-            user.Property(a => a.Nickname).HasMaxLength(30);
+            user.HasIndex(u => u.Email).IsUnique();
+            user.Property(u => u.Email).HasMaxLength(100).IsRequired();
+            user.Property(u => u.Nickname).HasMaxLength(30);
+            user.Property(u => u.RegistrationTime).HasDefaultValueSql("GETDATE()");
             user.ToTable("Users");
 
             var thread = modelBuilder.Entity<ForumThread>();
-            thread.ToTable("Threads");
-            thread.HasMany(p => p.ThreadPosts)
-                .WithOne(c => c.Thread)
+            thread.HasMany(t => t.ThreadPosts)
+                .WithOne(p => p.Thread)
                 .OnDelete(DeleteBehavior.Cascade);
-            thread.Property(p => p.Title).HasMaxLength(100).IsRequired();
+            thread.Property(t => t.Title).HasMaxLength(100).IsRequired();
             thread.Property(t => t.Content).IsRequired();
-            thread.Property(p => p.TimeCreated).HasDefaultValueSql("GETDATE()");
+            thread.Property(t => t.TimeCreated).HasDefaultValueSql("GETDATE()");
+            thread.ToTable("Threads");
 
             var theme = modelBuilder.Entity<Theme>();
             theme.HasMany(t => t.ForumThreads)
                 .WithOne(ft => ft.Theme)
                 .OnDelete(DeleteBehavior.SetNull);
             theme.Property(th => th.ThemeName).HasMaxLength(50).IsRequired();
+            theme.ToTable("Themes");
 
             var post = modelBuilder.Entity<Post>();
             post.Property(p => p.TimeCreated).HasDefaultValueSql("GETDATE()");
             post.Property(p => p.Content).IsRequired();
-            post.ToTable("ThreadPosts");
+            post.ToTable("Posts");
 
-            var account = modelBuilder.Entity<Credentials>();
-            account.HasOne(a => a.Role)
-                .WithMany(r => r.Accounts)
+            var credentials = modelBuilder.Entity<Credentials>();
+            credentials.HasOne(p => p.Role)
+                .WithMany(r => r.Credentials)
                 .OnDelete(DeleteBehavior.SetNull);
-            account.Property(a => a.PasswordSalt).IsRequired();
-            account.Property(a => a.PasswordHash).IsRequired();
-            account.ToTable("Accounts");
+            credentials.Property(p => p.PasswordSalt).IsRequired();
+            credentials.Property(p => p.PasswordHash).IsRequired();
+            credentials.ToTable("Credentials");
 
             modelBuilder.Entity<Role>()
                 .Property(r => r.RoleName).HasMaxLength(50).IsRequired();
@@ -166,7 +169,7 @@ namespace DAL.DbAccess
             };
             for (int i = 0; i < accounts.Count; i++)
             {
-                accounts[i] = AccountCreation.CreateAccount(accounts[i], "Passw0rd");
+                accounts[i] = CredentialsCreation.CreateCredentials(accounts[i], "Passw0rd");
             }
 
             modelBuilder.Entity<Credentials>().HasData(

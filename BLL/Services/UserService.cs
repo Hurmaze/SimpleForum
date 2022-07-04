@@ -16,8 +16,8 @@ namespace Services.Services
     /// <summary>
     /// UserAccount service
     /// </summary>
-    /// <seealso cref="IUserAccountService" />
-    public class UserAccountService : IUserAccountService
+    /// <seealso cref="IUserService" />
+    public class UserService : IUserService
     {
         /// <summary>
         /// The unit of work
@@ -28,25 +28,20 @@ namespace Services.Services
         /// </summary>
         private readonly IMapper _mapper;
         /// <summary>
-        /// The authentication options
-        /// </summary>
-        private readonly IOptions<JwtOptions> _authOptions;
-        /// <summary>
         /// The logger
         /// </summary>
-        private readonly ILogger<UserAccountService> _logger;
+        private readonly ILogger<UserService> _logger;
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserAccountService"/> class.
+        /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
         /// <param name="unitOfWork">The unit of work.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="options">The options.</param>
         /// <param name="logger">The logger.</param>
-        public UserAccountService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<JwtOptions> options, ILogger<UserAccountService> logger)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UserService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _authOptions = options;
             _logger = logger;
         }
 
@@ -56,12 +51,12 @@ namespace Services.Services
         /// <param name="email">The email.</param>
         /// <param name="roleId">The role identifier.</param>
         /// <exception cref="NotFoundException"></exception>
-        public async Task ChangeRoleAsync(string email, int roleId)
+        public async Task ChangeRoleAsync(int userId, int roleId)
         {
-            var account = await _unitOfWork.AccountRepository.GetByEmailAsync(email);
-            if(account == null)
+            var credentials = await _unitOfWork.CredentialsRepository.GetByUserIdAsync(userId);
+            if(credentials == null)
             {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", email.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", userId.ToString()));
             }
 
             var role = await _unitOfWork.RoleRepository.GetByIdAsync(roleId);
@@ -71,13 +66,13 @@ namespace Services.Services
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Role).Name, "Id", roleId.ToString()));
             }
 
-            account.Role = role;
-            account.RoleId = role.Id;
+            credentials.Role = role;
+            credentials.RoleId = role.Id;
 
-            _unitOfWork.AccountRepository.Update(account);
+            _unitOfWork.CredentialsRepository.Update(credentials);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("The role of the user {email} has been changed to {rolename}", account.Email, role.RoleName);
+            _logger.LogInformation("The role of the user {email} has been changed to {rolename}", credentials.User.Email, role.RoleName);
         }
 
         /// <summary>
@@ -124,10 +119,7 @@ namespace Services.Services
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", userId.ToString()));
             }
 
-            var account = await _unitOfWork.AccountRepository.GetByEmailAsync(user.Email);
-
             await _unitOfWork.UserRepository.DeleteByIdAsync(userId);
-            await _unitOfWork.AccountRepository.DeleteByIdAsync(account.Id);
             await _unitOfWork.SaveAsync();
 
             _logger.LogInformation("The user {email} has been deleted.", user.Email);
@@ -161,18 +153,8 @@ namespace Services.Services
         public async Task<IEnumerable<UserModel>> GetAllAsync()
         { 
             var users = await _unitOfWork.UserRepository.GetAllAsync();
-            var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
 
-            var tuple = users
-                .Join(
-                accounts,
-                u => u.Email,
-                a => a.Email,
-                (u, a) => new { u, a })
-                .AsEnumerable()
-                .Select(c => new Tuple<User, Credentials>(c.u, c.a));
-
-            return _mapper.Map<IEnumerable<UserModel>>(tuple);
+            return _mapper.Map<IEnumerable<UserModel>>(users);
         }
 
         /// <summary>
@@ -191,11 +173,8 @@ namespace Services.Services
             {
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Id", id.ToString()));
             }
-            var account = await _unitOfWork.AccountRepository.GetByEmailAsync(user.Email);
 
-            var tuple = new Tuple<User, Credentials>(user, account);
-            var ret =  _mapper.Map<UserModel>(tuple);
-            return ret;
+            return _mapper.Map<UserModel>(user);
         }
 
         /// <summary>
@@ -206,20 +185,8 @@ namespace Services.Services
         public async Task<IEnumerable<UserModel>> GetByRoleAsync(int roleId)
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync();
-            var accounts = await _unitOfWork.AccountRepository.GetAllAsync();
 
-            accounts = accounts?.Where(a => a.RoleId == roleId);
-
-            var tuple = users
-                .Join(
-                accounts,
-                u => u.Email,
-                a => a.Email,
-                (u, a) => new { u, a })
-                .AsEnumerable()
-                .Select(c => new Tuple<User, Credentials>(c.u, c.a));
-
-            return _mapper.Map<IEnumerable<UserModel>>(tuple);
+            return _mapper.Map<IEnumerable<UserModel>>(users);
         }
 
         /// <summary>
@@ -236,33 +203,6 @@ namespace Services.Services
         }
 
         /// <summary>
-        /// Logins asynchronous.
-        /// </summary>
-        /// <param name="authModel">The authentication model.</param>
-        /// <returns>
-        /// Task&lt;string&gt; - JWT token
-        /// </returns>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="WrongPasswordException"></exception>
-        public async Task<string> LoginAsync(LoginModel authModel)
-        {
-            var account = await _unitOfWork.AccountRepository.GetByEmailAsync(authModel.Email);
-
-            if(account == null)
-            {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", authModel.Email.ToString()));
-            }
-
-            if(!VerifyPassword(authModel.Password, account.PasswordHash, account.PasswordSalt))
-            {
-                throw new WrongPasswordException(ExceptionMessages.WrongPassword);
-            }
-
-            _logger.LogInformation("The user with email {email} has logged into.", authModel.Email);
-            return GenerateToken(_mapper.Map<AccountModel>(account));
-        }
-
-        /// <summary>
         /// Registers the Account asynchronous.
         /// </summary>
         /// <param name="authModel">The authentication model.</param>
@@ -273,11 +213,11 @@ namespace Services.Services
         /// <exception cref="NicknameTakenException"></exception>
         public async Task<UserModel> RegisterAsync(RegistrationModel authModel)
         {
-            bool isExist = await _unitOfWork.AccountRepository.IsEmailExistAsync(authModel.Email);
+            bool isExist = await _unitOfWork.UserRepository.IsEmailExistAsync(authModel.Email);
 
             if (isExist)
             {
-                throw new InvalidRegistrationException(String.Format(ExceptionMessages.EmailIsAlreadyUsed, authModel.Email));
+                throw new InvalidRegistrationException(String.Format(ExceptionMessages.EmailUsed, authModel.Email));
             }
 
             if(authModel.Nickname == "")
@@ -295,15 +235,9 @@ namespace Services.Services
 
             var role = roles.FirstOrDefault(x => x.RoleName == BasicRoles.User.ToString().ToLower());
 
-            var accountModel = CreateAccount(authModel.Password, authModel, role.Id);
-
-            var account = _mapper.Map<Credentials>(accountModel);
-            account.Role = role;
-
-            var user = _mapper.Map<User>(authModel);
+            var user = CreateAccount(authModel, role.Id);
 
             await _unitOfWork.UserRepository.AddAsync(user);
-            await _unitOfWork.AccountRepository.AddAsync(account);
             await _unitOfWork.SaveAsync();
 
             _logger.LogInformation("User with email {email} registered.", authModel.Email);
@@ -316,13 +250,18 @@ namespace Services.Services
         /// <param name="userModel">The user model.</param>
         /// <exception cref="Services.Validation.Exceptions.NotFoundException"></exception>
         /// <exception cref="Services.Validation.Exceptions.NicknameTakenException"></exception>
-        public async Task UpdateAsync(UserModel userModel)
+        public async Task UpdateAsync(int id, UserModel userModel)
         { 
-            var user =  await _unitOfWork.UserRepository.GetByEmailAsync(userModel.Email);
+            var user =  await _unitOfWork.UserRepository.GetByIdAsync(id);
 
             if(user == null)
             {
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", userModel.Email.ToString()));
+            }
+
+            if(user.Email != userModel.Email)
+            {
+                throw new DifferenceEmailException(String.Format(ExceptionMessages.DifferenceEmail, user.Email, id));
             }
 
             if(user.Nickname != userModel.Nickname)
@@ -386,71 +325,28 @@ namespace Services.Services
         /// <param name="registrationModel">The registration model.</param>
         /// <param name="roleId">The role identifier.</param>
         /// <returns></returns>
-        private AccountModel CreateAccount(string password, RegistrationModel registrationModel, int roleId)
+        private User CreateAccount(RegistrationModel registrationModel, int roleId)
         {
             byte[] passwordHash;
             byte[] passwordSalt;
             using (var hmac = new HMACSHA512())
             {
                 passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registrationModel.Password));
             }
 
-            AccountModel accountModel = new AccountModel {
+            User user = new User {
                 Email = registrationModel.Email,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                RoleId = roleId
+                Nickname = registrationModel.Nickname,
+                Credentials = new Credentials
+                {
+                    PasswordHash = passwordHash,
+                    PasswordSalt = passwordSalt,
+                    RoleId = roleId
+                }
             };
 
-            return accountModel;
-        }
-
-        /// <summary>
-        /// Verifies the password.
-        /// </summary>
-        /// <param name="password">The password.</param>
-        /// <param name="passwordHash">The password hash.</param>
-        /// <param name="passwordSalt">The password salt.</param>
-        /// <returns></returns>
-        private bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
-
-        /// <summary>
-        /// Generates the JWT token.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <returns></returns>
-        private string GenerateToken(AccountModel user)
-        {
-            var authParams = _authOptions.Value;
-
-            List<Claim> claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.RoleName)
-            };
-            claims.Add(new Claim("id",user.Id.ToString()));    
-
-            var key = authParams.GetSymmetricSecurityKey();
-            var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
-
-            var token = new JwtSecurityToken(
-                authParams.Issuer,
-                authParams.Audience,
-                claims: claims,
-                expires: DateTime.Now.AddSeconds(authParams.TokenLifeTime),
-                signingCredentials: credantials);
-
-            _logger.LogInformation("JWT token for {email} generated.", user.Email);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return user;
         }
     }
 }

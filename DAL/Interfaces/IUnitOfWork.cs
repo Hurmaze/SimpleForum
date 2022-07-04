@@ -19,7 +19,7 @@ namespace DAL.Interfaces
         /// <value>
         /// The account repository.
         /// </value>
-        public IAccountRepository AccountRepository { get; }
+        public ICredentialsRepository CredentialsRepository { get; }
         /// <summary>
         /// Gets the post repository.
         /// </summary>

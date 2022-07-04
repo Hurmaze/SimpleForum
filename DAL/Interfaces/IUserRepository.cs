@@ -25,5 +25,12 @@ namespace DAL.Interfaces
         /// <param name="nickname">The nickname.</param>
         /// <returns></returns>
         Task<bool> IsNicknameTakenAsync(string nickname);
+
+        /// <summary>
+        /// Determines whether is email exist asynchronous
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns>True, if email exists and false if not.</returns>
+        Task<bool> IsEmailExistAsync(string email);
     }
 }

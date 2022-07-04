@@ -60,16 +60,16 @@ namespace ForumApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "admin, moderator")]
-        public async Task<ActionResult> Update(ForumThreadModel model)
+        public async Task<ActionResult> Update(int id, [FromBody]ForumThreadRequest model)
         {
-            await _forumThreadService.UpdateAsync(model);
+            await _forumThreadService.UpdateAsync(id, model);
 
             return NoContent();
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Add(ForumThreadModel model)
+        public async Task<ActionResult> Add(ForumThreadRequest model)
         {
             var created = await _forumThreadService.AddAsync(model);
 

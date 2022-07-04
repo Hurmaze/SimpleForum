@@ -1,10 +1,5 @@
 ﻿using Services.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DAL.Entities;
 
 namespace Forum.Tests
@@ -116,7 +111,8 @@ namespace Forum.Tests
                 return false;
 
             return x.Id == y.Id
-                && x.Email == y.Email;
+                && x.UserId == y.UserId
+                && x.RoleId == y.RoleId;
         }
 
         public int GetHashCode([DisallowNull] Credentials obj)

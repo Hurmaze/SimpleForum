@@ -26,7 +26,7 @@ namespace DAL.Interfaces
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        Task AddAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity);
 
         /// <summary>
         /// Updates the specified entity.

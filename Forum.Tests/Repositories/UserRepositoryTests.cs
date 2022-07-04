@@ -125,5 +125,25 @@ namespace Forum.Tests.Repositories
 
             Assert.That(user, Is.EqualTo(expected).Using(new UserEqualityComparer()), message: "GetByIdAsync method works incorrect");
         }
+
+        [Test]
+        public async Task CredentialsRepository_IsEmailExist_ReturnTrue()
+        {
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+
+            var userRepository = new UserRepository(context);
+
+            Assert.IsTrue(await userRepository.IsEmailExistAsync(expectedUsers[0].Email));
+        }
+
+        [Test]
+        public async Task CredentialsRepository_IsEmailExist_ReturnFalse()
+        {
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+
+            var userRepository = new UserRepository(context);
+
+            Assert.IsFalse(await userRepository.IsEmailExistAsync("notexist@gmail.com"));
+        }
     }
 }

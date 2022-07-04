@@ -28,7 +28,7 @@ namespace Forum.Tests.Services
             var mockLogger = new Mock<ILogger<PostService>>();
             var postService = new PostService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            var post = new PostModel { AuthorId = 1, Content = "content", ThreadId = 1, TimeCreated = DateTime.Now };
+            var post = new PostRequest { AuthorId = 1, Content = "content", ThreadId = 1 };
 
             await postService.AddAsync(post);
 
@@ -155,7 +155,7 @@ namespace Forum.Tests.Services
             var mockLogger = new Mock<ILogger<PostService>>();
             var postService = new PostService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            await postService.UpdateAsync(data.GetPostModels[0]);
+            await postService.UpdateAsync(data.GetPostModels[0].Id, data.GetPostRequests[0]);
 
             mockUnitOfWork.Verify(x => x.PostRepository.Update(It.IsAny<Post>()), Times.Once());
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once());
@@ -172,7 +172,7 @@ namespace Forum.Tests.Services
             var mockLogger = new Mock<ILogger<PostService>>();
             var postService = new PostService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            Assert.ThrowsAsync<NotFoundException>(() => postService.UpdateAsync(data.GetPostModels[0]));
+            Assert.ThrowsAsync<NotFoundException>(() => postService.UpdateAsync(data.GetPostModels[0].Id, data.GetPostRequests[0]));
         }
     }
 }

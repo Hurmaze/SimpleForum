@@ -48,7 +48,7 @@ namespace Services.Services
         /// <returns>
         /// Task&lt;PostModel&gt;
         /// </returns>
-        public async Task<PostModel> AddAsync(PostModel model)
+        public async Task<PostModel> AddAsync(PostRequest model)
         {
             var post = _mapper.Map<Post>(model);
 
@@ -142,13 +142,13 @@ namespace Services.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <exception cref="NotFoundException"></exception>
-        public async Task UpdateAsync(PostModel model)
+        public async Task UpdateAsync(int id, PostRequest model)
         {
-            var post = await _unitOfWork.PostRepository.GetByIdAsync(model.Id);
+            var post = await _unitOfWork.PostRepository.GetByIdAsync(id);
 
             if (post == null)
             {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Post).Name, "Id", model.Id.ToString())); 
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Post).Name, "Id", id.ToString())); 
             }
 
             post = _mapper.Map(model, post);

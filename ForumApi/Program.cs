@@ -70,7 +70,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers().AddFluentValidation(fv =>
 {
     fv.RegisterValidatorsFromAssemblyContaining<RegistrationModelValidator>(lifetime: ServiceLifetime.Singleton);
-    fv.RegisterValidatorsFromAssemblyContaining<AccountModelValidator>(lifetime: ServiceLifetime.Singleton);
     fv.RegisterValidatorsFromAssemblyContaining<ForumThreadModelValidator>(lifetime: ServiceLifetime.Singleton);
     fv.RegisterValidatorsFromAssemblyContaining<LoginModelValidator>(lifetime: ServiceLifetime.Singleton);
     fv.RegisterValidatorsFromAssemblyContaining<PostModelValidator>(lifetime: ServiceLifetime.Singleton);
@@ -81,7 +80,7 @@ builder.Services.AddControllers().AddFluentValidation(fv =>
 });
 ValidatorOptions.Global.LanguageManager.Enabled = false;
 
-builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<ICredentialsRepository, CredentialsRepository>();
 builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IThemeRepository, ThemeRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -90,7 +89,7 @@ builder.Services.AddTransient<IPostRepository, PostRepository>();
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddTransient<IUserAccountService, UserAccountService>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<IForumThreadService, ForumThreadService>();
 builder.Services.AddTransient<IStatisticService, StatisticService>();
@@ -98,10 +97,6 @@ builder.Services.AddTransient<IStatisticService, StatisticService>();
 var forumConnectionString = builder.Configuration.GetConnectionString("ForumDb");
 builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(forumConnectionString));
 builder.Services.AddTransient<ForumDbContext>();
-
-var authConnectionString = builder.Configuration.GetConnectionString("AuthenticationDb");
-builder.Services.AddDbContext<AccountDbContext>(x => x.UseSqlServer(authConnectionString));
-builder.Services.AddTransient<AccountDbContext>();
 
 
 var mapperConfig = new MapperConfiguration(mc =>

@@ -36,7 +36,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet("users/{id}")]
-        public async Task<ActionResult<PostModel>> GetByuserId(int userId)
+        public async Task<ActionResult<PostModel>> GetByUserId(int userId)
         {
             var posts = await _postService.GetPostsByUserIdAsync(userId);
 
@@ -54,16 +54,16 @@ namespace ForumApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "admin, moderator")]
-        public async Task<ActionResult> Update(PostModel model)
+        public async Task<ActionResult> Update(int id, PostRequest model)
         {
-            await _postService.UpdateAsync(model);
+            await _postService.UpdateAsync(id, model);
 
             return NoContent(); 
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Add(PostModel model)
+        public async Task<ActionResult> Add(PostRequest model)
         {
             var created = await _postService.AddAsync(model);
 

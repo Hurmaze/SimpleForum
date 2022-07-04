@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Forum.Tests.Repositories
 {
-    internal class AccountRepositoryTests
+    internal class CredentialsRepositoryTests
     {
         static List<Role> roles = new List<Role>
             {
@@ -20,22 +20,22 @@ namespace Forum.Tests.Repositories
 
         List<Credentials> expectedAccounts = new List<Credentials>
             {
-                new Credentials { Id = 1, Role = roles[0], Email = "email1@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 2, Role = roles[0], Email = "email2@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 3, Role = roles[0], Email = "email3@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 4, Role = roles[1], Email = "email4@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Id = 5, Role = roles[1], Email = "email5@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
+                new Credentials { Id = 1, Role = roles[0], UserId = 1, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 2, Role = roles[0], UserId = 2, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 3, Role = roles[0], UserId = 3, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 4, Role = roles[1], UserId = 4, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Id = 5, Role = roles[1], UserId = 5, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
             };
 
         [TestCase(1)]
         [TestCase(4)]
-        public async Task AccountRepository_GetByIdAsync_ReturnsSingleValue(int id)
+        public async Task CredentialsRepository_GetByIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
-            var accountRepository = new AccountRepository(context);
+            var credentialsRepository = new CredentialsRepository(context);
 
-            var account = await accountRepository.GetByIdAsync(id);
+            var account = await credentialsRepository.GetByIdAsync(id);
 
             var expected = expectedAccounts.FirstOrDefault(x => x.Id == id);
 
@@ -43,90 +43,70 @@ namespace Forum.Tests.Repositories
         }
 
         [Test]
-        public async Task accountRepository_GetAllAsync_ReturnsAllValues()
+        public async Task credentialsRepository_GetAllAsync_ReturnsAllValues()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
-            var accountRepository = new AccountRepository(context);
-            var accounts = await accountRepository.GetAllAsync();
+            var credentialsRepository = new CredentialsRepository(context);
+            var accounts = await credentialsRepository.GetAllAsync();
             accounts = accounts.OrderBy(x => x.Id);
 
             Assert.That(accounts, Is.EqualTo(expectedAccounts).Using(new AccountEqualityComparer()), message: "GetAllAsync method works incorrect");
         }
 
         [Test]
-        public async Task accountRepository_AddAsync_AddsValueToDatabase()
+        public async Task CredentialsRepository_AddAsync_AddsValueToDatabase()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
-            var accountRepository = new AccountRepository(context);
+            var credentialsRepository = new CredentialsRepository(context);
             var account = new Credentials {
-                Email = "email6@gmail.com",
+                UserId = 6,
                 PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
                 PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }
             };
 
-            await accountRepository.AddAsync(account);
+            await credentialsRepository.AddAsync(account);
             await context.SaveChangesAsync();
 
-            Assert.That(context.Accounts.Count(), Is.EqualTo(expectedAccounts.Count + 1), message: "AddAsync method works incorrect");
+            Assert.That(context.Credentials.Count(), Is.EqualTo(expectedAccounts.Count + 1), message: "AddAsync method works incorrect");
         }
 
         [Test]
-        public async Task accountRepository_DeleteByIdAsync_DeletesEntity()
+        public async Task CredentialsRepository_DeleteByIdAsync_DeletesEntity()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
-            var accountRepository = new AccountRepository(context);
+            var credentialsRepository = new CredentialsRepository(context);
 
-            await accountRepository.DeleteByIdAsync(1);
+            await credentialsRepository.DeleteByIdAsync(1);
             await context.SaveChangesAsync();
 
-            Assert.That(context.Accounts.Count(), Is.EqualTo(expectedAccounts.Count - 1), message: "DeleteByIdAsync works incorrect");
+            Assert.That(context.Credentials.Count(), Is.EqualTo(expectedAccounts.Count - 1), message: "DeleteByIdAsync works incorrect");
         }
 
         [Test]
-        public void ThemeRepository_Update_TimesOnce()
+        public void CredentialsRepository_Update_TimesOnce()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
-            var accountRepository = new AccountRepository(context);
+            var credentialsRepository = new CredentialsRepository(context);
             var theme = new Credentials { Id = 1, PasswordHash = new byte[] { 0x20, 0x20, 0x10, 0x20, 0x20, 0x20, 0x20 } };
 
-            Assert.DoesNotThrow(() => accountRepository.Update(theme));
+            Assert.DoesNotThrow(() => credentialsRepository.Update(theme));
         }
 
-        [Test]
-        public async Task AccountRepository_IsEmailExist_ReturnTrue()
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task CredentialsRepository_GetByUserIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
-            var accountRepository = new AccountRepository(context);
+            var credentialsRepository = new CredentialsRepository(context);
 
-            Assert.IsTrue(await accountRepository.IsEmailExistAsync(expectedAccounts[0].Email));
-        }
+            var account = await credentialsRepository.GetByUserIdAsync(id);
 
-        [Test]
-        public async Task AccountRepository_IsEmailExist_ReturnFalse()
-        {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
-
-            var accountRepository = new AccountRepository(context);
-
-            Assert.IsFalse(await accountRepository.IsEmailExistAsync("notexist@gmail.com"));
-        }
-
-        [TestCase("email1@gmail.com")]
-        [TestCase("email4@gmail.com")]
-        public async Task AccountRepository_GetByEmailAsync_ReturnsSingleValue(string email)
-        {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
-
-            var accountRepository = new AccountRepository(context);
-
-            var account = await accountRepository.GetByEmailAsync(email);
-
-            var expected = expectedAccounts.FirstOrDefault(x => x.Email == email);
+            var expected = expectedAccounts.FirstOrDefault(x => x.Id == id);
 
             Assert.That(account, Is.EqualTo(expected).Using(new AccountEqualityComparer()), message: "GetByIdAsync method works incorrect");
         }

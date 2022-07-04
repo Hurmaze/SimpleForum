@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
-    /// <summary>
-    /// BaseEntity
-    /// </summary>
     public class BaseEntity
     {
-        /// <summary>
-        /// Id
-        /// </summary>
         public int Id { get; set; }
     }
 }

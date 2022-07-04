@@ -1,7 +1,5 @@
-﻿
-
-using DAL.DbAccess;
-using DAL.Entities.Credentials;
+﻿using DAL.DbAccess;
+using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,24 +14,26 @@ namespace DAL.Repositories
         /// <summary>
         /// The authentication database context
         /// </summary>
-        private readonly AccountDbContext _authDbContext;
+        private readonly ForumDbContext _forumDbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoleRepository"/> class.
         /// </summary>
         /// <param name="authDbContext">The authentication database context.</param>
-        public RoleRepository(AccountDbContext authDbContext)
+        public RoleRepository(ForumDbContext authDbContext)
         {
-            _authDbContext = authDbContext;
+            _forumDbContext = authDbContext;
         }
 
         /// <summary>
         /// Adds the Role asynchronous.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public async Task AddAsync(Role entity)
+        public async Task<Role> AddAsync(Role entity)
         {
-            await _authDbContext.Roles.AddAsync(entity);
+            await _forumDbContext.Roles.AddAsync(entity);
+
+            return entity;
         }
 
         /// <summary>
@@ -43,11 +43,11 @@ namespace DAL.Repositories
         /// <returns>Task&lt;Role&gt;</returns>
         public async Task<Role> DeleteByIdAsync(int id)
         {
-            var entity = await _authDbContext.Roles.FindAsync(id);
+            var entity = await _forumDbContext.Roles.FindAsync(id);
 
             if (entity != null)
             {
-                _authDbContext.Entry(entity).State = EntityState.Deleted;
+                _forumDbContext.Entry(entity).State = EntityState.Deleted;
             }
 
             return entity;
@@ -59,8 +59,9 @@ namespace DAL.Repositories
         /// <returns>Task&lt;IEnumerable&lt;Role&gt;&gt;.</returns>
         public async Task<IEnumerable<Role>> GetAllAsync()
         {
-            return await _authDbContext.Roles
-                .Include(r => r.Accounts)
+            return await _forumDbContext.Roles
+                .Include(r => r.Credentials)
+                .ThenInclude(c => c.User)
                 .ToListAsync();
         }
 
@@ -70,7 +71,7 @@ namespace DAL.Repositories
         /// <param name="entity">The entity.</param>
         public void Update(Role entity)
         {
-            _authDbContext.Entry(entity).State = EntityState.Modified;
+            _forumDbContext.Entry(entity).State = EntityState.Modified;
         }
 
         /// <summary>
@@ -80,8 +81,9 @@ namespace DAL.Repositories
         /// <returns>Task&lt;Role&gt;</returns>
         public async Task<Role> GetByIdAsync(int id)
         {
-            return await _authDbContext.Roles
-                .Include(r => r.Accounts)
+            return await _forumDbContext.Roles
+                .Include(r => r.Credentials)
+                .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
     }

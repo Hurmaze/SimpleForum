@@ -28,9 +28,11 @@ namespace DAL.Repositories
         /// Adds the Post asynchronous.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public async Task AddAsync(Post entity)
+        public async Task<Post> AddAsync(Post entity)
         {
             await _forumDbContext.Posts.AddAsync(entity);
+
+            return entity;
         }
 
         /// <summary>

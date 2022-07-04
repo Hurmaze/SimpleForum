@@ -1,12 +1,7 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Credentials;
+using DAL.Entities;
 using DAL.Repositories;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Forum.Tests.Repositories
 {
@@ -22,7 +17,7 @@ namespace Forum.Tests.Repositories
         [TestCase(2)]
         public async Task RoleRepository_GetByIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
             var roleRepository = new RoleRepository(context);
 
@@ -36,7 +31,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task RoleRepository_GetAllAsync_ReturnsAllValues()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
             var roleRepository = new RoleRepository(context);
             var roles = await roleRepository.GetAllAsync();
@@ -48,7 +43,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task RoleRepository_AddAsync_AddsValueToDatabase()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
             var roleRepository = new RoleRepository(context);
             var role = new Role { RoleName = "Clerk" };
@@ -62,7 +57,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task RoleRepository_DeleteByIdAsync_DeletesEntity()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
             var roleRepository = new RoleRepository(context);
 
@@ -73,15 +68,14 @@ namespace Forum.Tests.Repositories
         }
 
         [Test]
-        public void ThemeRepository_Update_TimesOnce()
+        public void RoleRepository_Update_TimesOnce()
         {
-            using var context = new AccountDbContext(DataSeeder.GetAccountDbOptions());
+            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
 
             var roleRepository = new RoleRepository(context);
             var role = new Role { Id = 1, RoleName = "NewName" };
 
             Assert.DoesNotThrow(() => roleRepository.Update(role));
-
         }
     }
 }

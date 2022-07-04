@@ -5,12 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using Services.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DAL.Entities;
 
 namespace Forum.Tests.Services
@@ -44,7 +38,7 @@ namespace Forum.Tests.Services
         }
 
         [Test]
-        public async Task UserAccountService_GetMostPopularAsync_ReturnsCorrectValues()
+        public async Task UserService_GetMostPopularAsync_ReturnsCorrectValues()
         {
             data = new Data();
             List<User> returnData = new List<User>

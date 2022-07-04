@@ -5,14 +5,8 @@ namespace Services.Interfaces
     /// <summary>
     /// Interface for the UserAccount service
     /// </summary>
-    public interface IUserAccountService
+    public interface IUserService
     {
-        /// <summary>
-        /// Logins asynchronous.
-        /// </summary>
-        /// <param name="authModel">The authentication model.</param>
-        /// <returns>Task&lt;string&gt; - JWT token</returns>
-         Task<string> LoginAsync(LoginModel authModel);
 
         /// <summary>
         /// Registers the Account asynchronous.
@@ -41,7 +35,7 @@ namespace Services.Interfaces
         /// <param name="email">The email.</param>
         /// <param name="roleId">The role identifier.</param>
         /// <returns></returns>
-         Task ChangeRoleAsync(string email, int roleId);
+         Task ChangeRoleAsync(int credentialsId, int roleId);
 
         /// <summary>
         /// Gets the User by identifier asynchronous.
@@ -67,7 +61,7 @@ namespace Services.Interfaces
         /// </summary>
         /// <param name="userModel">The user model.</param>
         /// <returns></returns>
-         Task UpdateAsync(UserModel userModel);
+         Task UpdateAsync(int id, UserModel userModel);
 
         /// <summary>
         /// Changes the nickname asynchronous.

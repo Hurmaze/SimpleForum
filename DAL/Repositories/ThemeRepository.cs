@@ -30,9 +30,11 @@ namespace DAL.Repositories
         /// Adds the Theme asynchronous.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public async Task AddAsync(Theme entity)
+        public async Task<Theme> AddAsync(Theme entity)
         {
             await _forumDbContext.Themes.AddAsync(entity);
+
+            return entity;
         }
 
         /// <summary>

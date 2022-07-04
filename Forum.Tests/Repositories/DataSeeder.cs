@@ -1,11 +1,6 @@
 ﻿using DAL.DbAccess;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Forum.Tests.Repositories
 {
@@ -25,22 +20,16 @@ namespace Forum.Tests.Repositories
             return options;
         }
 
-        public static DbContextOptions<AccountDbContext> GetAccountDbOptions()
-        {
-            var options = new DbContextOptionsBuilder<AccountDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            using (var context = new AccountDbContext(options))
-            {
-                SeedData(context);
-            }
-
-            return options;
-        }
-
         private static void SeedData(ForumDbContext context)
         {
+            var roles = new List<Role>
+            {
+                new Role { RoleName = "user"},
+                new Role { RoleName = "admin"}
+            };
+            context.Roles.AddRange(roles);
+            context.SaveChanges();
+
             var users = new List<User>
             {
                     new User { Email = "email1@gmail.com", Nickname = "nickname1" },
@@ -50,6 +39,16 @@ namespace Forum.Tests.Repositories
                     new User { Email = "email5@gmail.com", Nickname = "nickname5" }
             };
             context.Users.AddRange(users);
+
+            var accounts = new List<Credentials>
+            {
+                new Credentials { Role = roles[0], UserId=1, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Role = roles[0], UserId=2, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Role = roles[0], UserId=3, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Role = roles[1], UserId=4, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
+                new Credentials { Role = roles[1], UserId=5, PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
+            };
+            context.Credentials.AddRange(accounts);
             context.SaveChanges();
 
             var themes = new List<Theme>
@@ -76,28 +75,6 @@ namespace Forum.Tests.Repositories
                 new Post { Thread = threads[1], Content = "Read recently about Segriy Zhadan... He is cool.", Author = users[0], TimeCreated = DateTime.Now}
             };
             context.Posts.AddRange(posts);
-            context.SaveChanges();
-        }
-
-        public static void SeedData(AccountDbContext context)
-        {
-            var roles = new List<Role>
-            {
-                new Role { RoleName = "user"},
-                new Role { RoleName = "admin"}
-            };
-            context.Roles.AddRange(roles);
-            context.SaveChanges();
-
-            var accounts = new List<Credentials>
-            {
-                new Credentials { Role = roles[0], Email = "email1@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Role = roles[0], Email = "email2@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Role = roles[0], Email = "email3@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Role = roles[1], Email = "email4@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }},
-                new Credentials { Role = roles[1], Email = "email5@gmail.com", PasswordHash = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, PasswordSalt = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }}
-            };
-            context.Accounts.AddRange(accounts);
             context.SaveChanges();
         }
     }

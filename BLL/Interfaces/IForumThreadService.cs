@@ -6,8 +6,41 @@ namespace Services.Interfaces
     /// Interface for the ForumThread service
     /// </summary>
     /// <seealso cref="IBaseService&lt;ForumThreadModel&gt;" />
-    public interface IForumThreadService : IBaseService<ForumThreadModel>
+    public interface IForumThreadService
     {
+        /// <summary>
+        /// Adds TModel the asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Task&lt;TModel&gt;</returns>
+        Task<ForumThreadModel> AddAsync(ForumThreadRequest model);
+        /// <summary>
+        /// Gets all asynchronous.
+        /// </summary>
+        /// <returns>Task&lt;IEnumerable&lt;TModel&gt;&gt;.</returns>
+        Task<IEnumerable<ForumThreadModel>> GetAllAsync();
+
+        /// <summary>
+        /// Gets the TModel by identifier asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task&lt;TModel&gt;</returns>
+        Task<ForumThreadModel> GetByIdAsync(int id);
+
+        /// <summary>
+        /// Updates the TModel asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        Task UpdateAsync(int id, ForumThreadRequest model);
+
+        /// <summary>
+        /// Deletes the TModel by identifier asynchronous.
+        /// </summary>
+        /// <param name="modelId">The model identifier.</param>
+        /// <returns></returns>
+        Task DeleteByIdAsync(int modelId);
+
         /// <summary>
         /// Gets the thread posts asynchronous.
         /// </summary>

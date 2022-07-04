@@ -1,13 +1,6 @@
 ﻿using DAL.DbAccess;
-using DAL.Entities.Credentials;
-using DAL.Entities.Forum;
 using DAL.Interfaces;
 using DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -22,17 +15,13 @@ namespace DAL
         /// </summary>
         private readonly ForumDbContext _forumDbContext;
         /// <summary>
-        /// The account database context
-        /// </summary>
-        private readonly AccountDbContext _accountDbContext;
-        /// <summary>
         /// The user repository
         /// </summary>
         private IUserRepository _userRepository;
         /// <summary>
         /// The account repository
         /// </summary>
-        private IAccountRepository _accountRepository;
+        private ICredentialsRepository _credentialsRepository;
         /// <summary>
         /// The post repository
         /// </summary>
@@ -55,16 +44,15 @@ namespace DAL
         /// </summary>
         /// <param name="forumDbContext">The forum database context.</param>
         /// <param name="authDbContext">The authentication database context.</param>
-        public UnitOfWork(ForumDbContext forumDbContext, AccountDbContext authDbContext)
+        public UnitOfWork(ForumDbContext forumDbContext)
         {
             _forumDbContext = forumDbContext;
-            _accountDbContext = authDbContext;
             _userRepository = new UserRepository(forumDbContext);
-            _accountRepository = new AccountRepository(authDbContext);
+            _credentialsRepository = new CredentialsRepository(forumDbContext);
             _postRepository = new PostRepository(forumDbContext);
             _forumThreadRepository = new ForumThreadRepository(forumDbContext);
             _themeRepository = new ThemeRepository(forumDbContext);
-            _roleRepository = new RoleRepository(authDbContext);
+            _roleRepository = new RoleRepository(forumDbContext);
         }
 
         /// <summary>
@@ -80,7 +68,7 @@ namespace DAL
         /// <value>
         /// The account repository.
         /// </value>
-        public IAccountRepository AccountRepository { get => _accountRepository; }
+        public ICredentialsRepository CredentialsRepository { get => _credentialsRepository; }
         /// <summary>
         /// Gets the post repository.
         /// </summary>
@@ -116,7 +104,6 @@ namespace DAL
         public async Task SaveAsync()
         {
             await _forumDbContext.SaveChangesAsync();
-            await _accountDbContext.SaveChangesAsync();
         }
     }
 }

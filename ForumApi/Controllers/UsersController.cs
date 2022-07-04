@@ -12,11 +12,11 @@ namespace ForumApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserAccountsController : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private readonly IUserAccountService _userAccountService;
+        private readonly IUserService _userAccountService;
 
-        public UserAccountsController(IUserAccountService userAccountService)
+        public UsersController(IUserService userAccountService)
         {
             _userAccountService = userAccountService;
         }
@@ -55,24 +55,14 @@ namespace ForumApi.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{email}/role/{roleId}")]
+        [HttpPut("{userId}/role/{roleId}")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult> ChangeRole(string email, int roleId)
+        public async Task<ActionResult> ChangeRole(int userId, int roleId)
         {
-            await _userAccountService.ChangeRoleAsync(email, roleId);
+            await _userAccountService.ChangeRoleAsync(userId, roleId);
 
             return NoContent();
         }
-
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult<string>> Login(LoginModel model)
-        {
-            var token = await _userAccountService.LoginAsync(model);
-
-            return Ok(new { access_token = token });
-        }
-
 
         [HttpPost]
         [AllowAnonymous]
@@ -93,7 +83,7 @@ namespace ForumApi.Controllers
             return CreatedAtAction(nameof(CreateRole), new { id = role.Id }, role);
         }
 
-        [HttpPut("changenickname")]
+        [HttpPut("nickname")]
         [Authorize]
         public async Task<ActionResult<NicknameModel>> ChangeNickname(NicknameModel model)
         {
@@ -124,9 +114,9 @@ namespace ForumApi.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<ActionResult> Update(UserModel model)
+        public async Task<ActionResult> Update(int id,[FromBody] UserModel model)
         {
-            await _userAccountService.UpdateAsync(model);
+            await _userAccountService.UpdateAsync(id, model);
 
             return NoContent();
         }

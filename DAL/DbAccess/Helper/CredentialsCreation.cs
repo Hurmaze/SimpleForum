@@ -1,18 +1,13 @@
 ﻿using DAL.Entities;
-using DAL.Entities.Forum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.DbAccess.Helper
 {
     /// <summary>
     /// Helper to seed data into AccountDbContext
     /// </summary>
-    internal class AccountCreation
+    internal class CredentialsCreation
     {
         /// <summary>
         /// 
@@ -20,7 +15,7 @@ namespace DAL.DbAccess.Helper
         /// <param name="account"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        internal static Credentials CreateAccount(Credentials account, string password)
+        internal static Credentials CreateCredentials(Credentials credentials, string password)
         {
             byte[] passwordHash;
             byte[] passwordSalt;
@@ -32,11 +27,11 @@ namespace DAL.DbAccess.Helper
 
             Credentials newaccount = new Credentials
             {
-                Id = account.Id,
-                Email = account.Email,
+                Id = credentials.Id,
+                UserId = credentials.UserId,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RoleId = account.RoleId
+                RoleId = credentials.RoleId
             };
 
             return newaccount;

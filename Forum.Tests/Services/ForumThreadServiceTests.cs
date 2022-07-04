@@ -23,7 +23,7 @@ namespace Forum.Tests.Services
         {
             data = new Data();
 
-            var forumThread = new ForumThreadModel { AuthorId = 1, Content = "kekd", ThemeName = "Books", Title = "kekd", TimeCreated = DateTime.Now, ThreadPostsIds = new List<int> { 1 } };
+            var forumThread = new ForumThreadRequest { AuthorId = 1, Content = "kekd", ThemeId = 1, Title = "kekd"};
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.AddAsync(It.IsAny<ForumThread>()));
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
@@ -155,7 +155,7 @@ namespace Forum.Tests.Services
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
             var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            await forumThreadService.UpdateAsync(data.GetForumThreadModels[0]);
+            await forumThreadService.UpdateAsync(data.GetForumThreadModels[0].Id, data.GetForumThreadRequests[0]);
 
             mockUnitOfWork.Verify(x => x.ForumThreadRepository.Update(It.IsAny<ForumThread>()), Times.Once());
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once());
@@ -174,7 +174,7 @@ namespace Forum.Tests.Services
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
             var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            Assert.ThrowsAsync<NotFoundException>(() => forumThreadService.UpdateAsync(data.GetForumThreadModels[0]));
+            Assert.ThrowsAsync<NotFoundException>(() => forumThreadService.UpdateAsync(data.GetForumThreadModels[0].Id, data.GetForumThreadRequests[0]));
         }
 
         [Test]

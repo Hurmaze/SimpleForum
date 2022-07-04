@@ -28,9 +28,11 @@ namespace DAL.Repositories
         /// Adds the User asynchronous.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public async Task AddAsync(User entity)
+        public async Task<User> AddAsync(User entity)
         {
             await _forumDbContext.Users.AddAsync(entity);
+
+            return entity;
         }
 
         /// <summary>
@@ -64,6 +66,7 @@ namespace DAL.Repositories
                 .Include(u => u.ThreadPosts)
                 .ThenInclude(tp => tp.Thread)
                 .Include(u => u.Threads)
+                .Include(u => u.Credentials)
                 .ToListAsync();
         }
 
@@ -78,6 +81,7 @@ namespace DAL.Repositories
                 .Include(u => u.ThreadPosts)
                 .ThenInclude(tp => tp.Thread)
                 .Include(u => u.Threads)
+                .Include(u => u.Credentials)
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
@@ -91,7 +95,21 @@ namespace DAL.Repositories
             return await _forumDbContext.Users
                 .Include(u => u.ThreadPosts)
                 .ThenInclude(tp => tp.Thread)
+                .Include(u => u.Threads)
+                .Include(u => u.Credentials)
                 .FirstOrDefaultAsync(u => u.Id == id); ;
+        }
+
+        /// <summary>
+        /// Determines whether is email exist asynchronous
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns>
+        /// True, if email exists and false if not.
+        /// </returns>
+        public Task<bool> IsEmailExistAsync(string email)
+        {
+            return _forumDbContext.Users.AnyAsync(u => u.Email == email);
         }
 
         /// <summary>
@@ -101,18 +119,7 @@ namespace DAL.Repositories
         /// <returns>Task&lt;Bool&gt;</returns>
         public async Task<bool> IsNicknameTakenAsync(string nickname)
         {
-            if(nickname == null)
-            {
-                return false;
-            }
-            var nick = await _forumDbContext.Users.FirstOrDefaultAsync(u => u.Nickname == nickname);
-
-            if (nick == null)
-            {
-                return false;
-            }
-
-            return true;
+            return await _forumDbContext.Users.AnyAsync(u =>u.Nickname == nickname);
         }
 
         /// <summary>

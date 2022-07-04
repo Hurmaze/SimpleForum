@@ -48,7 +48,7 @@ namespace Services.Services
         /// <returns>
         /// Task&lt;ForumThreadModel&gt;
         /// </returns>
-        public async Task<ForumThreadModel> AddAsync(ForumThreadModel model)
+        public async Task<ForumThreadModel> AddAsync(ForumThreadRequest model)
         {
             var forumThread = _mapper.Map<ForumThread>(model);
 
@@ -61,10 +61,10 @@ namespace Services.Services
                 forumThread.AuthorId = null;
             }
 
-            await _unitOfWork.ForumThreadRepository.AddAsync(forumThread);
+            var thread = await _unitOfWork.ForumThreadRepository.AddAsync(forumThread);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("Added a new thread by user {email}", model.AuthorEmail);
+            _logger.LogInformation("Added a new thread with id {id}", thread.Id);
 
             var forumThreadView = _mapper.Map<ForumThreadModel>(forumThread);
             return forumThreadView;
@@ -231,13 +231,13 @@ namespace Services.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <exception cref="NotFoundException"></exception>
-        public async Task UpdateAsync(ForumThreadModel model)
+        public async Task UpdateAsync(int id, ForumThreadRequest model)
         {
-            var forumThread = await _unitOfWork.ForumThreadRepository.GetByIdAsync(model.Id);
+            var forumThread = await _unitOfWork.ForumThreadRepository.GetByIdAsync(id);
 
             if (forumThread == null)
             {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(ForumThread).Name, "Id", model.Id.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(ForumThread).Name, "Id", id.ToString()));
             }
 
             if (forumThread.ThemeId == 0)
