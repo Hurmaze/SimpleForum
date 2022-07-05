@@ -3,8 +3,10 @@ import { concatMap } from 'rxjs';
 import { ForumThread } from 'src/app/models/forum-thread.model';
 import { Theme } from 'src/app/models/theme.model';
 import { User } from 'src/app/models/user.model';
+import { AccessService } from 'src/app/shared/access.service';
 import { ForumThreadService } from 'src/app/shared/forum-thread.service';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { TokenService } from 'src/app/shared/token.service';
+import { UserService } from 'src/app/shared/user.service';
 
 @Component({
   selector: 'app-thread-list',
@@ -24,13 +26,15 @@ export class ThreadListComponent implements OnInit {
 
   constructor(
     private forumThreadService: ForumThreadService,
-    private authService: UserAccountService) { }
+    private userService: UserService,
+    private tokenService: TokenService,
+    private accessService: AccessService) { }
 
   ngOnInit(): void {
     this.forumThreadService.get()
     .subscribe(result => this.threads=result);
 
-    this.authService.get()
+    this.userService.get()
     .subscribe(result => this.authors=result);
 
     this.forumThreadService.getThemes()
@@ -46,20 +50,18 @@ export class ThreadListComponent implements OnInit {
   }
 
   postThread(){
-    this.newThread.authorId=this.authService.currentUser().id;
+    this.newThread.authorId=this.tokenService.currentUser().id;
     this.newThread.timeCreated = new Date();
     this.newThread.themeId = this.selectedTheme.id;
     this.forumThreadService.postThread(this.newThread).subscribe(res => { window.location.reload()}, err => console.log(err));
   }
 
   isAuthenticated(){
-    return this.authService.isAuthenticated();
+    return this.tokenService.isAuthenticated();
   }
 
-  isAllowedToChange(){
-    let role = this.authService.getUserRole();
-    role = role.toLowerCase()
-    return "admin" === role || role === "moderator";
+  isModeratable(){
+    return this.accessService.isModeratable();
   }
 
   deleteThread(id: number){

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Role } from 'src/app/models/role.model';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { UserService } from 'src/app/shared/user.service';
 
 @Component({
   selector: 'app-role-list',
@@ -14,11 +14,11 @@ export class RoleListComponent implements OnInit {
 
   constructor(
       private router: Router,
-      private authService: UserAccountService
+      private userService: UserService
     ) { }
 
   ngOnInit(): void {
-    this.authService.getRoles().subscribe(res => this.roles = res,
+    this.userService.getRoles().subscribe(res => this.roles = res,
       err => this.router.navigate(['/']));
   }
 }

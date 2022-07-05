@@ -18,9 +18,9 @@
                     <p>
                         {{post.content}}
                     </p>
-                    <div class="buttons">
-                        <a *ngIf="isAllowedToChange()" [routerLink]="['/posts/edit',post.id]" class="btn btn-secondary btn-sm">Update post</a>
-                        <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm"
+                    <div class="buttons" *ngIf="isModeratable()">
+                        <a  [routerLink]="['/posts/edit',post.id]" class="btn btn-secondary btn-sm">Update post</a>
+                        <button class="btn btn-secondary btn-sm"
                         mwlConfirmationPopover
                         [popoverTitle]="'Delete'"
                         [popoverMessage]="'Do you really want to delete this post?'"

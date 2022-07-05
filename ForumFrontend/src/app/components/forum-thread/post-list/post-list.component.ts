@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from 'src/app/models/post.model';
+import { AccessService } from 'src/app/shared/access.service';
 import { ForumThreadService } from 'src/app/shared/forum-thread.service';
 import { PostService } from 'src/app/shared/post.service';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { UserService } from 'src/app/shared/user.service';
 
 @Component({
   selector: 'app-post-list',
@@ -17,8 +18,9 @@ export class PostListComponent implements OnInit {
   constructor(
     private threadsService: ForumThreadService,
      private route: ActivatedRoute,
-     private authService: UserAccountService,
-     private postService: PostService) { }
+     private userService: UserService,
+     private postService: PostService,
+     private accessSerivce: AccessService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(routeParams => {
@@ -31,10 +33,8 @@ export class PostListComponent implements OnInit {
     .subscribe(res => this.posts = res);
   }
 
-  isAllowedToChange(){
-    let role = this.authService.getUserRole();
-    role = role.toLowerCase()
-    return "admin" === role || role === "moderator";
+  isModeratable(){
+    return this.accessSerivce.isModeratable();
   }
 
   deletePost(id: number){

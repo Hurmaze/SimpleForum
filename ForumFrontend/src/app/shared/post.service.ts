@@ -4,14 +4,13 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { POSTS_API_URL } from '../app-injection';
 import { Post } from '../models/post.model';
-import { ACCES_TOKEN } from './user-account.service';
+import { ACCESS_TOKEN } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  private options = { headers: new HttpHeaders().set('Content-Type', 'application/json'),
-                      "Authorization":("Bearer " + localStorage.getItem(ACCES_TOKEN)) };
+  private options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
   constructor(
     private http: HttpClient,
     private router: Router,

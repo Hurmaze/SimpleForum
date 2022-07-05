@@ -93,6 +93,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<IForumThreadService, ForumThreadService>();
 builder.Services.AddTransient<IStatisticService, StatisticService>();
+builder.Services.AddTransient<ITokenService, TokenService>();
 
 var forumConnectionString = builder.Configuration.GetConnectionString("ForumDb");
 builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(forumConnectionString));

@@ -80,7 +80,10 @@ namespace DAL.Repositories
 
         public async Task<Credentials> GetByUserIdAsync(int userId)
         {
-            return await _forumDbContext.Credentials.FirstOrDefaultAsync(c => c.UserId == userId);
+            return await _forumDbContext.Credentials
+                .Include(c => c.Role)
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
         /// <summary>

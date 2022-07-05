@@ -67,6 +67,7 @@ namespace DAL.Repositories
                 .ThenInclude(tp => tp.Thread)
                 .Include(u => u.Threads)
                 .Include(u => u.Credentials)
+                .ThenInclude(c => c.Role)
                 .ToListAsync();
         }
 
@@ -82,6 +83,7 @@ namespace DAL.Repositories
                 .ThenInclude(tp => tp.Thread)
                 .Include(u => u.Threads)
                 .Include(u => u.Credentials)
+                .ThenInclude(c => c.Role)
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
@@ -97,6 +99,7 @@ namespace DAL.Repositories
                 .ThenInclude(tp => tp.Thread)
                 .Include(u => u.Threads)
                 .Include(u => u.Credentials)
+                .ThenInclude(c => c.Role)
                 .FirstOrDefaultAsync(u => u.Id == id); ;
         }
 

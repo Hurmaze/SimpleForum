@@ -1,16 +1,16 @@
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-8" *ngIf="isLoaded">
             <div class="display-body">
                 <div class="credentials">
                     <h5>Id: {{user.id}}</h5>
                     <h5>Email: {{user.email}}</h5>
                     <h5>RoleName: {{user.roleName}}</h5>
-                    <h5 *ngIf="user.nickname !== ''">Nickname: {{user.nickname}}</h5>
+                    <h5 *ngIf="user.nickname !== '' && user.nickname !== null">Nickname: {{user.nickname}}</h5>
                 </div>
                 <div class="buttons">
                     <button *ngIf="isCurrentUser()" class="btn btn-outline-secondary btn-sm" (click)="toggleNickname()">Change nickname</button>
-                    <button *ngIf="isAllowedToChange()" class="btn btn-outline-secondary btn-sm"(click)="toggleRole()" >Change role</button>
-                    <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm"
+                    <button *ngIf="isAdministratable()" class="btn btn-outline-secondary btn-sm"(click)="toggleRole()" >Change role</button>
+                    <button *ngIf="isAdministratable()" class="btn btn-secondary btn-sm"
                     mwlConfirmationPopover
                     [popoverTitle]="'Delete'"
                     [popoverMessage]="'Do you really want to delete this user?'"
@@ -18,11 +18,11 @@
                     (confirm)="deleteUser(user.id)"
                     >Delete user</button>
                 </div>
-                <form (ngSubmit)="changeRole(user.id, user.email, newRoleId)" [hidden]="isHiddenRole" #f="ngForm">
+                <form (ngSubmit)="changeRole(user.id, curRoleId)" [hidden]="isHiddenRole" #f="ngForm">
                     <div class="form-group">
                         New role:
-                        <select class="form-select" [(ngModel)]="newRoleId" name="theme">
-                            <option *ngFor="let role of roles" [ngValue]="role.id">
+                        <select class="form-select" [(ngModel)]="curRoleId" name="role" id="role">
+                            <option *ngFor="let role of roles" [value]="role">
                                 {{role.roleName}}
                             </option>
                         </select>

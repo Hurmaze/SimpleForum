@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces;
 using Services.Models;
 using Services.Services;
 using System.Threading.Tasks;
@@ -10,16 +11,18 @@ namespace ForumApi.Controllers
     [ApiController]
     public class TokensController : ControllerBase
     {
-        private readonly TokenService _tokenService;
-        public TokensController(TokenService tokenService)
+        private readonly ITokenService _tokenService;
+        public TokensController(ITokenService tokenService)
         {
             _tokenService = tokenService;
         }
 
-        [HttpGet]
-        public async Task<string> Token(LoginModel model)
+        [HttpPost]
+        public async Task<ActionResult<string>> Token(LoginModel model)
         {
-            return await _tokenService.GetTokenAsync(model);
+            var token = await _tokenService.GetTokenAsync(model);
+
+            return Ok(new { access_token = token });
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserToken } from 'src/app/models/user-token.model';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { AccessService } from 'src/app/shared/access.service';
+import { TokenService } from 'src/app/shared/token.service';
 
 @Component({
   selector: 'app-header',
@@ -11,36 +11,32 @@ import { UserAccountService } from 'src/app/shared/user-account.service';
 export class HeaderComponent implements OnInit {
   userId: number=0;
 
-  constructor(private authService: UserAccountService, private router: Router) { }
+  constructor(
+    private tokenService: TokenService,
+    private router: Router,
+    private accessService: AccessService) { }
 
+  ngOnInit(): void {
+  }
+    
   isAuthenticated(){
-    return this.authService.isAuthenticated();
+    return this.tokenService.isAuthenticated();
   }
 
-  toLogin(){
-    this.router.navigate(['login']);
+  toProfile(){
+    this.userId=this.tokenService.currentUser().id;
+    this.router.navigate([`users/${this.userId}`]);
   }
 
   logout(){
-    this.authService.logout();
+    this.tokenService.logout();
   }
 
-  toRegister(){
-    this.router.navigate(['registration']);
+  isAdministratable(){
+    return this.accessService.isAdministratable();
   }
 
-  isAdmin(){
-    let role = this.authService.getUserRole();
-    return "admin" === role.toLowerCase();
+  isModeratable(){
+    return this.accessService.isModeratable();
   }
-
-  isModerator(){
-    let role = this.authService.getUserRole();
-    return "moderator" === role.toLowerCase();
-  }
-
-  ngOnInit(): void {
-    this.userId=this.authService.currentUser().id;
-  }
-
 }

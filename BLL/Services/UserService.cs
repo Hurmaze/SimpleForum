@@ -186,6 +186,8 @@ namespace Services.Services
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync();
 
+            users = users?.Where(u => u.Credentials.RoleId == roleId);
+
             return _mapper.Map<IEnumerable<UserModel>>(users);
         }
 

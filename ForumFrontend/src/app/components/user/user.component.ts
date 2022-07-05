@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from 'src/app/models/role.model';
 import { User } from 'src/app/models/user.model';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { AccessService } from 'src/app/shared/access.service';
+import { TokenService } from 'src/app/shared/token.service';
+import { UserService } from 'src/app/shared/user.service';
 
 @Component({
   selector: 'app-user',
@@ -13,37 +15,38 @@ import { UserAccountService } from 'src/app/shared/user-account.service';
 export class UserComponent implements OnInit {
   user: User=new User(0,'','',[],[],'');
   roles: Role[]=[];
-  newRoleId: number=0;
+  role: string='';
+  curRoleId: number=1;
 
   newNickname: string=''; 
   errorMessage: string='';
 
+  isLoaded: boolean = false;
   isHiddenRole: boolean = true;
   isHiddenNickname: boolean = true;
-  allowedToChange: boolean = false;
 
   constructor(
-    private authService: UserAccountService,
+    private userService: UserService,
+    private tokenService: TokenService,
+    private accessService: AccessService,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(routeParams => {
+      this.role = this.tokenService.getUserRole();
+    if(this.accessService.isAdministratable())
+    {
+      this.userService.getRoles().subscribe(res => this.roles = res);
+    }
+
       this.loadPage(routeParams['id'])
     });
-    let role = this.authService.getUserRole();
-    
-    role = role.toLowerCase()
-    if("admin" === role)
-    {
-      this.allowedToChange = true;
-      this.authService.getRoles().subscribe(res => this.roles = res);
-    }
   }
 
   isCurrentUser(){
-    return this.user.email === this.authService.currentUser().email;
+    return this.user.email === this.tokenService.currentUser().email;
   }
 
   toggleRole(){
@@ -54,28 +57,32 @@ export class UserComponent implements OnInit {
     this.isHiddenNickname = !this.isHiddenNickname;
   }
 
-  changeRole(userId: number, email: string, roleId: number){
-    this.authService.changeRole(userId, email, roleId).subscribe(res => window.location.reload());
+  changeRole(userId: number, roleId: number){
+    this.userService.changeRole(userId, roleId).subscribe(res => window.location.reload());
   }
 
   changeNickname(nickname:string){
-    this.authService.changeNickname(nickname)
+    this.userService.changeNickname(nickname)
     .subscribe(res => window.location.reload(),
     err => this.errorMessage = err.error.ErrorMessage);
   }
 
   deleteUser(id: number){
-    this.authService.deleteUser(id).subscribe(res => {this.location.back()})
+    this.userService.deleteUser(id).subscribe(res => {this.location.back()})
   }
 
-  
-  isAllowedToChange(): boolean{
-    return this.allowedToChange;
+  isAdministratable(){
+    return this.accessService.isAdministratable();
   }
 
   private loadPage(id: number){
-    this.authService.getById(id)
-    .subscribe(res => {this.user = res},
+    this.userService.getById(id)
+    .subscribe(res => 
+      {
+        this.user = res;
+        this.curRoleId = res.roleId;
+        this.isLoaded = true;
+    },
       err => {this.router.navigate(['/'])});
   }
 

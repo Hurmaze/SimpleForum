@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { UserService } from 'src/app/shared/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -15,7 +15,7 @@ export class UserListComponent implements OnInit {
   isEmpty: boolean=false;
 
   constructor(
-    private userService: UserAccountService,
+    private userService: UserService,
     private router: Router,
     private location: Location,
     private route: ActivatedRoute) { }

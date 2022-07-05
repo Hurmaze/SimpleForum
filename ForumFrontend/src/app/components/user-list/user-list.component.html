@@ -1,14 +1,5 @@
 <div class="row">
     <div class="col-lg-8">
-        <div class="row">
-            <div class="col-lg-4">
-                <button type="button" class="btn btn-primary create-button"
-                 [routerLink]="['threads']">
-                 Create new user</button>
-            </div>
-            <div class="col-lg-auto"></div>
-        </div>
-        
         <div *ngFor="let user of users">
             <div class="display-body">
                 <div class="credentials">

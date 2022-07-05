@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { UserAccountService } from './shared/user-account.service';
+import { TokenService } from './shared/token.service';
 
 @Component({
   selector: 'app-root',
@@ -10,20 +10,20 @@ import { UserAccountService } from './shared/user-account.service';
 export class AppComponent {
   title = 'ForumFrontend';
 
-  constructor(private userAccountService: UserAccountService){
+  constructor(private tokenService: TokenService){
 
   }
 
   public get isLoggedIn() : boolean {
-    return this.userAccountService.isAuthenticated();
+    return this.tokenService.isAuthenticated();
   }
 
   logout(){
-    this.userAccountService.logout();
+    this.tokenService.logout();
   }
 
   login(email: string, password: string){
-    this.userAccountService.login(email, password)
+    this.tokenService.login(email, password)
     .subscribe(result => {
       
     }, (err: HttpErrorResponse) => console.log(err.error));

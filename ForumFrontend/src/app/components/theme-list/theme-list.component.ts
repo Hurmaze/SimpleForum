@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Theme } from 'src/app/models/theme.model';
+import { AccessService } from 'src/app/shared/access.service';
 import { ForumThreadService } from 'src/app/shared/forum-thread.service';
-import { UserAccountService } from 'src/app/shared/user-account.service';
 
 @Component({
   selector: 'app-theme-list',
@@ -17,7 +17,7 @@ export class ThemeListComponent implements OnInit {
   constructor(
       private forumThreadService: ForumThreadService,
       private router: Router,
-      private authService: UserAccountService
+      private accessService: AccessService
     ) { }
 
   ngOnInit(): void {
@@ -25,10 +25,8 @@ export class ThemeListComponent implements OnInit {
       err => this.router.navigate(['/']));
   }
 
-  isAllowedToChange(){
-    let role = this.authService.getUserRole();
-    role = role.toLowerCase()
-    return "admin" === role || role === "moderator";
+  isModeratable(){
+    return this.accessService
   }
 
   toggleCreation(){

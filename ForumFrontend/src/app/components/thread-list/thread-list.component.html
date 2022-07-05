@@ -63,14 +63,14 @@
                     <br>
                 <div class="buttons">
                     <a [routerLink]="['/threads', thread.id]" class="btn btn-outline-secondary btn-sm">Read thread</a>
-                    <button *ngIf="isAllowedToChange()" class="btn btn-secondary btn-sm"
+                    <button *ngIf="isModeratable()" class="btn btn-secondary btn-sm"
                     mwlConfirmationPopover
                     [popoverTitle]="'Delete'"
                     [popoverMessage]="'Do you really want to delete this thread?'"
                     placement="left"
                     (confirm)="deleteThread(thread.id)"
                     >Delete thread</button>
-                    <a *ngIf="isAllowedToChange()" [routerLink]="['/threads/edit',thread.id]" class="btn btn-secondary btn-sm">Update thread</a>
+                    <a *ngIf="isModeratable()" [routerLink]="['/threads/edit',thread.id]" class="btn btn-secondary btn-sm">Update thread</a>
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@ import { ForumThread } from 'src/app/models/forum-thread.model';
 import { Post } from 'src/app/models/post.model';
 import { ForumThreadService } from 'src/app/shared/forum-thread.service';
 import { PostService } from 'src/app/shared/post.service';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { TokenService } from 'src/app/shared/token.service';
 
 @Component({
   selector: 'app-forum-thread',
@@ -21,7 +21,7 @@ export class ForumThreadComponent implements OnInit {
   
   constructor(
     private threadService: ForumThreadService,
-    private authService: UserAccountService,
+    private userService: TokenService,
     private postService: PostService,
     private route: ActivatedRoute,
     private router: Router) { }
@@ -39,7 +39,7 @@ export class ForumThreadComponent implements OnInit {
   }
 
   isAuthenticated(){
-    return this.authService.isAuthenticated();
+    return this.userService.isAuthenticated();
   }
 
   toBottom(){
@@ -47,7 +47,7 @@ export class ForumThreadComponent implements OnInit {
   }
 
   post(){
-    let userToken = this.authService.currentUser();
+    let userToken = this.userService.currentUser();
     let postModel = new Post();
     postModel.authorId =userToken.id;
     postModel.content= this.postContent;

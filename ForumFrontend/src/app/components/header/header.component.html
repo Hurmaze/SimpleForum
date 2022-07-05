@@ -3,20 +3,19 @@
         <a routerLink="" class="navbar-brand">Forum</a>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a *ngIf="isAdmin()||isModerator()" class="nav-link" routerLink="themes">Themes</a>
+                <a *ngIf="isModeratable()" class="nav-link" routerLink="themes">Themes</a>
               </li>
             <li class="nav-item">
-              <a *ngIf="isAdmin()" class="nav-link" routerLink="users">Users</a>
+              <a *ngIf="isAdministratable()" class="nav-link" routerLink="users">Users</a>
             </li>
             <li class="nav-item">
-              <a *ngIf="isAdmin()" class="nav-link" routerLink="roles">Roles</a>
+              <a *ngIf="isAdministratable()" class="nav-link" routerLink="roles">Roles</a>
             </li>
         </ul>
-        
             
         <div class="d-flex">
             <button class="btn btn-outline-secondary btn-sm" *ngIf="isAuthenticated()" type="submit" (click)="logout()">Logout</button>
-            <a [routerLink]="['/users/',userId]" class="btn btn-outline-secondary btn-sm" *ngIf="isAuthenticated()">Profile</a>
+            <button (click)="toProfile()" class="btn btn-outline-secondary btn-sm" *ngIf="isAuthenticated()">Profile</button>
             <a routerLink="login" class="btn btn-outline-secondary btn-sm" *ngIf="!isAuthenticated()">Login</a>
             <a routerLink="registration" class="btn btn-outline-secondary btn-sm" *ngIf="!isAuthenticated()">Register</a>
         </div>

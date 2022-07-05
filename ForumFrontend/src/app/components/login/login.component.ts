@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Login } from 'src/app/models/login.model';
-import { UserAccountService } from 'src/app/shared/user-account.service';
+import { TokenService } from 'src/app/shared/token.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   public isError: boolean=false;
   public errorMessage: string='';
 
-  constructor(private service: UserAccountService, private router: Router) { }
+  constructor(private service: TokenService, private router: Router) { }
 
   login(){
     this.service.login(this.loginModel.Email, this.loginModel.Password).subscribe(
