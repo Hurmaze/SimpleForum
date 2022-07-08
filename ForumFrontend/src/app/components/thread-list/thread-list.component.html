@@ -12,12 +12,12 @@
                     <form (ngSubmit)="postThread()" #f="ngForm" [hidden]="isHiddenCreation"  *ngIf="isAuthenticated()">
                     <div class="form-group create-thread">
                         <input name="title" class="form-control" [(ngModel)]="newThread.title" placeholder="Title"
-                        required pattern="^[a-zA-Z0-9_.,;!-\s]*$"
+                        required pattern="^[a-zA-Z0-9_.,;:!-\s]*$"
                         #title="ngModel"> 
                         <br>
                         Theme:
-                        <select class="form-select" [(ngModel)]="selectedTheme" name="theme">
-                            <option *ngFor="let theme of themes" [ngValue]="theme">
+                        <select class="form-select" [(ngModel)]="selectedThemeId" name="theme">
+                            <option *ngFor="let theme of themes" [ngValue]="theme.id">
                                 {{theme.themeName}}
                             </option>
                         </select>
@@ -26,11 +26,11 @@
                         <label>Thread body.</label>
                         <textarea class="form-control" [(ngModel)]="newThread.content" rows="3"
                          required name="content"
-                         pattern="^[a-zA-Z0-9_.,;!-\s]*$"
+                         pattern="^[a-zA-Z0-9_.,;:!-\s]*$"
                          #content="ngModel"></textarea>
         
                         <button class="btn btn-outline-secondary btn-sm"  type="submit"
-                        [disabled]="content.errors || title.errors" (click)="toggleCreation()" name="button">Post</button>
+                        [disabled]="content.errors || title.errors || selectedThemeId===0" (click)="toggleCreation()" name="button">Post</button>
                     </div>
                 </form>
             </div>

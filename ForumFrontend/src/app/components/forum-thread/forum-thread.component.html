@@ -33,7 +33,7 @@
                 <label for="exampleFormControlTextarea1">Replying to the thread.</label>
                 <textarea class="form-control" [(ngModel)]="postContent" rows="3"
                  required [ngModelOptions]="{standalone: true}"
-                 pattern="^[a-zA-Z0-9_.,;!-\s]*$"
+                 pattern="^[a-zA-Z0-9_.,;:!-\s]*$"
                  #content="ngModel"></textarea>
 
                 <button class="btn btn-outline-secondary btn-sm"  type="submit"

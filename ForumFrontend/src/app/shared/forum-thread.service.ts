@@ -40,15 +40,13 @@ export class ForumThreadService {
       Title: thread.title,
       Content: thread.content,
       ThemeId: thread.themeId,
-      AuthorId: thread.authorId,
-      TimeCreated: thread.timeCreated
+      AuthorId: thread.authorId
 
     }, this.options);
   }
 
   updateThread(id:Number, thread: ForumThread): Observable<ForumThread>{
     return this.http.put<ForumThread>(`${this.forumThreadsUrl}${id}`,{
-      Id: thread.id,
       Title: thread.title,
       Content: thread.content,
       ThemeId: thread.themeId,

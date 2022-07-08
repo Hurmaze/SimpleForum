@@ -22,12 +22,12 @@
                     <div class="form-group">
                         New role:
                         <select class="form-select" [(ngModel)]="curRoleId" name="role" id="role">
-                            <option *ngFor="let role of roles" [value]="role">
+                            <option *ngFor="let role of roles" [ngValue]="role.id">
                                 {{role.roleName}}
                             </option>
                         </select>
                 
-                        <button class="btn btn-outline-secondary btn-sm"  type="submit" name="button"
+                        <button class="btn btn-outline-secondary btn-sm" [disabled]="curRoleId===0" type="submit" name="button"
                         (click)="toggleRole()">Update</button>
                     </div>
                 </form>

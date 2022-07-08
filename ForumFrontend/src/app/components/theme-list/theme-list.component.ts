@@ -12,7 +12,7 @@ import { ForumThreadService } from 'src/app/shared/forum-thread.service';
 export class ThemeListComponent implements OnInit {
   themes: Theme[]=[];
   isHiddenCreation: boolean=true;
-  newTheme: Theme=new Theme(0,'',[]);
+  newTheme: Theme=new Theme(0,'');
 
   constructor(
       private forumThreadService: ForumThreadService,

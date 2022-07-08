@@ -7,6 +7,5 @@ export class ForumThread {
     authorId: number=0;
     authorEmail: string='';
     authorNickname:string='';
-    threadPostsIds: number[]=[];
     themeId: number=0;
 }

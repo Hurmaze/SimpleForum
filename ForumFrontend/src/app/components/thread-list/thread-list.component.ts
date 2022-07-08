@@ -21,7 +21,7 @@ export class ThreadListComponent implements OnInit {
   isHiddenUpdation = true;
 
   newThread: ForumThread=new ForumThread();
-  selectedTheme:Theme=new Theme(0,'',[]);
+  selectedThemeId:number=0;
   themes: Theme[]=[];
 
   constructor(
@@ -51,8 +51,7 @@ export class ThreadListComponent implements OnInit {
 
   postThread(){
     this.newThread.authorId=this.tokenService.currentUser().id;
-    this.newThread.timeCreated = new Date();
-    this.newThread.themeId = this.selectedTheme.id;
+    this.newThread.themeId = this.selectedThemeId;
     this.forumThreadService.postThread(this.newThread).subscribe(res => { window.location.reload()}, err => console.log(err));
   }
 

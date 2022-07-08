@@ -13,10 +13,9 @@ import { UserService } from 'src/app/shared/user.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  user: User=new User(0,'','',[],[],'');
+  user: User=new User(0,'','','');
   roles: Role[]=[];
-  role: string='';
-  curRoleId: number=1;
+  curRoleId: number=0;
 
   newNickname: string=''; 
   errorMessage: string='';
@@ -35,7 +34,6 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(routeParams => {
-      this.role = this.tokenService.getUserRole();
     if(this.accessService.isAdministratable())
     {
       this.userService.getRoles().subscribe(res => this.roles = res);
