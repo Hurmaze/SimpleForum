@@ -6,17 +6,18 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using DAL.Entities;
+using Forum.Tests.Helpers;
 
 namespace Forum.Tests.Services
 {
     internal class StatisticServiceTests
     {
-        Data data;
+        ServiceHelper data;
 
         [Test]
         public async Task StatisticService_GetMostPopularAsync_ReturnsCorrectValues()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var returnData = data.GetForumThreadEntities;
             returnData[0].ThreadPosts = new List<Post> { data.GetPostEntities[0], data.GetPostEntities[1] };
             returnData[1].ThreadPosts = new List<Post> { data.GetPostEntities[2], data.GetPostEntities[3] };
@@ -40,7 +41,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task UserService_GetMostPopularAsync_ReturnsCorrectValues()
         {
-            data = new Data();
+            data = new ServiceHelper();
             List<User> returnData = new List<User>
             {
                 new User { Id = 1, Email = "email1@gmail.com", Nickname = "nickname1", Threads = new List<ForumThread> { new ForumThread() { Id = 1} }, ThreadPosts = new List<Post> { new Post() { Id = 1}, new Post() { Id = 2} } },

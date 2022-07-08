@@ -97,7 +97,7 @@ namespace Services.Services
             await _unitOfWork.ThemeRepository.AddAsync(theme);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("Added a new theme {theme}", model.ThemeName);
+            _logger.LogInformation("Added a new theme {theme}", model?.ThemeName);
 
             var themeView = _mapper.Map<ThemeModel>(theme);
             return themeView;

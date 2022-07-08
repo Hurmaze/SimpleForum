@@ -72,7 +72,7 @@ namespace Services.Services
             _unitOfWork.CredentialsRepository.Update(credentials);
             await _unitOfWork.SaveAsync();
 
-            _logger.LogInformation("The role of the user {email} has been changed to {rolename}", credentials.User.Email, role.RoleName);
+            _logger.LogInformation("The role of the user {email} has been changed to {rolename}", credentials.User?.Email, role.RoleName);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Services.Services
 
             if (isBasic)
             {
-                throw new ProhibitedOperationException(String.Format(ExceptionMessages.ProhibitedOperation, typeof(Role).Name, "Id", id.ToString()));
+                throw new ProhibitedOperationException(String.Format(ExceptionMessages.ProhibitedOperation,nameof(DeleteRoleAsync), typeof(Role).Name, "Id", id.ToString()));
             }
 
             var model = await _unitOfWork.RoleRepository.DeleteByIdAsync(id);
@@ -192,14 +192,16 @@ namespace Services.Services
         /// <returns></returns>
         public async Task<IEnumerable<UserModel>> GetByRoleAsync(int roleId)
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var role = await _unitOfWork.RoleRepository.GetByIdAsync(roleId);
 
-            users = users?.Where(u => u.Credentials.RoleId == roleId);
-
-            if (users == null)
+            if (role == null)
             {
                 throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Role).Name, "Id", roleId.ToString()));
             }
+
+            var users = await _unitOfWork.UserRepository.GetAllAsync();
+
+            users = users?.Where(u => u.Credentials.RoleId == roleId);
 
             return _mapper.Map<IEnumerable<UserModel>>(users);
         }

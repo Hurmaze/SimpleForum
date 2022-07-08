@@ -62,7 +62,7 @@ namespace Services.Services
 
             if (user == null)
             {
-                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", login.Email.ToString()));
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(User).Name, "Email", login.Email?.ToString()));
             }
 
             if (!VerifyPassword(login.Password, user.Credentials.PasswordHash, user.Credentials.PasswordSalt))
@@ -98,7 +98,6 @@ namespace Services.Services
         private string GenerateToken(User user)
         {
             var authParams = _authOptions.Value;
-
             
             List<Claim> claims = new List<Claim>()
             {

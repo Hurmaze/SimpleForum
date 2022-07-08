@@ -1,6 +1,7 @@
 ﻿using DAL.DbAccess;
 using DAL.Entities;
 using DAL.Repositories;
+using Forum.Tests.Helpers;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace Forum.Tests.Repositories
         [TestCase(2)]
         public async Task PostRepository_GetByIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var postRepository = new PostRepository(context);
 
@@ -62,7 +63,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task PostRepository_GetAllAsync_ReturnsAllValues()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var postRepository = new PostRepository(context);
             var posts = await postRepository.GetAllAsync();
@@ -74,7 +75,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task PostRepository_AddAsync_AddsValueToDatabase()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var postRepository = new PostRepository(context);
             var post = new Post { Content = "Bananas" };
@@ -88,7 +89,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task PostRepository_DeleteByIdAsync_DeletesEntity()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var postRepository = new PostRepository(context);
 
@@ -101,7 +102,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public void PostRepository_Update_TimesOnce()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var postRepository = new PostRepository(context);
             var post = new Post { Id = 1, Content = "NewName" };

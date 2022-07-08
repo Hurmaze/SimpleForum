@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using DAL.Entities;
 
-namespace Forum.Tests
+namespace Forum.Tests.Helpers
 {
     internal class ThemeEqualityComparer : IEqualityComparer<Theme>
     {
@@ -33,8 +33,7 @@ namespace Forum.Tests
                 return false;
 
             return x.Id == y.Id
-                && x.Content == y.Content
-                && x.Author.Email == y.Author.Email;
+                && x.Content == y.Content;
         }
 
         public int GetHashCode([DisallowNull] Post obj)

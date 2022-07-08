@@ -11,17 +11,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.Entities;
+using Forum.Tests.Helpers;
 
 namespace Forum.Tests.Services
 {
     internal class ForumThreadServiceTests
     {
-        Data data;
+        ServiceHelper data;
 
         [Test]
         public async Task ForumThreadService_AddAsync_PostAdded()
         {
-            data = new Data();
+            data = new ServiceHelper();
 
             var forumThreadRequest = new ForumThreadRequest { AuthorId = 1, Content = "kekd", ThemeId = 1, Title = "kekd"};
             var forumThreadEntity = new ForumThread { Id = 6, AuthorId = 1, Content = "kekd", ThemeId = 1, Title = "kekd" };
@@ -42,7 +43,7 @@ namespace Forum.Tests.Services
         [TestCase(2)]
         public async Task ForumThreadService_DeleteByIdAsync_PostDeleted(int id)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.DeleteByIdAsync(id))
                 .Returns(Task.FromResult(data.GetForumThreadEntities[id - 1]));
@@ -58,7 +59,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_DeleteByIdAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.DeleteByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((ForumThread)null);
@@ -71,7 +72,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_GetAllAsync_ReturnAllPosts()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.GetAllAsync()).ReturnsAsync(data.GetForumThreadEntities);
@@ -88,7 +89,7 @@ namespace Forum.Tests.Services
         [TestCase(2)]
         public async Task ForumThreadService_GetByIdAsync_ReturnPost(int id)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.GetByIdAsync(id))
@@ -105,7 +106,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_GetByIdAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((ForumThread)null);
@@ -118,7 +119,7 @@ namespace Forum.Tests.Services
         [TestCase(2)]
         public async Task Postservice_GetPostsByUserIdAsync_ReturnsPosts(int userId)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.UserRepository.GetByIdAsync(userId))
@@ -135,7 +136,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task Postservice_GetPostsByUserIdAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.UserRepository.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((User)null);
@@ -148,7 +149,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_UpdateAsync_Updates()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.Update(It.IsAny<ForumThread>()));
@@ -167,7 +168,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_UpdateAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.Update(It.IsAny<ForumThread>()));
@@ -183,7 +184,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_AddThemeAsync_AddsTheme()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ThemeRepository.GetAllAsync())
@@ -203,7 +204,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_AddThemeAsync_AddsFirstTheme()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ThemeRepository.GetAllAsync())
@@ -223,7 +224,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_AddThemeAsync_AlreadyExistException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ThemeRepository.GetAllAsync())
@@ -238,7 +239,7 @@ namespace Forum.Tests.Services
         [TestCase(1)]
         public async Task ForumThreadService_DeleteThemeByIdAsync_ThemeDeleted(int id)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ThemeRepository.DeleteByIdAsync(id))
                 .ReturnsAsync(data.GetThemeEntities[id - 1]);
@@ -255,7 +256,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_DeleteThemeByIdAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ThemeRepository.DeleteByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((Theme)null);
@@ -269,7 +270,7 @@ namespace Forum.Tests.Services
         [TestCase(2)]
         public async Task ForumThreadService_GetThreadPostsAsync_ReturnPost(int id)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.GetByIdAsync(id))
@@ -286,7 +287,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task ForumThreadService_GetThreadPostsAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.ForumThreadRepository.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((ForumThread)null);

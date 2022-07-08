@@ -11,17 +11,18 @@ using Services.Services;
 using Microsoft.Extensions.Logging;
 using Services.Validation.Exceptions;
 using DAL.Entities;
+using Forum.Tests.Helpers;
 
 namespace Forum.Tests.Services
 {
     public class PostServiceTests
     {
-        Data data;
+        ServiceHelper data;
 
         [Test]
         public async Task PostService_AddAsync_PostAdded()
         {
-            data = new Data();
+            data = new ServiceHelper();
 
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.PostRepository.AddAsync(It.IsAny<Post>()));
@@ -40,7 +41,7 @@ namespace Forum.Tests.Services
         [TestCase(2)]
         public async Task PostService_DeleteByIdAsync_PostDeleted(int id)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.PostRepository.DeleteByIdAsync(id))
                 .ReturnsAsync(data.GetPostEntities[id - 1]);
@@ -56,7 +57,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task PostService_DeleteByIdAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.PostRepository.DeleteByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((Post)null);
@@ -69,7 +70,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task PostService_GetAllAsync_ReturnAllPosts()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.PostRepository.GetAllAsync())
@@ -87,7 +88,7 @@ namespace Forum.Tests.Services
         [TestCase(2)]
         public async Task PostService_GetByIdAsync_ReturnPost(int id)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.PostRepository.GetByIdAsync(id))
@@ -104,7 +105,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task PostService_GetByIdAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.PostRepository.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((Post)null);
@@ -117,7 +118,7 @@ namespace Forum.Tests.Services
         [TestCase(2)]
         public async Task Postservice_GetPostsByUserIdAsync_ReturnsPosts(int userId)
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
             mockUnitOfWork.Setup(m => m.UserRepository.GetByIdAsync(userId))
@@ -134,7 +135,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task Postservice_GetPostsByUserIdAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.UserRepository.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((User)null);
@@ -147,7 +148,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task PostService_UpdateAsync_Updates()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.PostRepository.Update(It.IsAny<Post>()));
             mockUnitOfWork.Setup(m => m.PostRepository.GetByIdAsync(1))
@@ -164,7 +165,7 @@ namespace Forum.Tests.Services
         [Test]
         public async Task PostService_UpdateAsync_ThrowsNotFoundException()
         {
-            data = new Data();
+            data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork.Setup(m => m.PostRepository.Update(It.IsAny<Post>()));
             mockUnitOfWork.Setup(m => m.PostRepository.GetByIdAsync(It.IsAny<int>()))

@@ -1,6 +1,7 @@
 ﻿using DAL.DbAccess;
 using DAL.Entities;
 using DAL.Repositories;
+using Forum.Tests.Helpers;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Forum.Tests.Repositories
         [TestCase(4)]
         public async Task UserRepository_GetByIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
 
@@ -40,7 +41,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task UserRepository_GetAllAsync_ReturnsAllValues()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
             var users = await userRepository.GetAllAsync();
@@ -52,7 +53,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task UserRepository_AddAsync_AddsValueToDatabase()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
             var user = new User
@@ -69,7 +70,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task UserRepository_DeleteByIdAsync_DeletesEntity()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
 
@@ -82,7 +83,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public void UserRepository_Update_TimesOnce()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
             var user = expectedUsers[0];
@@ -94,7 +95,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task UserRepository_IsEmailExist_ReturnTrue()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
 
@@ -104,7 +105,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task UserRepository_IsEmailExist_ReturnFalse()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
 
@@ -115,7 +116,7 @@ namespace Forum.Tests.Repositories
         [TestCase("email4@gmail.com")]
         public async Task UserRepository_GetByEmailAsync_ReturnsSingleValue(string email)
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
 
@@ -129,7 +130,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task CredentialsRepository_IsEmailExist_ReturnTrue()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
 
@@ -139,7 +140,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task CredentialsRepository_IsEmailExist_ReturnFalse()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var userRepository = new UserRepository(context);
 

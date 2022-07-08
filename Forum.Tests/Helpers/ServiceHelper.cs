@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Entities;
 
-namespace Forum.Tests.Services
+namespace Forum.Tests.Helpers
 {
-    internal class Data
+    internal class ServiceHelper
     {
         private readonly IMapper _mapper;
 
-        public Data()
+        public ServiceHelper()
         {
             var myProfile = new AutomapperProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));

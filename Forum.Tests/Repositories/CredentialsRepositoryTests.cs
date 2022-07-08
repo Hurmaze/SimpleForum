@@ -1,6 +1,7 @@
 ﻿using DAL.DbAccess;
 using DAL.Entities;
 using DAL.Repositories;
+using Forum.Tests.Helpers;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace Forum.Tests.Repositories
         [TestCase(4)]
         public async Task CredentialsRepository_GetByIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var credentialsRepository = new CredentialsRepository(context);
 
@@ -45,7 +46,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task CredentialsRepository_GetAllAsync_ReturnsAllValues()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var credentialsRepository = new CredentialsRepository(context);
             var accounts = await credentialsRepository.GetAllAsync();
@@ -57,7 +58,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task CredentialsRepository_AddAsync_AddsValueToDatabase()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var credentialsRepository = new CredentialsRepository(context);
             var account = new Credentials {
@@ -75,7 +76,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task CredentialsRepository_DeleteByIdAsync_DeletesEntity()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var credentialsRepository = new CredentialsRepository(context);
 
@@ -88,7 +89,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public void CredentialsRepository_Update_TimesOnce()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var credentialsRepository = new CredentialsRepository(context);
             var theme = new Credentials { Id = 1, PasswordHash = new byte[] { 0x20, 0x20, 0x10, 0x20, 0x20, 0x20, 0x20 } };
@@ -100,7 +101,7 @@ namespace Forum.Tests.Repositories
         [TestCase(2)]
         public async Task CredentialsRepository_GetByUserIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var credentialsRepository = new CredentialsRepository(context);
 

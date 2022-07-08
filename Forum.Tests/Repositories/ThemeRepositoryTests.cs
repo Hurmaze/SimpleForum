@@ -1,6 +1,7 @@
 ﻿using DAL.DbAccess;
 using DAL.Entities;
 using DAL.Repositories;
+using Forum.Tests.Helpers;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Forum.Tests.Repositories
         [TestCase(2)]
         public async Task ThemeRepository_GetByIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var themeRepository = new ThemeRepository(context);
 
@@ -36,7 +37,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task ThemeRepository_GetAllAsync_ReturnsAllValues()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var themeRepository = new ThemeRepository(context);
             var themes = await themeRepository.GetAllAsync();
@@ -48,7 +49,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task ThemeRepository_AddAsync_AddsValueToDatabase()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var themeRepository = new ThemeRepository(context);
             var theme = new Theme { ThemeName = "Bananas" };
@@ -62,7 +63,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task ThemeRepository_DeleteByIdAsync_DeletesEntity()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var themeRepository = new ThemeRepository(context);
 
@@ -75,7 +76,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public void ThemeRepository_Update_TimesOnce()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var themeRepository = new ThemeRepository(context);
             var theme = new Theme { Id = 1, ThemeName = "NewName" };

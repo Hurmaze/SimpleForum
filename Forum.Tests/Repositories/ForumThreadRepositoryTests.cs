@@ -1,6 +1,7 @@
 ﻿using DAL.DbAccess;
 using DAL.Entities;
 using DAL.Repositories;
+using Forum.Tests.Helpers;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Forum.Tests.Repositories
         [TestCase(2)]
         public async Task ForumThreadRepository_GetByIdAsync_ReturnsSingleValue(int id)
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var threadRepository = new ForumThreadRepository(context);
 
@@ -52,7 +53,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task ForumThreadRepository_GetAllAsync_ReturnsAllValues()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var threadRepository = new ForumThreadRepository(context);
             var threads = await threadRepository.GetAllAsync();
@@ -64,7 +65,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task ForumThreadRepository_AddAsync_AddsValueToDatabase()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var threadRepository = new ForumThreadRepository(context);
             var thread = new ForumThread {Content = "Content", Title = "Title"};
@@ -78,7 +79,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public async Task ForumThreadRepository_DeleteByIdAsync_DeletesEntity()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var threadRepository = new ForumThreadRepository(context);
 
@@ -91,7 +92,7 @@ namespace Forum.Tests.Repositories
         [Test]
         public void ForumThreadRepository_Update_TimesOnce()
         {
-            using var context = new ForumDbContext(DataSeeder.GetForumDbOptions());
+            using var context = new ForumDbContext(RepositoryHelper.GetForumDbOptions());
 
             var threadRepository = new ForumThreadRepository(context);
             var thread = new ForumThread { Id = 1, Content = "NewContent" };

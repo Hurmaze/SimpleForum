@@ -2,9 +2,9 @@
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Tests.Repositories
+namespace Forum.Tests.Helpers
 {
-    internal class DataSeeder
+    internal class RepositoryHelper
     {
         public static DbContextOptions<ForumDbContext> GetForumDbOptions()
         {
