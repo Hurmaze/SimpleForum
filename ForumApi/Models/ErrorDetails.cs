@@ -6,6 +6,7 @@ namespace ForumApi.Models
     {
         public int StatusCode { get; set; }
         public string ErrorMessage { get; set; }
+        public string Source { get; set; }
 
         public override string ToString()
         {

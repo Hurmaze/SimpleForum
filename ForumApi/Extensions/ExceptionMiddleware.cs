@@ -28,10 +28,7 @@ namespace ForumApi.Extensions
             {
 
                 context.Response.ContentType = "application/json";
-                var error = new ErrorDetails
-                {
-                    ErrorMessage = "Internal error occured. We will fix it as fast as we can."
-                };
+                var error = new ErrorDetails();
 
                 switch (ex)
                 {
@@ -39,24 +36,27 @@ namespace ForumApi.Extensions
                         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                         _logger.LogWarning(ex.Message);
                         error.ErrorMessage = ex.Message;
+                        error.Source = ex.Source;
                         break;
 
                     case CustomException:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         _logger.LogWarning(ex.Message);
                         error.ErrorMessage = ex.Message;
+                        error.Source = ex.Source;
                         break;
 
                     default:
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         _logger.LogError("Something went wrong: {mes}", ex);
+                        error.ErrorMessage = "Internal error occured. We will fix it as fast as we can.";
+                        error.Source = ex.Source;
                         break;
                 }
 
                 error.StatusCode = context.Response.StatusCode;
 
                 await context.Response.WriteAsync(error.ToString());
-
             }
         }
     }
