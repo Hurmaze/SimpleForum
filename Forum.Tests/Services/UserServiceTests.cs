@@ -267,7 +267,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            Assert.ThrowsAsync<NicknameTakenException>(() => userAccountService.UpdateAsync(1,model));
+            Assert.ThrowsAsync<NicknameException>(() => userAccountService.UpdateAsync(1,model));
         }
 
         [TestCase(1,1)]
@@ -369,7 +369,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            await userAccountService.ChangeNicknameAsync(data.GetUserEntities[0].Email, new NicknameModel() { Nickname ="fdfdsfsdf"});
+            await userAccountService.ChangeNicknameAsync(data.GetUserEntities[0].Email, new NicknameRequest() { Nickname ="fdfdsfsdf"});
 
             mockUnitOfWork.Verify(x => x.UserRepository.Update(It.IsAny<User>()), Times.Once());
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once());
@@ -389,7 +389,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            Assert.ThrowsAsync<NotFoundException>(() => userAccountService.ChangeNicknameAsync("dsfsd", new NicknameModel() { Nickname = "fdfdsfsdf" }));
+            Assert.ThrowsAsync<NotFoundException>(() => userAccountService.ChangeNicknameAsync("dsfsd", new NicknameRequest() { Nickname = "fdfdsfsdf" }));
         }
 
         [TestCase(true, "dsfdssdf")]
@@ -410,7 +410,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new UserService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);
 
-            Assert.ThrowsAsync<NicknameTakenException>(() => userAccountService.ChangeNicknameAsync(data.GetUserEntities[1].Email, new NicknameModel() { Nickname = nickname }));
+            Assert.ThrowsAsync<NicknameException>(() => userAccountService.ChangeNicknameAsync(data.GetUserEntities[1].Email, new NicknameRequest() { Nickname = nickname }));
         }
     }
 }

@@ -4,6 +4,6 @@ namespace Services.Interfaces
 {
     public interface ITokenService
     {
-        Task<string> GetTokenAsync(LoginModel login);
+        Task<string> GetTokenAsync(LoginRequest login);
     }
 }

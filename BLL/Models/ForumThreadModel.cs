@@ -10,6 +10,5 @@
         public int? AuthorId { get; set; }
         public string AuthorEmail { get; set; }
         public string AuthorNickname { get; set; }
-        public ICollection<int> ThreadPostsIds { get; set; }
     }
 }

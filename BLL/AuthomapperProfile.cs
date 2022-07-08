@@ -16,8 +16,6 @@ namespace Services
         public AutomapperProfile()
         {
             CreateMap<User, UserModel>()
-                .ForMember(um => um.PostsIds, x => x.MapFrom(u => u.ThreadPosts.Select(y => y.Id)))
-                .ForMember(um => um.ThreadsIds, x => x.MapFrom(u => u.Threads.Select(y => y.Id)))
                 .ForMember(um => um.RoleName, x => x.MapFrom(u => u.Credentials.Role.RoleName))
                 .ReverseMap();
 
@@ -34,20 +32,13 @@ namespace Services
                 .ForMember(fm => fm.ThemeName, x => x.MapFrom(p => p.Theme.ThemeName))
                 .ForMember(pm => pm.AuthorId, x => x.MapFrom(p => p.Author.Id))
                 .ForMember(pm => pm.AuthorEmail, x => x.MapFrom(p => p.Author.Email))
-                .ForMember(pm => pm.AuthorNickname, x => x.MapFrom(p => p.Author.Nickname))
-                .ForMember(pm => pm.ThreadPostsIds, x => x.MapFrom(p => p.ThreadPosts.Select(y => y.Id)));
+                .ForMember(pm => pm.AuthorNickname, x => x.MapFrom(p => p.Author.Nickname));
 
             CreateMap<ForumThreadRequest, ForumThread>();
 
-            CreateMap<Theme, ThemeModel>()
-                .ForMember(tm => tm.ForumThreads, x => x.MapFrom(t => t.ForumThreads.Select(y => y.Id)));
+            CreateMap<Theme, ThemeModel>().ReverseMap();
 
-            CreateMap<ThemeModel, Theme>()
-                .ForMember(t => t.ThemeName, x => x.MapFrom(tm => tm.ThemeName));
-
-            CreateMap<Role, RoleModel>()
-                .ForMember(rm => rm.CredentialsIds, x => x.MapFrom(r => r.Credentials.Select(a => a.Id)))
-                .ReverseMap();
+            CreateMap<Role, RoleModel>().ReverseMap();
         }
     }
 }

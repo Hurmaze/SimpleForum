@@ -36,6 +36,18 @@ namespace DAL.Repositories
             return entity;
         }
 
+        public async Task<bool> IsBasicAsync(int id)
+        {
+            var role = await _forumDbContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
+
+            if(role == null)
+            {
+                return false;
+            }
+
+            return role.BasicRole;
+        }
+
         /// <summary>
         /// Deletes the Role by identifier asynchronous.
         /// </summary>

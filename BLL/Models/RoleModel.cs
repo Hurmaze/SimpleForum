@@ -9,6 +9,5 @@ namespace Services.Models
     public class RoleModel : BaseModel
     {
         public string RoleName { get; set; }
-        public ICollection<int> CredentialsIds { get; set; }
     }
 }

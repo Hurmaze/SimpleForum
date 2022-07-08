@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.Models
 {
-    public class NicknameModel
+    public class NicknameRequest
     {
         public string Nickname { get; set; }
     }

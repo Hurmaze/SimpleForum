@@ -129,9 +129,17 @@ namespace Services.Services
         /// Deletes the role asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>
+        /// <exception cref="ProhibitedOperationException"></exception>
         /// <exception cref="NotFoundException"></exception>
         public async Task DeleteRoleAsync(int id)
         {
+            bool isBasic = await _unitOfWork.RoleRepository.IsBasicAsync(id);
+
+            if (isBasic)
+            {
+                throw new ProhibitedOperationException(String.Format(ExceptionMessages.ProhibitedOperation, typeof(Role).Name, "Id", id.ToString()));
+            }
+
             var model = await _unitOfWork.RoleRepository.DeleteByIdAsync(id);
 
             await _unitOfWork.SaveAsync();
@@ -188,6 +196,11 @@ namespace Services.Services
 
             users = users?.Where(u => u.Credentials.RoleId == roleId);
 
+            if (users == null)
+            {
+                throw new NotFoundException(String.Format(ExceptionMessages.NotFound, typeof(Role).Name, "Id", roleId.ToString()));
+            }
+
             return _mapper.Map<IEnumerable<UserModel>>(users);
         }
 
@@ -212,7 +225,7 @@ namespace Services.Services
         /// Task&lt;UserModel&gt;
         /// </returns>
         /// <exception cref="InvalidRegistrationException"></exception>
-        /// <exception cref="NicknameTakenException"></exception>
+        /// <exception cref="NicknameException"></exception>
         public async Task<UserModel> RegisterAsync(RegistrationModel authModel)
         {
             bool isExist = await _unitOfWork.UserRepository.IsEmailExistAsync(authModel.Email);
@@ -231,13 +244,10 @@ namespace Services.Services
 
             if (isTaken)
             {
-                throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, authModel.Nickname));
+                throw new NicknameException(string.Format(ExceptionMessages.NicknameTaken, authModel.Nickname));
             }
-            var roles = await _unitOfWork.RoleRepository.GetAllAsync();
 
-            var role = roles.FirstOrDefault(x => x.RoleName == BasicRoles.User.ToString().ToLower());
-
-            var user = CreateAccount(authModel, role.Id);
+            var user = CreateAccount(authModel, (int)BasicRoles.User);
 
             await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.SaveAsync();
@@ -272,7 +282,7 @@ namespace Services.Services
 
                 if (isTaken)
                 {
-                    throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, userModel.Nickname));
+                    throw new NicknameException(string.Format(ExceptionMessages.NicknameTaken, userModel.Nickname));
                 }
             }
 
@@ -290,8 +300,8 @@ namespace Services.Services
         /// <param name="issuerEmail">The issuer email.</param>
         /// <param name="nickname">The nickname.</param>
         /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="NicknameTakenException"></exception>
-        public async Task ChangeNicknameAsync(string issuerEmail, NicknameModel nickname)
+        /// <exception cref="NicknameException"></exception>
+        public async Task ChangeNicknameAsync(string issuerEmail, NicknameRequest nickname)
         {
             var user = await _unitOfWork.UserRepository.GetByEmailAsync(issuerEmail);
 
@@ -302,14 +312,14 @@ namespace Services.Services
 
             if (user.Nickname == nickname.Nickname)
             {
-                throw new NicknameTakenException(ExceptionMessages.NicknamesAreEqual);
+                throw new NicknameException(ExceptionMessages.NicknamesAreEqual);
             }
 
             bool isTaken = await _unitOfWork.UserRepository.IsNicknameTakenAsync(nickname.Nickname);
 
             if (isTaken)
             {
-                throw new NicknameTakenException(string.Format(ExceptionMessages.NicknameTaken, nickname.Nickname));
+                throw new NicknameException(string.Format(ExceptionMessages.NicknameTaken, nickname.Nickname));
             }
 
             user.Nickname = nickname.Nickname;

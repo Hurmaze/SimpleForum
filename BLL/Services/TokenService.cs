@@ -56,7 +56,7 @@ namespace Services.Services
         /// </returns>
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="WrongPasswordException"></exception>
-        public async Task<string> GetTokenAsync(LoginModel login)
+        public async Task<string> GetTokenAsync(LoginRequest login)
         {
             var user = await _unitOfWork.UserRepository.GetByEmailAsync(login.Email);
 

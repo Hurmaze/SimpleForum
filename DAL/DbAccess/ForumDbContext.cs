@@ -154,9 +154,9 @@ namespace DAL.DbAccess
                 new Post { Id = 4, ThreadId = 2, Content = "Read recently about Segriy Zhadan... He is cool.", AuthorId = 1, TimeCreated = DateTime.Now });
 
             modelBuilder.Entity<Role>().HasData(
-                new Role { Id = 1, RoleName = Enum.GetName(BasicRoles.User).ToLower() },
-                new Role { Id = 2, RoleName = Enum.GetName(BasicRoles.Moderator).ToLower() },
-                new Role { Id = 3, RoleName = Enum.GetName(BasicRoles.Admin).ToLower() }
+                new Role { Id = 1, BasicRole=true, RoleName = Enum.GetName(BasicRoles.User).ToLower() },
+                new Role { Id = 2, BasicRole=true, RoleName = Enum.GetName(BasicRoles.Moderator).ToLower() },
+                new Role { Id = 3, BasicRole=true, RoleName = Enum.GetName(BasicRoles.Admin).ToLower() }
                 );
 
             var accounts = new List<Credentials>

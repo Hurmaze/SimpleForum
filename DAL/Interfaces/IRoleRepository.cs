@@ -8,5 +8,6 @@ namespace DAL.Interfaces
     /// <seealso cref="IRepository&lt;Role&gt;" />
     public interface IRoleRepository : IRepository<Role>
     {
+        Task<bool> IsBasicAsync(int id);
     }
 }

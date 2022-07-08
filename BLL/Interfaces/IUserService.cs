@@ -69,7 +69,7 @@ namespace Services.Interfaces
         /// <param name="issuerEmail">The issuer email.</param>
         /// <param name="nickname">The nickname.</param>
         /// <returns></returns>
-         Task ChangeNicknameAsync(string issuerEmail, NicknameModel nickname);
+         Task ChangeNicknameAsync(string issuerEmail, NicknameRequest nickname);
 
         /// <summary>
         /// Deletes the Account by identifier asynchronous.

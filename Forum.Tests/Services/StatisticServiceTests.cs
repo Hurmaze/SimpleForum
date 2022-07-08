@@ -28,7 +28,7 @@ namespace Forum.Tests.Services
             var forumThreadService = new StatisticService(mockUnitOfWork.Object, data.CreateMapperProfile());
 
             var expected = new List<ForumThreadModel> { data.GetForumThreadModels[0] };
-            expected[0].ThreadPostsIds = new List<int> { 1, 2 };
+            
 
             var threads = await forumThreadService.GetMostPopularThreadsAsync(1);
 
@@ -56,7 +56,7 @@ namespace Forum.Tests.Services
 
             var userAccountService = new StatisticService(mockUnitOfWork.Object, data.CreateMapperProfile());
 
-            var expected = new List<UserModel> { new UserModel { Id = 1, Email = "email1@gmail.com", Nickname = "nickname1", ThreadsIds = new List<int> { 1 }, PostsIds = new List<int> { 1, 2 } } };
+            var expected = new List<UserModel> { new UserModel { Id = 1, Email = "email1@gmail.com", Nickname = "nickname1" } };
 
             var threads = await userAccountService.GetMostActiveUsersAsync(1);
 

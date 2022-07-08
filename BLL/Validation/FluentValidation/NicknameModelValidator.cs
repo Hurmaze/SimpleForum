@@ -3,7 +3,7 @@ using Services.Models;
 
 namespace Services.Validation.FluentValidation
 {
-    public class NicknameModelValidator : AbstractValidator<NicknameModel>
+    public class NicknameModelValidator : AbstractValidator<NicknameRequest>
     {
         public NicknameModelValidator()
         {

@@ -10,12 +10,12 @@ namespace Services.Validation.Exceptions
     /// Throw when nickname is already taken
     /// </summary>
     /// <seealso cref="CustomException" />
-    public class NicknameTakenException : CustomException
+    public class NicknameException : CustomException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NicknameTakenException"/> class.
+        /// Initializes a new instance of the <see cref="NicknameException"/> class.
         /// </summary>
         /// <param name="mes"></param>
-        public NicknameTakenException(string mes) : base(mes) { }
+        public NicknameException(string mes) : base(mes) { }
     }
 }

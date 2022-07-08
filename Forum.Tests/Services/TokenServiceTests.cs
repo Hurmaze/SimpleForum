@@ -44,7 +44,7 @@ namespace Forum.Tests.Services
                 }
             };
 
-            var loginModel = new LoginModel
+            var loginModel = new LoginRequest
             {
                 Email = "valid@email.com",
                 Password = "Passw0rd"

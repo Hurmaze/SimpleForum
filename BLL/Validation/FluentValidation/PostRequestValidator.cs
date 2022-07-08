@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Services.Validation.FluentValidation
 {
-    public class PostModelValidator : AbstractValidator<PostModel>
+    public class PostRequestValidator : AbstractValidator<PostRequest>
     {
-        public PostModelValidator()
+        public PostRequestValidator()
         {
             RuleFor(x => x.Content)
                 .NotNull().NotEmpty();

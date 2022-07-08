@@ -47,13 +47,9 @@ namespace Services.Services
         {
             var mostActive = await _unitOfWork.UserRepository.GetAllAsync();
 
-            mostActive = mostActive.OrderByDescending(x => x.ThreadPosts?.Count ?? 0).ThenByDescending(y => y.Threads?.Count?? 0).Take(count);
+            mostActive = mostActive.OrderByDescending(x => x.ThreadPosts?.Count ?? 0).ThenByDescending(y => y.Threads?.Count?? 0).Take(count).ToList();
 
-            mostActive = mostActive.ToList();
-
-            var ret = _mapper.Map<IEnumerable<UserModel>>(mostActive);
-
-            return ret;
+            return _mapper.Map<IEnumerable<UserModel>>(mostActive);
         }
 
         /// <summary>

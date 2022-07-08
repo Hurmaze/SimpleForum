@@ -8,7 +8,5 @@
         public int RoleId { get; set; }
         public string RoleName { get; set; }
         public DateTime RegistrationTime { get; set; }
-        public ICollection<int> ThreadsIds { get; set; }
-        public ICollection<int> PostsIds { get; set; }
     }
 }
