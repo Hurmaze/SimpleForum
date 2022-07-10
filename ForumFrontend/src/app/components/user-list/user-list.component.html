@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-8">
-        <div *ngFor="let user of users">
+        <div *ngFor="let user of users | paginate: { itemsPerPage: usersOnPage, currentPage: page }">
             <div class="display-body">
                 <div class="credentials">
                     <h5>Id: {{user.id}}</h5>
@@ -20,6 +20,7 @@
                 </div>
             </div>
         </div>
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
     </div>
     <div class="col-lg-4">
         <app-statistic></app-statistic>

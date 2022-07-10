@@ -2,6 +2,8 @@
     <div class="col-lg-8">
         <div class="row">
             <div class="col-lg">
+                <input name="title" id="search" class="form-control" [(ngModel)]="search" name="search" placeholder="Search a thread:"
+                    required pattern="^[a-zA-Z0-9_.,;:!-\s]*$" (focusout)="Search()" (keyup.enter)="Search()"> 
                 <button type="button" class="btn btn-primary create-button"
                  *ngIf="isAuthenticated()" (click)="toggleCreation()">
                     Start new thread
@@ -37,7 +39,8 @@
         </div>
     </div>
         
-        <div *ngFor="let thread of threads">
+        <div *ngFor="let thread of filteredThreads
+         | paginate: { itemsPerPage: threadsOnPage, currentPage: page }">
             <div class="display-body">
                 <a [routerLink]="['/threads', thread.id]"><h3>{{thread.title}}</h3></a>
                     <ul class="list-inline">
@@ -74,6 +77,7 @@
                 </div>
             </div>
         </div>
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
         
     </div>
     <div class="col-lg-4">

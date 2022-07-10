@@ -24,6 +24,9 @@ import { ThreadUpdateComponent } from './components/thread-update/thread-update.
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { PostUpdateComponent } from './components/post-update/post-update.component';
 import { ACCESS_TOKEN, TokenService } from './shared/token.service';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { ThreadFilterPipe } from './thread-filter.pipe';
 
 export function getToken() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -45,6 +48,7 @@ export function getToken() {
     UserComponent,
     ThreadUpdateComponent,
     PostUpdateComponent,
+    ThreadFilterPipe,
   ],
 
   imports: [
@@ -52,6 +56,8 @@ export function getToken() {
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    NgxPaginationModule,
+    Ng2SearchPipeModule,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' 
     }),

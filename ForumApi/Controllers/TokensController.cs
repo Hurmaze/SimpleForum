@@ -37,9 +37,5 @@ namespace ForumApi.Controllers
             return Ok(new { access_token = token });
         }
 
-        public async Task<ActionResult<string>> RefreshToken()
-        {
-            return Ok();
-        }
     }
 }

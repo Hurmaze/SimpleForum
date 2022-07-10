@@ -14,3 +14,7 @@
  .buttons > * {
     margin: 0 10px 0 10px;
   }
+
+.main-color{
+    background-color: #dfe0e1;
+}

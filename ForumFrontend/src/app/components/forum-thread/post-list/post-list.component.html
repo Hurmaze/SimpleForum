@@ -1,35 +1,36 @@
-
-        <div *ngFor="let post of posts">
-            <div class="display-body">
-                    <ul class="list-inline">
-                        <li class="list-inline-item">
-                            <img src="/assets/img/user_icon.png" alt="">
-                            <a *ngIf="post.authorNickname === null || post.authorNickname===''"
-                                [routerLink]="['/users',post.authorId]">{{post.authorEmail}}
-                            </a>
-                            <a *ngIf="post.authorNickname !== null && post.authorNickname !==''"
-                                [routerLink]="['/users',post.authorId]">{{post.authorNickname}}
-                            </a>
-                        </li>
-                        <li class="list-inline-item">
-                            Posted: {{post.timeCreated | date: 'short'}}
-                        </li>
-                    </ul>
-                    <p>
-                        {{post.content}}
-                    </p>
-                    <div class="buttons" *ngIf="isModeratable()">
-                        <a  [routerLink]="['/posts/edit',post.id]" class="btn btn-secondary btn-sm">Update post</a>
-                        <button class="btn btn-secondary btn-sm"
-                        mwlConfirmationPopover
-                        [popoverTitle]="'Delete'"
-                        [popoverMessage]="'Do you really want to delete this post?'"
-                        placement="left"
-                        (confirm)="deletePost(post.id)"
-                        >Delete post</button>
-                    </div>
-                <br>
+<div *ngFor="let post of posts | paginate: { itemsPerPage: postsOnPage, currentPage: page }">
+    <div class="display-body">
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <img src="/assets/img/user_icon.png" alt="">
+                    <a *ngIf="post.authorNickname === null || post.authorNickname===''"
+                        [routerLink]="['/users',post.authorId]">{{post.authorEmail}}
+                    </a>
+                    <a *ngIf="post.authorNickname !== null && post.authorNickname !==''"
+                        [routerLink]="['/users',post.authorId]">{{post.authorNickname}}
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    Posted: {{post.timeCreated | date: 'short'}}
+                </li>
+            </ul>
+            <p>
+                {{post.content}}
+            </p>
+            <div class="buttons" *ngIf="isModeratable()">
+                <a  [routerLink]="['/posts/edit',post.id]" class="btn btn-secondary btn-sm">Update post</a>
+                <button class="btn btn-secondary btn-sm"
+                mwlConfirmationPopover
+                [popoverTitle]="'Delete'"
+                [popoverMessage]="'Do you really want to delete this post?'"
+                placement="left"
+                (confirm)="deletePost(post.id)"
+                >Delete post</button>
             </div>
-        </div>        
+        <br>
+    </div>
+</div>   
+
+<pagination-controls (pageChange)="page = $event"></pagination-controls>
 
 

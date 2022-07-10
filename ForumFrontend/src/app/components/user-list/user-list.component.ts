@@ -14,6 +14,9 @@ export class UserListComponent implements OnInit {
   roleId: number=0;
   isEmpty: boolean=false;
 
+  page: number = 1;
+  usersOnPage = 8;
+
   constructor(
     private userService: UserService,
     private router: Router,

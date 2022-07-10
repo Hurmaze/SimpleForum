@@ -14,6 +14,8 @@ import { UserService } from 'src/app/shared/user.service';
 export class PostListComponent implements OnInit {
   threadId:number=0;
   posts: Post[]=[];
+  page: number=1;
+  postsOnPage: number=5;
 
   constructor(
     private threadsService: ForumThreadService,
