@@ -35,7 +35,7 @@ export class ForumThreadComponent implements OnInit {
 
   private loadPage(id: number){
     this.threadService.getById(id).subscribe(thread => this.thread = thread,
-      err => this.router.navigate(['/']));
+      () => this.router.navigate(['/']));
   }
 
   isAuthenticated(){
@@ -55,7 +55,7 @@ export class ForumThreadComponent implements OnInit {
     postModel.timeCreated= new Date();
     postModel.authorEmail = userToken.email;
 
-    this.postService.post(postModel).subscribe(res => window.location.reload(), err => err);
+    this.postService.post(postModel).subscribe(() => window.location.reload(), err => err);
   }
 
 }

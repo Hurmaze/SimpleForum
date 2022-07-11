@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from 'src/app/models/post.model';
 import { AccessService } from 'src/app/shared/access.service';
@@ -20,9 +20,9 @@ export class PostListComponent implements OnInit {
   constructor(
     private threadsService: ForumThreadService,
      private route: ActivatedRoute,
-     private userService: UserService,
      private postService: PostService,
-     private accessSerivce: AccessService) { }
+     private accessSerivce: AccessService,
+     private changeDetection: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(routeParams => {
@@ -40,6 +40,6 @@ export class PostListComponent implements OnInit {
   }
 
   deletePost(id: number){
-    this.postService.deletePost(id).subscribe(res => window.location.reload());
+    this.postService.deletePost(id).subscribe(() => window.location.reload());
   }
 }
