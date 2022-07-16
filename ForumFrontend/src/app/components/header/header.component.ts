@@ -28,6 +28,13 @@ export class HeaderComponent implements OnInit {
     this.router.navigate([`users/${this.userId}`]);
   }
 
+  toHome(){
+    if(this.router.url==='/'){
+      window.location.reload();
+    }
+    this.router.navigate(['']);
+  }
+
   logout(){
     this.tokenService.logout();
   }

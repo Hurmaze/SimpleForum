@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using DAL.DbAccess;
-using NLog.Web;
 using FluentValidation.AspNetCore;
 using Services.Validation.FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -101,7 +100,6 @@ var forumConnectionString = builder.Configuration.GetConnectionString("ForumDb")
 builder.Services.AddDbContext<ForumDbContext>(x => x.UseSqlServer(forumConnectionString));
 builder.Services.AddTransient<ForumDbContext>();
 
-
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new AutomapperProfile());
@@ -119,9 +117,6 @@ builder.Services.AddSwaggerGen(s =>
     s.IncludeXmlComments(xmlPath);
 });
 
-
-
-
 var app = builder.Build();
 
 app.UseCors();
@@ -134,13 +129,13 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
 

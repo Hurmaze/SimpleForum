@@ -37,6 +37,8 @@ export class ThreadListComponent implements OnInit {
     private changeDetection: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.search = '';
+
     this.forumThreadService.get()
     .subscribe(result => {
       this.threads=result, 
