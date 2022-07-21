@@ -6,7 +6,7 @@
           <h2>Registration</h2>
           <span class="alert" *ngIf="isError">{{errorMessage}}</span>
           <br/>
-          <label for="email" >Email address</label>
+          <label for="email" >Email address*</label>
           <input class="form-control" [(ngModel)]="registrationModel.Email" #email="ngModel" required  [ngModelOptions]="{standalone: true}" 
                 type="text" name="email"
                 pattern=".+@.+\..+" placeholder="Enter Email">
@@ -18,13 +18,13 @@
                 placeholder="Enter Nickname">
           <span class="alert" *ngIf="nickname.errors?.['maxlength']" >Nickname has to be less than 30 characters.</span>
           <br/>
-          <label for="password" >Password</label>
+          <label for="password" >Password*</label>
           <input class="form-control" [(ngModel)]="registrationModel.Password" #password="ngModel" required [ngModelOptions]="{standalone: true}" 
                 type="password" name="password" 
                 pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$" placeholder="Enter Password">
           <span class="alert" *ngIf="password.errors?.['pattern']">Password must contain 8-16 characters, at least one letter and one number.</span>
           <br/>
-          <label for="password" >Password</label>
+          <label for="password" >Password*</label>
           <input class="form-control" [(ngModel)]="registrationModel.PasswordRepeat" #password2="ngModel" required [ngModelOptions]="{standalone: true}" 
                 type="password" name="password2" 
                  placeholder="Enter Password">
