@@ -119,6 +119,10 @@ builder.Services.AddSwaggerGen(s =>
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseHttpsRedirection();
+
 app.UseCors();
 
 // Configure the HTTP request pipeline.
@@ -127,9 +131,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
-
-app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 
