@@ -45,9 +45,7 @@ namespace Services.Services
         /// </returns>
         public async Task<IEnumerable<UserModel>> GetMostActiveUsersAsync(int count)
         {
-            var mostActive = await _unitOfWork.UserRepository.GetAllAsync();
-
-            mostActive = mostActive.OrderByDescending(x => x.ThreadPosts?.Count ?? 0).ThenByDescending(y => y.Threads?.Count?? 0).Take(count).ToList();
+            var mostActive = await _unitOfWork.UserRepository.GetMostActiveUsersAsync(count);
 
             return _mapper.Map<IEnumerable<UserModel>>(mostActive);
         }
@@ -61,9 +59,7 @@ namespace Services.Services
         /// </returns>
         public async Task<IEnumerable<ForumThreadModel>> GetMostPopularThreadsAsync(int count)
         {
-            var mostPopular = await _unitOfWork.ForumThreadRepository.GetAllAsync();
-
-            mostPopular = mostPopular.OrderByDescending(x => x.ThreadPosts?.Count ?? 0).ThenBy(y => y.TimeCreated).Take(count).ToList();
+            var mostPopular = await _unitOfWork.ForumThreadRepository.GetMostPopularThreadsAsync(count);
 
             return _mapper.Map<IEnumerable<ForumThreadModel>>(mostPopular);
         }

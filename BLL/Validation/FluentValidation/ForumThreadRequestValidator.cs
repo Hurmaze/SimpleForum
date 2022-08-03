@@ -8,12 +8,12 @@ namespace Services.Validation.FluentValidation
         public ForumThreadRequestValidator()
         {
             RuleFor(t => t.Title)
-                .NotNull().NotEmpty()
+                .NotEmpty()
                 .MinimumLength(3)
                 .MaximumLength(100);
 
             RuleFor(t => t.Content)
-                .NotNull().NotEmpty();
+                .NotEmpty();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Services.Validation.FluentValidation
         public PostRequestValidator()
         {
             RuleFor(x => x.Content)
-                .NotNull().NotEmpty();
+                .NotEmpty();
         }
     }
 }

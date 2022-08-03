@@ -103,6 +103,15 @@ namespace DAL.Repositories
                 .FirstOrDefaultAsync(u => u.Id == id); ;
         }
 
+        public async Task<IEnumerable<User>> GetMostActiveUsersAsync(int count)
+        {
+            return await _forumDbContext.Users
+            .OrderByDescending(x => x.ThreadPosts == null ? 0 : x.ThreadPosts.Count)
+            .ThenByDescending(y => y.Threads == null ? 0 : y.Threads.Count)
+            .Take(count)
+            .ToListAsync();
+        }
+
         /// <summary>
         /// Determines whether is email exist asynchronous
         /// </summary>

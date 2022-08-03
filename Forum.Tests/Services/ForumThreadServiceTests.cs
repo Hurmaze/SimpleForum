@@ -227,8 +227,8 @@ namespace Forum.Tests.Services
             data = new ServiceHelper();
             var mockUnitOfWork = new Mock<IUnitOfWork>();
 
-            mockUnitOfWork.Setup(m => m.ThemeRepository.GetAllAsync())
-                .ReturnsAsync(data.GetThemeEntities);
+            mockUnitOfWork.Setup(m => m.ThemeRepository.IsExistAsync(It.IsAny<string>()))
+                .ReturnsAsync(true);
 
             var mockLogger = new Mock<ILogger<ForumThreadService>>();
             var forumThreadService = new ForumThreadService(mockUnitOfWork.Object, data.CreateMapperProfile(), mockLogger.Object);

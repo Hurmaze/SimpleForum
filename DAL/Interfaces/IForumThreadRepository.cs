@@ -8,5 +8,6 @@ namespace DAL.Interfaces
     /// <seealso cref="IRepository&lt;ForumThread&gt;" />
     public interface IForumThreadRepository : IRepository<ForumThread>
     {
+        Task<IEnumerable<ForumThread>> GetMostPopularThreadsAsync(int count);
     }
 }

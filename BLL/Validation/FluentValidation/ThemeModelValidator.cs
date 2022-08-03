@@ -8,7 +8,7 @@ namespace Services.Validation.FluentValidation
         public ThemeModelValidator()
         {
             RuleFor(c => c.ThemeName)
-                .NotNull().NotEmpty()
+                .NotEmpty()
                 .MaximumLength(50);
         }
     }

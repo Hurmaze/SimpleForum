@@ -8,7 +8,7 @@ namespace Services.Validation.FluentValidation
         public RegistrationModelValidator()
         {
             RuleFor(x => x.Password)
-                .NotNull().NotEmpty()
+                .NotEmpty()
                 .Matches(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$")
                 .WithMessage("Password must contain 8-16 characters, at least one letter and one number.");
 
@@ -17,7 +17,7 @@ namespace Services.Validation.FluentValidation
                 .WithMessage("Passwords should be equal.");
 
             RuleFor(x => x.Email)
-                .NotNull().NotEmpty()
+                .NotEmpty()
                 .EmailAddress()
                 .MaximumLength(100)
                 .WithMessage("Maximum 100 characters.");

@@ -8,7 +8,7 @@ namespace Services.Validation.FluentValidation
         public UserModelValidator()
         {
             RuleFor(x => x.Email)
-                .NotNull().NotEmpty()
+                .NotEmpty()
                 .MaximumLength(100)
                 .EmailAddress()
                 .WithMessage("Maximum 100 characters.");

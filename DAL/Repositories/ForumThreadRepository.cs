@@ -87,6 +87,20 @@ namespace DAL.Repositories
         }
 
         /// <summary>
+        /// Gets the most popular threads asynchronous.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns>Task&lt;IEnumerable&lt;ForumThread&gt;&gt;.</returns>
+        public async Task<IEnumerable<ForumThread>> GetMostPopularThreadsAsync(int count)
+        {
+            return await _forumDbContext.Threads
+            .OrderByDescending(x => x.ThreadPosts == null ? 0 : x.ThreadPosts.Count)
+            .ThenBy(y => y.TimeCreated)
+            .Take(count)
+            .ToListAsync();
+        }
+
+        /// <summary>
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>

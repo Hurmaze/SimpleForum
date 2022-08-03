@@ -32,5 +32,12 @@ namespace DAL.Interfaces
         /// <param name="email">The email.</param>
         /// <returns>True, if email exists and false if not.</returns>
         Task<bool> IsEmailExistAsync(string email);
+
+        /// <summary>
+        /// Gets the most active users asynchronous.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns></returns>
+        Task<IEnumerable<User>> GetMostActiveUsersAsync(int count);
     }
 }

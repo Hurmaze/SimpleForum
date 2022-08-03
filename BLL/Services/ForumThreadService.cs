@@ -80,16 +80,11 @@ namespace Services.Services
         /// <exception cref="AlreadyExistException"></exception>
         public async Task<ThemeModel> AddThemeAsync(ThemeModel model)
         {
-            var themes = await _unitOfWork.ThemeRepository.GetAllAsync();
+            bool isExist = await _unitOfWork.ThemeRepository.IsExistAsync(model.ThemeName);
 
-            if(themes != null)
+            if (isExist)
             {
-                var isExist = themes.Any(t => t.ThemeName == model.ThemeName);
-
-                if (isExist)
-                {
-                    throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Theme).Name, "RoleName", model.ThemeName));
-                }
+                throw new AlreadyExistException(String.Format(ExceptionMessages.AlreadyExists, typeof(Theme).Name, "RoleName", model.ThemeName));
             }
 
             var theme = _mapper.Map<Theme>(model);

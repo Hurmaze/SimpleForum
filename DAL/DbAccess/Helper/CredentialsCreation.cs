@@ -10,7 +10,7 @@ namespace DAL.DbAccess.Helper
     internal class CredentialsCreation
     {
         /// <summary>
-        /// 
+        /// Creates a password hash for an account.
         /// </summary>
         /// <param name="account"></param>
         /// <param name="password"></param>
@@ -25,7 +25,7 @@ namespace DAL.DbAccess.Helper
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            Credentials newaccount = new Credentials
+            Credentials newAccount = new Credentials
             {
                 Id = credentials.Id,
                 UserId = credentials.UserId,
@@ -34,7 +34,7 @@ namespace DAL.DbAccess.Helper
                 RoleId = credentials.RoleId
             };
 
-            return newaccount;
+            return newAccount;
         }
     }
 }

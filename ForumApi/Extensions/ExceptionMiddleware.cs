@@ -26,35 +26,40 @@ namespace ForumApi.Extensions
             }
             catch (Exception ex)
             {
-
                 context.Response.ContentType = "application/json";
                 var error = new ErrorDetails();
+
+                error.ErrorMessage = ex.Message;
+                error.Source = ex.Source;
 
                 switch (ex)
                 {
                     case NotFoundException:
                         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                        _logger.LogWarning(ex.Message);
-                        error.ErrorMessage = ex.Message;
-                        error.Source = ex.Source;
                         break;
 
                     case CustomException:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        _logger.LogWarning(ex.Message);
-                        error.ErrorMessage = ex.Message;
-                        error.Source = ex.Source;
                         break;
 
                     default:
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        _logger.LogError("Something went wrong: {mes}", ex);
                         error.ErrorMessage = "Internal error occured. We will fix it as fast as we can.";
-                        error.Source = ex.Source;
                         break;
                 }
 
-                error.StatusCode = context.Response.StatusCode;
+                var statusCode = (HttpStatusCode)context.Response.StatusCode;
+
+                switch (statusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        _logger.LogWarning(ex.Message);
+                        break;
+
+                    default:
+                        _logger.LogError(ex.Message);
+                        break;
+                }
 
                 await context.Response.WriteAsync(error.ToString());
             }

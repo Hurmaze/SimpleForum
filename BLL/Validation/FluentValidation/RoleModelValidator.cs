@@ -8,7 +8,7 @@ namespace Services.Validation.FluentValidation
         public RoleModelValidator()
         {
             RuleFor(x => x.RoleName)
-                .NotNull().NotEmpty()
+                .NotEmpty()
                 .MaximumLength(50);
                
         }

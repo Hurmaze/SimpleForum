@@ -77,6 +77,11 @@ namespace DAL.Repositories
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
+        public async Task<bool> IsExistAsync(string themeName)
+        {
+            return await _forumDbContext.Themes.AnyAsync(x => x.ThemeName == themeName);
+        }
+
         /// <summary>
         /// Updates the specified entity.
         /// </summary>
